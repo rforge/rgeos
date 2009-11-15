@@ -21,6 +21,7 @@ GEOSGeom rgeos_crdMat2Polygon(SEXP mat, SEXP dim);
 
 GEOSGeom rgeos_SPoints2MP(SEXP obj);
 
+SEXP rgeos_PolygonsContain(SEXP obj);
 
 SEXP rgeos_lineLength(SEXP mat, SEXP dim);
 

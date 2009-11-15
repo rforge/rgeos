@@ -55,7 +55,7 @@ GEOSGeom rgeos_Polygons2GC(SEXP obj) {
 
 }
 
-SEXP rgeos_what(SEXP obj) {
+SEXP rgeos_PolygonsContain(SEXP obj) {
 
     SEXP ans, dim;
     int pc=0;
