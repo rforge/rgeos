@@ -86,7 +86,7 @@ SEXP rgeos_PolygonsContain(SEXP obj) {
                         GEOSGeom_destroy(GC);
                         return(R_NilValue);
                     }
-                    if (i == j) LOGICAL_POINTER(ans)[i+(j*n)] = NA_LOGICAL;
+                    if (i == j) LOGICAL_POINTER(ans)[i+(j*n)] = FALSE;
                     else {
                         contains = (int) GEOSContains(Pi, Pj);
                         if (contains == 2) 
