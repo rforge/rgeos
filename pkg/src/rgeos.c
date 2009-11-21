@@ -163,7 +163,7 @@ GEOSGeom rgeos_crdMat2Polygon(SEXP mat, SEXP dim) {
 
     if ((p1 = GEOSGeom_createPolygon(g1, NULL, (unsigned int) 0)) == NULL) {
         GEOSGeom_destroy(g1);
-        error("rgeos_Within1LR1pt: Polygon not created");
+        error("rgeos_crdMat2Polygon: Polygon not created");
     }
 
     return(p1);

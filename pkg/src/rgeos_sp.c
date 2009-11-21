@@ -26,7 +26,7 @@ GEOSGeom rgeos_SPoints2MP(SEXP obj) {
     return(GC);
 }
 
-GEOSGeom rgeos_Polygons2GC(SEXP obj) {
+GEOSGeom rgeos_Polygons2GC(SEXP obj, SEXP comm) {
 
     SEXP pls, crdMat, dim;
     GEOSGeom *geoms;
@@ -35,15 +35,26 @@ GEOSGeom rgeos_Polygons2GC(SEXP obj) {
 
     PROTECT(pls = GET_SLOT(obj, install("Polygons"))); pc++;
     npls = length(pls);
+    if (comm == R_NilValue) {
 
-    geoms = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
+        geoms = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
 
-    for (i=0; i<npls; i++) {
-        crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
-        dim = getAttrib(crdMat, R_DimSymbol);
-        Pol = rgeos_crdMat2Polygon(crdMat, dim);
-        geoms[i] = Pol;
-    }
+        for (i=0; i<npls; i++) {
+            crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
+            dim = getAttrib(crdMat, R_DimSymbol);
+            Pol = rgeos_crdMat2Polygon(crdMat, dim);
+            geoms[i] = Pol;
+        }
+    }/* else {
+
+        GEOSGeom g1, hole;
+        GEOSGeom *holes;
+        int nErings = length(comm);
+
+        g1 = rgeos_crdMat2LinearRing(mat, dim);
+
+
+    }*/
 
     if ((GC = GEOSGeom_createCollection(GEOS_MULTIPOLYGON, geoms, 
         npls)) == NULL) {
@@ -55,7 +66,7 @@ GEOSGeom rgeos_Polygons2GC(SEXP obj) {
 
 }
 
-SEXP rgeos_PolygonsContain(SEXP obj) {
+SEXP rgeos_PolygonsContain(SEXP obj, SEXP comm) {
 
     SEXP ans, dim;
     int pc=0;
@@ -64,7 +75,7 @@ SEXP rgeos_PolygonsContain(SEXP obj) {
 
     GEOSGeom GC, Pi, Pj;
 
-    GC = rgeos_Polygons2GC(obj);
+    GC = rgeos_Polygons2GC(obj, comm);
 
     if (!((int) GEOSisValid(GC))) {
         n = (unsigned int) GEOSGetNumGeometries(GC);
@@ -237,3 +248,34 @@ SEXP rgeos_Geom2bbox(GEOSGeom Geom) {
     return(ans);
 }
 
+SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance, SEXP preserve) {
+
+    double tol=NUMERIC_POINTER(tolerance)[0];
+    GEOMGeom in, out;
+    int pc=0;
+    SEXP ans;
+
+    in = rgeos_SpatialPolygonsGC(obj);
+    if (LOGICAL_POINTER(preserve)[0]) {
+        if ((out = (GEOSGeometry *) GEOSTopologyPreserveSimplify(in, tol))
+            == NULL) {
+            GEOSGeom_destroy(in);
+            return(R_NilValue);
+        }
+    } else {
+        if ((out = (GEOSGeometry *) GEOSSimplify(in, tol))
+            == NULL) {
+            GEOSGeom_destroy(in);
+            return(R_NilValue);
+        }
+    }
+    PROTECT(ans = rgeos_GCSpatialPolygons(out); pc++;
+    GEOSGeom_destroy(in);
+    GEOSGeom_destroy(out);
+    UNPROTECT(pc);
+    return(ans);
+}
+
+SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom) {
+
+}
