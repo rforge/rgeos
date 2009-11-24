@@ -35,6 +35,7 @@ GEOSGeom rgeos_Polygons2GC(SEXP obj, SEXP comm) {
 
     PROTECT(pls = GET_SLOT(obj, install("Polygons"))); pc++;
     npls = length(pls);
+
     if (comm == R_NilValue) {
 
         geoms = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
@@ -45,25 +46,69 @@ GEOSGeom rgeos_Polygons2GC(SEXP obj, SEXP comm) {
             Pol = rgeos_crdMat2Polygon(crdMat, dim);
             geoms[i] = Pol;
         }
-    }/* else {
+        if ((GC = GEOSGeom_createCollection(GEOS_MULTIPOLYGON, geoms, 
+            npls)) == NULL) {
+            error("Polygons2GC: collection not created");
+        }
+    } else {
 
-        GEOSGeom g1, hole;
-        GEOSGeom *holes;
         int nErings = length(comm);
-
-        g1 = rgeos_crdMat2LinearRing(mat, dim);
-
-
-    }*/
-
-    if ((GC = GEOSGeom_createCollection(GEOS_MULTIPOLYGON, geoms, 
-        npls)) == NULL) {
-        error("Polygons2GC: collection not created");
+        geoms = (GEOSGeom *) R_alloc((size_t) nErings, sizeof(GEOSGeom));
+        for (i=0; i<nErings; i++) {
+Rprintf("nErings: %d, i: %d\n", nErings, i);
+            Pol = rgeos_Polygons_i_2Polygon(pls, VECTOR_ELT(comm, i));
+            geoms[i] = Pol;
+        }
+        if ((GC = GEOSGeom_createCollection(GEOS_MULTIPOLYGON, geoms, 
+            nErings)) == NULL) {
+            error("Polygons2GC: collection not created");
+        }
     }
 
     UNPROTECT(pc);
     return(GC);
 
+}
+
+GEOSGeom rgeos_Polygons_i_2Polygon(SEXP pls, SEXP vec) {
+
+    GEOSGeom res, pol, hole;
+    GEOSGeom *holes;
+    SEXP mat, dim;
+
+    int n = length(vec);
+    int i, j;
+
+    i = INTEGER_POINTER(vec)[0]-R_OFFSET;
+
+Rprintf("i: %d, n: %d\n", i, n);
+
+    mat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
+    dim = getAttrib(mat, R_DimSymbol);
+    pol = rgeos_crdMat2LinearRing(mat, dim);
+    if (n == 1) {
+        if ((res = GEOSGeom_createPolygon(pol, NULL, (unsigned int) 0))
+            == NULL) {
+            GEOSGeom_destroy(pol);
+            error("rgeos_Polygons_i_2Polygon: Polygon not created");
+        }
+    } else {
+        holes = (GEOSGeom *) R_alloc((size_t) (n-1), sizeof(GEOSGeom));
+        for (j=1; j<n; j++) {
+            i = INTEGER_POINTER(vec)[j]-R_OFFSET;
+Rprintf("ji: %d\n", i);
+            mat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
+            dim = getAttrib(mat, R_DimSymbol);
+            hole = rgeos_crdMat2LinearRing(mat, dim);
+            holes[(j-1)] = hole;
+        }
+        if ((res = GEOSGeom_createPolygon(pol, holes, (unsigned int) (n-1)))
+            == NULL) {
+            GEOSGeom_destroy(pol);
+            error("rgeos_Polygons_i_2Polygon: Polygon not created");
+        }
+    }
+    return(res);
 }
 
 SEXP rgeos_PolygonsContain(SEXP obj, SEXP comm) {
@@ -251,7 +296,7 @@ SEXP rgeos_Geom2bbox(GEOSGeom Geom) {
 SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance, SEXP preserve) {
 
     double tol=NUMERIC_POINTER(tolerance)[0];
-    GEOMGeom in, out;
+    GEOSGeom in, out;
     int pc=0;
     SEXP ans;
 
@@ -269,7 +314,7 @@ SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance, SEXP preserve) {
             return(R_NilValue);
         }
     }
-    PROTECT(ans = rgeos_GCSpatialPolygons(out); pc++;
+    PROTECT(ans = rgeos_GCSpatialPolygons(out)); pc++;
     GEOSGeom_destroy(in);
     GEOSGeom_destroy(out);
     UNPROTECT(pc);
@@ -279,3 +324,8 @@ SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance, SEXP preserve) {
 SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom) {
 
 }
+
+GEOSGeom rgeos_SpatialPolygonsGC(SEXP obj) {
+
+}
+

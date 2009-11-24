@@ -1,5 +1,5 @@
 checkPolygonsGEOS <- function(obj) {
-    if (!is(x, "Polygons")) 
+    if (!is(obj, "Polygons")) 
         stop("not a Polygons object")
     comm <- comment(obj)
     if (!is.null(comm)) {
@@ -16,56 +16,20 @@ checkPolygonsGEOS <- function(obj) {
             l[[o+1]] <- l[[o]] %*% lmat
             o <- o+1
         }
-        o <- o-1
-        for (oo in o:1) {
-            if (oo %% 2 == 0) {
-                ids <- which(colSums(l[[oo]]) == 1)
-                lmat[,ids] <- FALSE
-            } else {
-            }
-        }
-
-    }
-        {
-
         rlmat <- rowSums(lmat)
         clmat <- colSums(lmat)
-        justExternalRings <- which(rlmat == 0 & clmat == 0)
-        apparentExternalRingsRoots <- which(rlmat > 0 & clmat == 0)
-        ExternalRings_IR <- logical(length(apparentExternalRingsRoots))
-        for (i in 1:length(apparentExternalRingsRoots)) {
-            Iri <- which(lmat[apparentExternalRingsRoots[i],])
-            ExternalRings_IR[i] <- all(colSums(lmat[,Iri]) == 1)
-        }
-        if (any(!ExternalRings_IR)) {
-            for (i in apparentExternalRingsRoots[!ExternalRings_IR]) {
-                Iri <- lmat[i,]
-                fin <- TRUE
-                Ir <- TRUE
-                while (fin) {
-                    rS <- rowSums(lmat[Iri,Iri])
-print(rS)
-                    wi <- which(Iri)
-print(wi)
-                    if (sum(rS > 0)) {
-                        id <- wi[which.max(rS)]
-cat("Ir", Ir, "id", id, "rS", rS, "\n")
-                        if (Ir) {
-                            lmat[id,] <- FALSE
-                            which(lmat, arr.ind=TRUE)
-                            Ir <- FALSE
-                        } else {
-                            Iri[id] <- FALSE
-                            Ir <- TRUE
-                        }
-                    } else {
-                        fin <- FALSE
-                    }
-                }
+        containers <- which(rlmat > 0 & clmat == 0)
+        if (o >= 3) lmat1 <- lmat - (l[[2]] - l[[3]])
+        for (i in seq(along=containers)) {
+            isn <- which(lmat[containers[i],] > 0)
+            if (any(colSums(l[[2]])[isn] > 0)) {
+                Ers <- isn[which(rlmat[isn] %% 2 == 0)]
+                lmat1[, Ers] <- FALSE
             }
         }
+        lmat <- lmat1
     } 
-    containsij <- which(lmat, arr.ind=TRUE)
+    containsij <- which(lmat == 1, arr.ind=TRUE)
     pls <- slot(obj, "Polygons")
     for (i in containsij[,2]) {
         pl <- pls[[i]]

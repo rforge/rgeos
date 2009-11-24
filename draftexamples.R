@@ -47,7 +47,13 @@ Pls <- Polygons(lp, ID="1")
 #system("R CMD SHLIB *.c -lgeos_c")
 dyn.load("rgeos.so")
 .Call("rgeos_Init")
-lmat <- .Call("rgeos_PolygonsContain", Pls, NULL)
+source("../R/rgeos.R")
+zz <- checkPolygonsGEOS(Pls)
+zzz <- checkPolygonsGEOS(zz)
+
+
+
+#lmat <- .Call("rgeos_PolygonsContain", Pls, NULL)
 
 
 Er0 <- which(rowSums(lmat) == 0 & colSums(lmat) == 0)
