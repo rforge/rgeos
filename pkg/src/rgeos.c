@@ -12,8 +12,6 @@ SEXP rgeos_GEOSversion(void) {
     return(ans);
 }
 
-#define BUFSIZE 8192
-
 static void __errorHandler(const char *fmt, ...) {
 
     char buf[BUFSIZE], *p;

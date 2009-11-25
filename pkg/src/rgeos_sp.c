@@ -26,15 +26,17 @@ GEOSGeom rgeos_SPoints2MP(SEXP obj) {
     return(GC);
 }
 
-GEOSGeom rgeos_Polygons2GC(SEXP obj, SEXP comm) {
+GEOSGeom rgeos_Polygons2GC(SEXP obj) {
 
-    SEXP pls, crdMat, dim;
+    SEXP pls, crdMat, dim, comm;
     GEOSGeom *geoms;
     GEOSGeom Pol, GC;
     int npls, i, pc=0;
 
     PROTECT(pls = GET_SLOT(obj, install("Polygons"))); pc++;
     npls = length(pls);
+
+    PROTECT(comm = comment2comm(obj)); pc++;
 
     if (comm == R_NilValue) {
 
@@ -55,7 +57,6 @@ GEOSGeom rgeos_Polygons2GC(SEXP obj, SEXP comm) {
         int nErings = length(comm);
         geoms = (GEOSGeom *) R_alloc((size_t) nErings, sizeof(GEOSGeom));
         for (i=0; i<nErings; i++) {
-Rprintf("nErings: %d, i: %d\n", nErings, i);
             Pol = rgeos_Polygons_i_2Polygon(pls, VECTOR_ELT(comm, i));
             geoms[i] = Pol;
         }
@@ -81,8 +82,6 @@ GEOSGeom rgeos_Polygons_i_2Polygon(SEXP pls, SEXP vec) {
 
     i = INTEGER_POINTER(vec)[0]-R_OFFSET;
 
-Rprintf("i: %d, n: %d\n", i, n);
-
     mat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
     dim = getAttrib(mat, R_DimSymbol);
     pol = rgeos_crdMat2LinearRing(mat, dim);
@@ -96,7 +95,6 @@ Rprintf("i: %d, n: %d\n", i, n);
         holes = (GEOSGeom *) R_alloc((size_t) (n-1), sizeof(GEOSGeom));
         for (j=1; j<n; j++) {
             i = INTEGER_POINTER(vec)[j]-R_OFFSET;
-Rprintf("ji: %d\n", i);
             mat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
             dim = getAttrib(mat, R_DimSymbol);
             hole = rgeos_crdMat2LinearRing(mat, dim);
@@ -111,7 +109,7 @@ Rprintf("ji: %d\n", i);
     return(res);
 }
 
-SEXP rgeos_PolygonsContain(SEXP obj, SEXP comm) {
+SEXP rgeos_PolygonsContain(SEXP obj) {
 
     SEXP ans, dim;
     int pc=0;
@@ -120,7 +118,7 @@ SEXP rgeos_PolygonsContain(SEXP obj, SEXP comm) {
 
     GEOSGeom GC, Pi, Pj;
 
-    GC = rgeos_Polygons2GC(obj, comm);
+    GC = rgeos_Polygons2GC(obj);
 
     if (!((int) GEOSisValid(GC))) {
         n = (unsigned int) GEOSGetNumGeometries(GC);
@@ -327,5 +325,74 @@ SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom) {
 
 GEOSGeom rgeos_SpatialPolygonsGC(SEXP obj) {
 
+}
+
+SEXP comment2comm(SEXP obj) {
+    SEXP ans, comment, comm;
+    int pc=0, ns, i, j, jj, k;
+    char buf[BUFSIZE], s[15];
+    int *c, *nss, *co, *coo;
+
+    PROTECT(comment = getAttrib(obj, install("comment"))); pc++;
+    if (comment == R_NilValue) {
+        UNPROTECT(pc);
+        return(R_NilValue);
+    }
+    strcpy(buf, CHAR(STRING_ELT(comment, 0)));
+    ns = i = 0;
+    while (buf[i] != '\0') {
+        if (buf[i] == ' ') ns++;
+        ++i;
+    }
+    k = (int) strlen(buf);
+   
+    nss = (int *) R_alloc((size_t) (ns+1), sizeof(int));
+    c = (int *) R_alloc((size_t) (ns+1), sizeof(int));
+    i = j = 0;
+    while (buf[i] != '\0') {
+        if (buf[i] == ' ') {
+            nss[j] = i; ++j;
+        }
+        ++i;
+    }
+    nss[(ns)] = k;
+       
+    strncpy(s, &buf[0], (size_t) nss[0]);
+    c[0] = atoi(s);
+    for (i=0; i<ns; i++) {
+        k = nss[(i+1)]-(nss[i]+1);
+        strncpy(s, &buf[(nss[i]+1)], (size_t) k);
+        s[k] = '\0';
+        c[i+1] = atoi(s);
+    }
+
+    for (i=0, k=0; i<(ns+1); i++) if (c[i] == 0) k++;
+    
+    PROTECT(ans = NEW_LIST((k))); pc++;
+    co = (int *) R_alloc((size_t) k, sizeof(int));
+    coo = (int *) R_alloc((size_t) k, sizeof(int));
+    for (i=0; i<k; i++) co[i] = 1;
+
+    for (i=0, j=0; i<(ns+1); i++)
+        if (c[i] == 0) coo[j++] = i + R_OFFSET;
+
+    for (i=0; i<k; i++)
+        for (j=0; j<(ns+1); j++)
+            if ((c[j]) == coo[i]) co[i]++;
+
+    for (i=0; i<k; i++) SET_VECTOR_ELT(ans, i, NEW_INTEGER(co[i]));
+
+    for (i=0; i<k; i++) {
+        jj = 0;
+        INTEGER_POINTER(VECTOR_ELT(ans, i))[jj++] = coo[i];
+        if (co[i] > 1) {
+            for (j=0; j<(ns+1); j++)
+                if (c[j] == coo[i])
+                    INTEGER_POINTER(VECTOR_ELT(ans, i))[jj++] = j + R_OFFSET;
+        }
+    }
+
+    UNPROTECT(pc);
+    return(ans);
 }
 

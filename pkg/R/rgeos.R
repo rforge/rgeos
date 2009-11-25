@@ -1,12 +1,7 @@
 checkPolygonsGEOS <- function(obj) {
     if (!is(obj, "Polygons")) 
         stop("not a Polygons object")
-    comm <- comment(obj)
-    if (!is.null(comm)) {
-        comm <- as.integer(unlist(strsplit(comment(obj), " ")))
-        comm <- lapply(which(comm == 0), function(y) c(y, which(comm == y)))
-    }
-    lmat <- .Call("rgeos_PolygonsContain", obj, comm)
+    lmat <- .Call("rgeos_PolygonsContain", obj)
     if (is.null(lmat)) return(obj)
     if (sum(lmat %*% lmat) > 0) {
         o <- 1
@@ -23,7 +18,11 @@ checkPolygonsGEOS <- function(obj) {
         for (i in seq(along=containers)) {
             isn <- which(lmat[containers[i],] > 0)
             if (any(colSums(l[[2]])[isn] > 0)) {
-                Ers <- isn[which(rlmat[isn] %% 2 == 0)]
+                if (o %% 2 == 0) {
+                    Ers <- isn[which(rlmat[isn] %% 2 != 0)]
+                } else {
+                    Ers <- isn[which(rlmat[isn] %% 2 == 0)]
+                }
                 lmat1[, Ers] <- FALSE
             }
         }
@@ -47,3 +46,9 @@ checkPolygonsGEOS <- function(obj) {
     return(obj)
 }
 
+comment2comm <- function(str) {
+    if (is.null(str)) return(str)
+    res <- as.integer(unlist(strsplit(str, " ")))
+    res <- lapply(which(res == 0), function(y) c(y, which(res == y)))
+    res
+}
