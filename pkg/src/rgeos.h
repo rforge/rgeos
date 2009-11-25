@@ -29,7 +29,7 @@ GEOSGeom rgeos_Polygons2GC(SEXP obj);
 
 GEOSGeom rgeos_Polygons_i_2Polygon(SEXP pls, SEXP vec);
 
-SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom);
+SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs);
 
 SEXP rgeos_PolygonsContain(SEXP obj);
 
@@ -54,4 +54,8 @@ SEXP rgeos_MP2crdMat(GEOSGeom GC);
 SEXP rgeos_Geom2bbox(GEOSGeom Geom);
 
 SEXP comment2comm(SEXP obj);
+
+SEXP rgeos_GCPolygons(GEOSGeom Geom, SEXP ID);
+
+SEXP rgeos_GCPolygon(GEOSGeom Geom);
 
