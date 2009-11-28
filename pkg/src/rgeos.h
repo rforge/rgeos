@@ -47,7 +47,7 @@ SEXP rgeos_DistNpts1pt(SEXP mat, SEXP dim, SEXP x2, SEXP y2);
 
 SEXP rgeos_Dist1LR1pt(SEXP mat, SEXP dim, SEXP x, SEXP y);
 
-SEXP rgeos_CoordSeq2crdMat(GEOSCoordSeq s, int HasZ);
+SEXP rgeos_CoordSeq2crdMat(GEOSCoordSeq s, int HasZ, int rev);
 
 SEXP rgeos_MP2crdMat(GEOSGeom GC);
 
@@ -57,5 +57,9 @@ SEXP comment2comm(SEXP obj);
 
 SEXP rgeos_GCPolygons(GEOSGeom Geom, SEXP ID);
 
-SEXP rgeos_GCPolygon(GEOSGeom Geom);
+SEXP rgeos_LinearRingPolygon(GEOSGeom lr, int hole);
+
+void rgeos_spRFindCG( int *n, double *x, double *y, double *area );
+
+void rgeos_csArea(GEOSCoordSeq s, double *area);
 

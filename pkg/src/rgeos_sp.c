@@ -262,7 +262,7 @@ SEXP rgeos_Geom2bbox(GEOSGeom Geom) {
         return(R_NilValue);
     }
     
-    bbmat = rgeos_CoordSeq2crdMat(s, (int) GEOSHasZ(bb)); 
+    bbmat = rgeos_CoordSeq2crdMat(s, (int) GEOSHasZ(bb), FALSE); 
     for (i=0; i<n; i++) {
        if (NUMERIC_POINTER(bbmat)[i] > UX) UX = NUMERIC_POINTER(bbmat)[i];
        if (NUMERIC_POINTER(bbmat)[i+n] > UY) UY = NUMERIC_POINTER(bbmat)[i+n];
@@ -302,13 +302,13 @@ SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance) {
     PROTECT(pls = GET_SLOT(obj, install("polygons"))); pc++;
     npls = length(pls);
     PROTECT(IDs = NEW_CHARACTER(npls)); pc++;
-/*    for (i=0; i<npls; i++) {
-        SET_STRING_ELT(IDs, i, GET_SLOT(VECTOR_ELT(pls, i), install("ID")));
-    }*/
+    for (i=0; i<npls; i++) {
+        SET_STRING_ELT(IDs, i, STRING_ELT(GET_SLOT(VECTOR_ELT(pls, i),
+            install("ID")), 0));
+    }
 
     in = rgeos_SpatialPolygonsGC(obj);
 
-Rprintf("n_geoms: %d\n", GEOSGetNumGeometries(in));
     if ((out = (GEOSGeometry *) GEOSTopologyPreserveSimplify(in, tol))
         == NULL) {
             GEOSGeom_destroy(in);
@@ -317,30 +317,56 @@ Rprintf("n_geoms: %d\n", GEOSGetNumGeometries(in));
 
     PROTECT(ans = rgeos_GCSpatialPolygons(out, p4s, IDs)); pc++;
     GEOSGeom_destroy(in);
-    GEOSGeom_destroy(out);
-Rprintf("completed\n");
+
     UNPROTECT(pc);
     return(ans);
 }
 
 SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs) {
-    SEXP ans, pls;
+    SEXP ans, pls, ID, bbox, plotOrder;
     int pc=0, ng, i;
-    GEOSGeom GC;
+    GEOSGeom GC, bb;
+    int *po;
+    double *areas;
+    GEOSGeom *envs;
 
     ng = GEOSGetNumGeometries(Geom);
+    envs = (GEOSGeom *) R_alloc((size_t) ng, sizeof(GEOSGeom));
 
     PROTECT(pls = NEW_LIST(ng)); pc++;
+    PROTECT(ID = NEW_CHARACTER(1)); pc++;
     for (i=0; i<ng; i++) {
         GC = (GEOSGeometry *) GEOSGetGeometryN(Geom, i);
-/*Rprintf("type[%d]: %s\n", i, GEOSGeomType(GC));*/
-        SET_VECTOR_ELT(pls, i, rgeos_GCPolygons(GC, STRING_ELT(IDs, i)));
+        if ((bb = GEOSEnvelope(GC)) == NULL) {
+            error("rgeos_GCSpatialPolygons bbox failure");
+        }
+        envs[i] = bb;
+        SET_STRING_ELT(ID, 0, STRING_ELT(IDs, i));
+        SET_VECTOR_ELT(pls, i, rgeos_GCPolygons(GC, ID));
+    }
+    if ((GC = GEOSGeom_createCollection(GEOS_MULTIPOLYGON, envs,
+        ng)) == NULL) {
+        error("rgeos_GCSpatialPolygons: collection not created");
     }
 
-    PROTECT(ans = NEW_LIST(2)); pc++;
-    SET_VECTOR_ELT(ans, 0, pls);
-/*    INTEGER_POINTER(VECTOR_ELT(ans, 0))[0] = ng;*/
-    SET_VECTOR_ELT(ans, 1, rgeos_Geom2bbox(Geom));
+    areas = (double *) R_alloc((size_t) ng, sizeof(double));
+    for (i=0; i<ng; i++) 
+        areas[i] = NUMERIC_POINTER(GET_SLOT(VECTOR_ELT(pls, i),
+            install("area")))[0]; 
+    po = (int *) R_alloc((size_t) ng, sizeof(int));
+    for (i=0; i<ng; i++) po[i] = i+1;
+    revsort(areas, po, ng);
+
+    PROTECT(ans = NEW_OBJECT(MAKE_CLASS("SpatialPolygons"))); pc++;
+    SET_SLOT(ans, install("polygons"), pls);
+    SET_SLOT(ans, install("proj4string"), p4s);
+
+    PROTECT(plotOrder = NEW_INTEGER(ng)); pc++;
+    for (i=0; i<ng; i++) INTEGER_POINTER(plotOrder)[i] = po[i];
+    SET_SLOT(ans, install("plotOrder"), plotOrder);
+
+    PROTECT(bbox = rgeos_Geom2bbox(GC)); pc++;
+    SET_SLOT(ans, install("bbox"), bbox);
 
     UNPROTECT(pc);
     return(ans);
@@ -348,13 +374,32 @@ SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs) {
 }
 
 SEXP rgeos_GCPolygons(GEOSGeom Geom, SEXP ID) {
-    SEXP ans, pls;
-    int pc=0, ng, i, nps=0;
-    GEOSGeom GC;
+    SEXP ans, pls, comment, Area, plotOrder, labpt;
+    int pc=0, ng, i, j, k, kk, nps=0, nirs;
+    int *comm, *po;
+    GEOSGeom GC, lr;
+    char buf[BUFSIZE], cbuf[15];
+    double *areas;
 
     if (GEOSGeomTypeId(Geom) == GEOS_POLYGON) {
         nps = GEOSGetNumInteriorRings(Geom) + 1;
         PROTECT(pls = NEW_LIST(nps)); pc++;
+
+        if ((lr = (GEOSGeometry *) GEOSGetExteriorRing(Geom)) == NULL)
+            error("rgeos_GCPolygons: exterior ring failure");
+        comm = (int *) R_alloc((size_t) nps, sizeof(int));
+
+        SET_VECTOR_ELT(pls, 0, rgeos_LinearRingPolygon(lr, FALSE));
+
+        comm[k] = 0;
+
+        for (i=1; i<nps; i++) {
+            if ((lr = (GEOSGeometry *) GEOSGetInteriorRingN(Geom, (int) (i-1)))
+                 == NULL)
+                    error("rgeos_GCPolygons: interior ring failure");
+            comm[i] = 1;
+            SET_VECTOR_ELT(pls, i, rgeos_LinearRingPolygon(lr, TRUE));
+        }
 
     } else if (GEOSGeomTypeId(Geom) == GEOS_MULTIPOLYGON) {
 
@@ -365,17 +410,107 @@ SEXP rgeos_GCPolygons(GEOSGeom Geom, SEXP ID) {
             nps = nps + (GEOSGetNumInteriorRings(GC) + 1);
         }
         PROTECT(pls = NEW_LIST(nps)); pc++;
+        comm = (int *) R_alloc((size_t) nps, sizeof(int));
 
+        k = 0;
+        for (i=0; i<ng; i++) {
+            GC = (GEOSGeometry *) GEOSGetGeometryN(Geom, i);
+            if ((lr = (GEOSGeometry *) GEOSGetExteriorRing(GC)) == NULL)
+                error("rgeos_GCPolygons: exterior ring failure");
+            comm[k] = 0;
+            kk = k + R_OFFSET;
+            SET_VECTOR_ELT(pls, k, rgeos_LinearRingPolygon(lr, FALSE));
+            k++;
+            nirs = GEOSGetNumInteriorRings(GC);
+            for (j=0; j<nirs; j++) {
+                comm[k] = kk;
+                if ((lr = (GEOSGeometry *) GEOSGetInteriorRingN(GC, 
+                    (int) (j))) == NULL)
+                        error("rgeos_GCPolygons: interior ring failure");
+                SET_VECTOR_ELT(pls, k, rgeos_LinearRingPolygon(lr, TRUE));
+                k++;
+            }
+        }
     }
-    PROTECT(ans = NEW_INTEGER(1)); pc++;
-    INTEGER_POINTER(ans)[0] = nps;
+    sprintf(buf, "%d", comm[0]);
+    for (i=1; i<nps; i++) {
+        sprintf(cbuf, " %d", comm[i]);
+        strcat(buf, cbuf);
+    }
+    PROTECT(comment = NEW_CHARACTER(1)); pc++;
+    SET_STRING_ELT(comment, 0, COPY_TO_USER_STRING(buf));
+
+    areas = (double *) R_alloc((size_t) nps, sizeof(double));
+    for (i=0; i<nps; i++) 
+        areas[i] = NUMERIC_POINTER(GET_SLOT(VECTOR_ELT(pls, i),
+            install("area")))[0]; 
+    po = (int *) R_alloc((size_t) nps, sizeof(int));
+    for (i=0; i<nps; i++) po[i] = i+1;
+    revsort(areas, po, nps);
+
+    PROTECT(ans = NEW_OBJECT(MAKE_CLASS("Polygons"))); pc++;
+    SET_SLOT(ans, install("Polygons"), pls);
+    SET_SLOT(ans, install("ID"), ID);
+    setAttrib(ans, install("comment"), comment);
+
+    PROTECT(Area = NEW_NUMERIC(1)); pc++;
+    for (i=0; i<nps; i++) NUMERIC_POINTER(Area)[0] += fabs(areas[i]);
+    SET_SLOT(ans, install("area"), Area);
+
+    PROTECT(plotOrder = NEW_INTEGER(nps)); pc++;
+    for (i=0; i<nps; i++) INTEGER_POINTER(plotOrder)[i] = po[i];
+    SET_SLOT(ans, install("plotOrder"), plotOrder);
+
+    PROTECT(labpt = NEW_NUMERIC(2)); pc++;
+    NUMERIC_POINTER(labpt)[0] = NUMERIC_POINTER(GET_SLOT(VECTOR_ELT(pls,
+        (po[0]-1)), install("labpt")))[0];
+    NUMERIC_POINTER(labpt)[1] = NUMERIC_POINTER(GET_SLOT(VECTOR_ELT(pls,
+        (po[0]-1)), install("labpt")))[1];
+    SET_SLOT(ans, install("labpt"), labpt);
 
     GEOSGeom_destroy(GC);
     UNPROTECT(pc);
     return(ans);
 }
 
-SEXP rgeos_GCPolygon(GEOSGeom Geom) {
+SEXP rgeos_LinearRingPolygon(GEOSGeom lr, int hole) {
+    SEXP SPans, ans, labpt, Area, Hole, ringDir;
+    double area[3];
+    int pc=0, rev=FALSE;
+    GEOSCoordSeq s;
+
+    if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq(lr)) == NULL)
+        error("rgeos_lrArea: CoordSeq failure");
+
+    rgeos_csArea(s, area);
+    PROTECT(ringDir = NEW_INTEGER(1)); pc++;
+    PROTECT(Hole = NEW_LOGICAL(1)); pc++;
+    LOGICAL_POINTER(Hole)[0] = hole;
+    INTEGER_POINTER(ringDir)[0] = (area[2] > 0.0) ? -1 : 1;
+    if (LOGICAL_POINTER(Hole)[0] && INTEGER_POINTER(ringDir)[0] == 1) {
+        rev = TRUE;
+        INTEGER_POINTER(ringDir)[0] = -1;
+    }
+    
+    PROTECT(SPans = NEW_OBJECT(MAKE_CLASS("Polygon"))); pc++;
+
+    PROTECT(ans = rgeos_CoordSeq2crdMat(s, FALSE, rev)); pc++;
+    SET_SLOT(SPans, install("coords"), ans);
+
+    PROTECT(labpt = NEW_NUMERIC(2)); pc++;
+    NUMERIC_POINTER(labpt)[0] = area[0];
+    NUMERIC_POINTER(labpt)[1] = area[1];
+    SET_SLOT(SPans, install("labpt"), labpt);
+
+    PROTECT(Area = NEW_NUMERIC(1)); pc++;
+    NUMERIC_POINTER(Area)[0] = fabs(area[2]);
+    SET_SLOT(SPans, install("area"), Area);
+
+    SET_SLOT(SPans, install("hole"), Hole);
+    SET_SLOT(SPans, install("ringDir"), ringDir);
+
+    UNPROTECT(pc);
+    return(SPans);
 
 }
 

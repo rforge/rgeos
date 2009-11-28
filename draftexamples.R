@@ -55,6 +55,7 @@ zz <- checkPolygonsGEOS(Pls)
 zzz <- checkPolygonsGEOS(zz)
 
 
+.Call("rgeos_SpatialPolygonsSimplify", SpatialPolygons(list(zz)), 0.1)
 
 #lmat <- .Call("rgeos_PolygonsContain", Pls, NULL)
 

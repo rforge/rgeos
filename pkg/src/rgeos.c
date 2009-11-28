@@ -177,9 +177,9 @@ GEOSGeom rgeos_Geom2Env(GEOSGeom Geom) {
 }
 
 
-SEXP rgeos_CoordSeq2crdMat(GEOSCoordSeq s, int HasZ) {
+SEXP rgeos_CoordSeq2crdMat(GEOSCoordSeq s, int HasZ, int rev) {
 
-    int pc=0, i, n, m;
+    int pc=0, i, n, m, ii;
     double val;
 
     if (GEOSCoordSeq_getSize(s, &n) == 0)
@@ -196,23 +196,49 @@ SEXP rgeos_CoordSeq2crdMat(GEOSCoordSeq s, int HasZ) {
     INTEGER_POINTER(dims)[1] = 2;
 
     for (i=0; i<n; i++){
+        ii = (rev) ? (n-1)-i : i;
         if (GEOSCoordSeq_getX(s, (unsigned int) i, &val) == 0) {
             return(R_NilValue);
         }    
 
-        NUMERIC_POINTER(ans)[i] = val;
+        NUMERIC_POINTER(ans)[ii] = val;
 
         if (GEOSCoordSeq_getY(s, (unsigned int) i, &val) == 0) {
             return(R_NilValue);
         }
 
-        NUMERIC_POINTER(ans)[i+n] = val;
+        NUMERIC_POINTER(ans)[ii+n] = val;
     }
 
     setAttrib(ans, R_DimSymbol, dims);
     UNPROTECT(pc);
     return(ans);
 
+}
+
+void rgeos_csArea(GEOSCoordSeq s, double *area) {
+    double val;
+    int i, n;
+    double *x, *y;
+
+    if (GEOSCoordSeq_getSize(s, &n) == 0)
+        error("rgeos_lrArea: size failure");
+    x = (double *) R_alloc((size_t) n, sizeof(double));
+    y = (double *) R_alloc((size_t) n, sizeof(double));
+    for (i=0; i<n; i++) {
+        if (GEOSCoordSeq_getX(s, (unsigned int) i, &val) == 0) {
+            error("rgeos_lrArea: x failure");
+        }    
+        x[i] = val;
+        if (GEOSCoordSeq_getY(s, (unsigned int) i, &val) == 0) {
+            error("rgeos_lrArea: y failure");
+        }
+        y[i] = val;
+    }
+
+    rgeos_spRFindCG(&n, x, y, area);
+
+    return;
 }
 
 
