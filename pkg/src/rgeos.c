@@ -150,6 +150,13 @@ GEOSGeom rgeos_crdMat2LinearRing(SEXP mat, SEXP dim) {
         GEOSGeom_destroy(gl);
         error("rgeos_crdMat2LinearRing: linearRing not created");
     }
+    if ((int) GEOSisValid(gl) == 1) {
+        if (GEOSNormalize(gl) == -1)
+            warning("rgeos_crdMat2LinearRing: normalization failure");
+    } else {
+        warning("rgeos_crdMat2LinearRing: validity failure");
+    }
+
     return(gl);
 }
 

@@ -29,7 +29,9 @@ GEOSGeom rgeos_Polygons2GC(SEXP obj);
 
 GEOSGeom rgeos_Polygons_i_2Polygon(SEXP pls, SEXP vec);
 
-SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs);
+SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh);
+
+SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance, SEXP thresh);
 
 SEXP rgeos_PolygonsContain(SEXP obj);
 
@@ -55,7 +57,7 @@ SEXP rgeos_Geom2bbox(GEOSGeom Geom);
 
 SEXP comment2comm(SEXP obj);
 
-SEXP rgeos_GCPolygons(GEOSGeom Geom, SEXP ID);
+SEXP rgeos_GCPolygons(GEOSGeom Geom, SEXP ID, SEXP thresh);
 
 SEXP rgeos_LinearRingPolygon(GEOSGeom lr, int hole);
 

@@ -291,7 +291,7 @@ SEXP rgeos_Geom2bbox(GEOSGeom Geom) {
     return(ans);
 }
 
-SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance) {
+SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance, SEXP thresh) {
 
     double tol=NUMERIC_POINTER(tolerance)[0];
     GEOSGeom in, out;
@@ -315,14 +315,14 @@ SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance) {
             return(R_NilValue);
     }
 
-    PROTECT(ans = rgeos_GCSpatialPolygons(out, p4s, IDs)); pc++;
+    PROTECT(ans = rgeos_GCSpatialPolygons(out, p4s, IDs, thresh)); pc++;
     GEOSGeom_destroy(in);
 
     UNPROTECT(pc);
     return(ans);
 }
 
-SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs) {
+SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh) {
     SEXP ans, pls, ID, bbox, plotOrder;
     int pc=0, ng, i;
     GEOSGeom GC, bb;
@@ -333,6 +333,9 @@ SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs) {
     ng = GEOSGetNumGeometries(Geom);
     envs = (GEOSGeom *) R_alloc((size_t) ng, sizeof(GEOSGeom));
 
+Rprintf("%s ", CHAR(STRING_ELT(IDs, 0)));
+Rprintf("\n");
+
     PROTECT(pls = NEW_LIST(ng)); pc++;
     PROTECT(ID = NEW_CHARACTER(1)); pc++;
     for (i=0; i<ng; i++) {
@@ -342,12 +345,15 @@ SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs) {
         }
         envs[i] = bb;
         SET_STRING_ELT(ID, 0, STRING_ELT(IDs, i));
-        SET_VECTOR_ELT(pls, i, rgeos_GCPolygons(GC, ID));
+        SET_VECTOR_ELT(pls, i, rgeos_GCPolygons(GC, ID, thresh));
+Rprintf("%s ", CHAR(STRING_ELT(ID, 0)));
     }
+Rprintf("\n%s\n", CHAR(STRING_ELT(GET_SLOT(VECTOR_ELT(pls, 0), install("ID")), 0)));
     if ((GC = GEOSGeom_createCollection(GEOS_MULTIPOLYGON, envs,
         ng)) == NULL) {
         error("rgeos_GCSpatialPolygons: collection not created");
     }
+
 
     areas = (double *) R_alloc((size_t) ng, sizeof(double));
     for (i=0; i<ng; i++) 
@@ -356,6 +362,8 @@ SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs) {
     po = (int *) R_alloc((size_t) ng, sizeof(int));
     for (i=0; i<ng; i++) po[i] = i+1;
     revsort(areas, po, ng);
+
+Rprintf("%s\n", CHAR(STRING_ELT(GET_SLOT(VECTOR_ELT(pls, 0), install("ID")), 0)));
 
     PROTECT(ans = NEW_OBJECT(MAKE_CLASS("SpatialPolygons"))); pc++;
     SET_SLOT(ans, install("polygons"), pls);
@@ -368,30 +376,32 @@ SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs) {
     PROTECT(bbox = rgeos_Geom2bbox(GC)); pc++;
     SET_SLOT(ans, install("bbox"), bbox);
 
+    GEOSGeom_destroy(bb);
+
     UNPROTECT(pc);
     return(ans);
 
 }
 
-SEXP rgeos_GCPolygons(GEOSGeom Geom, SEXP ID) {
+SEXP rgeos_GCPolygons(GEOSGeom Geom, SEXP ID, SEXP thresh) {
     SEXP ans, pls, comment, Area, plotOrder, labpt;
     int pc=0, ng, i, j, k, kk, nps=0, nirs;
-    int *comm, *po;
+    int *comm, *po, *idareas, *keep;
     GEOSGeom GC, lr;
     char buf[BUFSIZE], cbuf[15];
-    double *areas;
+    double *areas, *dareas, area;
 
     if (GEOSGeomTypeId(Geom) == GEOS_POLYGON) {
         nps = GEOSGetNumInteriorRings(Geom) + 1;
         PROTECT(pls = NEW_LIST(nps)); pc++;
 
-        if ((lr = (GEOSGeometry *) GEOSGetExteriorRing(Geom)) == NULL)
+        if ((GC = (GEOSGeometry *) GEOSGetExteriorRing(Geom)) == NULL)
             error("rgeos_GCPolygons: exterior ring failure");
         comm = (int *) R_alloc((size_t) nps, sizeof(int));
 
-        SET_VECTOR_ELT(pls, 0, rgeos_LinearRingPolygon(lr, FALSE));
+        SET_VECTOR_ELT(pls, 0, rgeos_LinearRingPolygon(GC, FALSE));
 
-        comm[k] = 0;
+        comm[0] = 0;
 
         for (i=1; i<nps; i++) {
             if ((lr = (GEOSGeometry *) GEOSGetInteriorRingN(Geom, (int) (i-1)))
@@ -405,30 +415,54 @@ SEXP rgeos_GCPolygons(GEOSGeom Geom, SEXP ID) {
 
         ng = GEOSGetNumGeometries(Geom);
 
+        keep = (int *) R_alloc((size_t) ng, sizeof(int));
+        for (i=0; i<ng; i++) keep[i] = TRUE;
+
+        if (NUMERIC_POINTER(thresh)[0] > 0.0) {
+            dareas = (double *) R_alloc((size_t) ng, sizeof(double));
+            idareas = (int *) R_alloc((size_t) ng, sizeof(int));
+
+            for (i=0; i<ng; i++) {
+                GEOSArea((GEOSGeometry *) GEOSGetGeometryN(Geom, i), &area);
+                if (area < NUMERIC_POINTER(thresh)[0]) keep[i] = FALSE;
+                dareas[i] = area;
+                idareas[i] = i;
+            }
+            for (i=0, k=0; i<ng; i++) k += keep[i];
+            if (k == 0) {
+                revsort(dareas, idareas, ng);
+                keep[idareas[0]] = TRUE;
+            }
+        }
+
         for (i=0; i<ng; i++) {
-            GC = (GEOSGeometry *) GEOSGetGeometryN(Geom, i);
-            nps = nps + (GEOSGetNumInteriorRings(GC) + 1);
+            if (keep[i]) {
+                GC = (GEOSGeometry *) GEOSGetGeometryN(Geom, i);
+                nps = nps + (GEOSGetNumInteriorRings(GC) + 1);
+            }
         }
         PROTECT(pls = NEW_LIST(nps)); pc++;
         comm = (int *) R_alloc((size_t) nps, sizeof(int));
 
         k = 0;
         for (i=0; i<ng; i++) {
-            GC = (GEOSGeometry *) GEOSGetGeometryN(Geom, i);
-            if ((lr = (GEOSGeometry *) GEOSGetExteriorRing(GC)) == NULL)
-                error("rgeos_GCPolygons: exterior ring failure");
-            comm[k] = 0;
-            kk = k + R_OFFSET;
-            SET_VECTOR_ELT(pls, k, rgeos_LinearRingPolygon(lr, FALSE));
-            k++;
-            nirs = GEOSGetNumInteriorRings(GC);
-            for (j=0; j<nirs; j++) {
-                comm[k] = kk;
-                if ((lr = (GEOSGeometry *) GEOSGetInteriorRingN(GC, 
-                    (int) (j))) == NULL)
-                        error("rgeos_GCPolygons: interior ring failure");
-                SET_VECTOR_ELT(pls, k, rgeos_LinearRingPolygon(lr, TRUE));
+            if (keep[i]) {
+                GC = (GEOSGeometry *) GEOSGetGeometryN(Geom, i);
+                if ((lr = (GEOSGeometry *) GEOSGetExteriorRing(GC)) == NULL)
+                    error("rgeos_GCPolygons: exterior ring failure");
+                comm[k] = 0;
+                kk = k + R_OFFSET;
+                SET_VECTOR_ELT(pls, k, rgeos_LinearRingPolygon(lr, FALSE));
                 k++;
+                nirs = GEOSGetNumInteriorRings(GC);
+                for (j=0; j<nirs; j++) {
+                    comm[k] = kk;
+                    if ((lr = (GEOSGeometry *) GEOSGetInteriorRingN(GC, 
+                        (int) (j))) == NULL)
+                            error("rgeos_GCPolygons: interior ring failure");
+                    SET_VECTOR_ELT(pls, k, rgeos_LinearRingPolygon(lr, TRUE));
+                    k++;
+                }
             }
         }
     }

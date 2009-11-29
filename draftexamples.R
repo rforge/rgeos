@@ -54,8 +54,27 @@ source("../R/rgeos.R")
 zz <- checkPolygonsGEOS(Pls)
 zzz <- checkPolygonsGEOS(zz)
 
+library(rgdal)
+source("../R/rgeos.R")
+gf <- readOGR(".", "gfrance1")
+zz <- lapply(slot(gf, "polygons"), function(x) checkPolygonsGEOS(x))
+slot(gf, "polygons") <- zz
+oo <- .Call("rgeos_SpatialPolygonsSimplify", gf, 5000, 500000)
 
-.Call("rgeos_SpatialPolygonsSimplify", SpatialPolygons(list(zz)), 0.1)
+
+
+.Call("rgeos_SpatialPolygonsSimplify", SpatialPolygons(list(zz)), 0.1, 0.0)
+
+library(maptools)
+data(wrld_simpl)
+zz <- lapply(slot(wrld_simpl, "polygons"), function(x) checkPolygonsGEOS(x))
+slot(wrld_simpl, "polygons") <- zz
+
+oo <- .Call("rgeos_SpatialPolygonsSimplify", wrld_simpl, 0.1)
+# wham
+    at rgeos_sp.c:394
+394             comm[k] = 0;
+
 
 #lmat <- .Call("rgeos_PolygonsContain", Pls, NULL)
 
