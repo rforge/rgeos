@@ -57,7 +57,7 @@ SEXP rgeos_Geom2bbox(GEOSGeom Geom);
 
 SEXP comment2comm(SEXP obj);
 
-SEXP rgeos_GCPolygons(GEOSGeom Geom, SEXP ID, SEXP thresh);
+SEXP rgeos_GCPolygons(GEOSGeom Geom, char *buf, SEXP thresh);
 
 SEXP rgeos_LinearRingPolygon(GEOSGeom lr, int hole);
 

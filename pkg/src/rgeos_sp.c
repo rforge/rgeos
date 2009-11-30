@@ -323,37 +323,31 @@ SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance, SEXP thresh) {
 }
 
 SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh) {
-    SEXP ans, pls, ID, bbox, plotOrder;
+    SEXP ans, pls, bbox, plotOrder;
     int pc=0, ng, i;
     GEOSGeom GC, bb;
     int *po;
     double *areas;
     GEOSGeom *envs;
+    char ibuf[BUFSIZ];
 
     ng = GEOSGetNumGeometries(Geom);
     envs = (GEOSGeom *) R_alloc((size_t) ng, sizeof(GEOSGeom));
 
-Rprintf("%s ", CHAR(STRING_ELT(IDs, 0)));
-Rprintf("\n");
-
     PROTECT(pls = NEW_LIST(ng)); pc++;
-    PROTECT(ID = NEW_CHARACTER(1)); pc++;
     for (i=0; i<ng; i++) {
         GC = (GEOSGeometry *) GEOSGetGeometryN(Geom, i);
         if ((bb = GEOSEnvelope(GC)) == NULL) {
             error("rgeos_GCSpatialPolygons bbox failure");
         }
         envs[i] = bb;
-        SET_STRING_ELT(ID, 0, STRING_ELT(IDs, i));
-        SET_VECTOR_ELT(pls, i, rgeos_GCPolygons(GC, ID, thresh));
-Rprintf("%s ", CHAR(STRING_ELT(ID, 0)));
+        strcpy(ibuf, CHAR(STRING_ELT(IDs, i)));
+        SET_VECTOR_ELT(pls, i, rgeos_GCPolygons(GC, ibuf, thresh));
     }
-Rprintf("\n%s\n", CHAR(STRING_ELT(GET_SLOT(VECTOR_ELT(pls, 0), install("ID")), 0)));
     if ((GC = GEOSGeom_createCollection(GEOS_MULTIPOLYGON, envs,
         ng)) == NULL) {
         error("rgeos_GCSpatialPolygons: collection not created");
     }
-
 
     areas = (double *) R_alloc((size_t) ng, sizeof(double));
     for (i=0; i<ng; i++) 
@@ -363,7 +357,6 @@ Rprintf("\n%s\n", CHAR(STRING_ELT(GET_SLOT(VECTOR_ELT(pls, 0), install("ID")), 0
     for (i=0; i<ng; i++) po[i] = i+1;
     revsort(areas, po, ng);
 
-Rprintf("%s\n", CHAR(STRING_ELT(GET_SLOT(VECTOR_ELT(pls, 0), install("ID")), 0)));
 
     PROTECT(ans = NEW_OBJECT(MAKE_CLASS("SpatialPolygons"))); pc++;
     SET_SLOT(ans, install("polygons"), pls);
@@ -383,8 +376,8 @@ Rprintf("%s\n", CHAR(STRING_ELT(GET_SLOT(VECTOR_ELT(pls, 0), install("ID")), 0))
 
 }
 
-SEXP rgeos_GCPolygons(GEOSGeom Geom, SEXP ID, SEXP thresh) {
-    SEXP ans, pls, comment, Area, plotOrder, labpt;
+SEXP rgeos_GCPolygons(GEOSGeom Geom, char *ibuf, SEXP thresh) {
+    SEXP ans, pls, comment, Area, plotOrder, labpt, iID;
     int pc=0, ng, i, j, k, kk, nps=0, nirs;
     int *comm, *po, *idareas, *keep;
     GEOSGeom GC, lr;
@@ -484,8 +477,11 @@ SEXP rgeos_GCPolygons(GEOSGeom Geom, SEXP ID, SEXP thresh) {
 
     PROTECT(ans = NEW_OBJECT(MAKE_CLASS("Polygons"))); pc++;
     SET_SLOT(ans, install("Polygons"), pls);
-    SET_SLOT(ans, install("ID"), ID);
     setAttrib(ans, install("comment"), comment);
+
+    PROTECT(iID = NEW_CHARACTER(1)); pc++;
+    SET_STRING_ELT(iID, 0, COPY_TO_USER_STRING(ibuf));
+    SET_SLOT(ans, install("ID"), iID);
 
     PROTECT(Area = NEW_NUMERIC(1)); pc++;
     for (i=0; i<nps; i++) NUMERIC_POINTER(Area)[0] += fabs(areas[i]);
