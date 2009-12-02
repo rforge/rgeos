@@ -92,4 +92,29 @@ Iri <- which(lmat[Er1p[2],])
 colSums(lmat[,Iri])
 
 
+.Call("rgeos_finish")
+dyn.unload("rgeos.so")
+system("R CMD SHLIB *.c -lgeos_c")
+
+dyn.load("rgeos.so")
+.Call("rgeos_Init")
+source("../R/rgeos_union.R")
+source("../R/rgeos_simplify.R")
+source("../R/rgeos.R")
+
+
+library(maptools)
+xx <- readShapeSpatial(system.file("shapes/sids.shp", package="maptools")[1],
+IDvar="FIPSNO", proj4string=CRS("+proj=longlat +ellps=clrk66"))
+zz <- lapply(slot(xx, "polygons"), function(x) checkPolygonsGEOS(x))
+slot(xx, "polygons") <- zz
+lps <- coordinates(xx)
+ID <- cut(lps[,1], quantile(lps[,1]), include.lowest=TRUE)
+reg4 <- unionSpatialPolygons(xx, ID)
+plot(reg4)
+reg4a <- unionSpatialPolygonsGEOS(xx, ID)
+plot(reg4a)
+reg4b <- thinnedSpatialPolyGEOS(reg4a, 0.01)
+plot(reg4b)
+
 

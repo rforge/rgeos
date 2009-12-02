@@ -65,3 +65,7 @@ void rgeos_spRFindCG( int *n, double *x, double *y, double *area );
 
 void rgeos_csArea(GEOSCoordSeq s, double *area);
 
+SEXP rgeos_SpatialPolygonsUnion(SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh);
+
+GEOSGeom rgeos_plsUnion(SEXP ipls, SEXP igrp);
+

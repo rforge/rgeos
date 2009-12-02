@@ -242,7 +242,7 @@ SEXP rgeos_Geom2bbox(GEOSGeom Geom) {
     GEOSGeom bb, bbER;
     GEOSCoordSeq s;
     unsigned int i, n;
-    double UX=DBL_MIN, LX=DBL_MAX, UY=DBL_MIN, LY=DBL_MAX;
+    double UX=-DBL_MAX, LX=DBL_MAX, UY=-DBL_MAX, LY=DBL_MAX;
     SEXP bbmat, ans, dim, dimnames;
     int pc=0;
 
@@ -322,6 +322,78 @@ SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance, SEXP thresh) {
     return(ans);
 }
 
+SEXP rgeos_SpatialPolygonsUnion(SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh) {
+
+    GEOSGeom GC;
+    GEOSGeom *geoms;
+    int pc=0, ngrps, i;
+    SEXP ans, p4s, ipls;
+
+    ngrps = length(grps);
+    geoms = (GEOSGeom *) R_alloc((size_t) ngrps, sizeof(GEOSGeom));
+
+    PROTECT(p4s = GET_SLOT(obj, install("proj4string"))); pc++;
+    PROTECT(ipls = GET_SLOT(obj, install("polygons"))); pc++;
+
+    for (i=0; i<ngrps; i++) {
+        GC = rgeos_plsUnion(ipls, VECTOR_ELT(grps, i));
+        geoms[i] = GC;
+    }
+    
+    if ((GC = GEOSGeom_createCollection(GEOS_GEOMETRYCOLLECTION, geoms,
+        ngrps)) == NULL) {
+            error("rgeos_SpatialPolygonsUnion: collection not created");
+    }
+
+    PROTECT(ans = rgeos_GCSpatialPolygons(GC, p4s, grpIDs, thresh)); pc++;
+
+    UNPROTECT(pc);
+    return(ans);
+
+}
+
+GEOSGeom rgeos_plsUnion(SEXP ipls, SEXP igrp) {
+
+    GEOSGeom GC, iGC, oGC;
+    GEOSGeom *geoms, *ggeoms;
+    int npls, i, ii, j, nnpls;
+    int *ngeoms;
+    SEXP pl;
+
+    npls = length(igrp);
+    geoms = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
+    ngeoms = (int *) R_alloc((size_t) npls, sizeof(int));
+
+    for (i=0, nnpls=0; i<npls; i++) {
+        ii = INTEGER_POINTER(igrp)[i] - R_OFFSET;
+        pl = VECTOR_ELT(ipls, ii);
+        GC = rgeos_Polygons2GC(pl);
+        geoms[i] = GC;
+        ngeoms[i] = GEOSGetNumGeometries(GC);
+        nnpls += ngeoms[i];
+    }
+
+    ggeoms = (GEOSGeom *) R_alloc((size_t) nnpls, sizeof(GEOSGeom));
+    for(i=0, ii=0; i<npls; i++) {
+        GC = geoms[i];
+        for (j=0; j<ngeoms[i]; j++) {
+            ggeoms[ii] = (GEOSGeometry *) GEOSGetGeometryN(GC, j);
+            ii++;
+        }
+    }
+    
+    if ((iGC = GEOSGeom_createCollection(GEOS_MULTIPOLYGON, ggeoms,
+        nnpls)) == NULL) {
+            error("rgeos_plsUnion: collection not created");
+    }
+    if ((oGC = GEOSBuffer(iGC, 0.0, 100)) == NULL) {
+            error("rgeos_plsUnion: buffer not created");
+    }
+
+    return(oGC);
+
+}
+
 SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh) {
     SEXP ans, pls, bbox, plotOrder;
     int pc=0, ng, i;
@@ -354,7 +426,7 @@ SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh) {
         areas[i] = NUMERIC_POINTER(GET_SLOT(VECTOR_ELT(pls, i),
             install("area")))[0]; 
     po = (int *) R_alloc((size_t) ng, sizeof(int));
-    for (i=0; i<ng; i++) po[i] = i+1;
+    for (i=0; i<ng; i++) po[i] = i + R_OFFSET;
     revsort(areas, po, ng);
 
 
@@ -383,6 +455,7 @@ SEXP rgeos_GCPolygons(GEOSGeom Geom, char *ibuf, SEXP thresh) {
     GEOSGeom GC, lr;
     char buf[BUFSIZE], cbuf[15];
     double *areas, *dareas, area;
+
 
     if (GEOSGeomTypeId(Geom) == GEOS_POLYGON) {
         nps = GEOSGetNumInteriorRings(Geom) + 1;
@@ -472,7 +545,7 @@ SEXP rgeos_GCPolygons(GEOSGeom Geom, char *ibuf, SEXP thresh) {
         areas[i] = NUMERIC_POINTER(GET_SLOT(VECTOR_ELT(pls, i),
             install("area")))[0]; 
     po = (int *) R_alloc((size_t) nps, sizeof(int));
-    for (i=0; i<nps; i++) po[i] = i+1;
+    for (i=0; i<nps; i++) po[i] = i + R_OFFSET;
     revsort(areas, po, nps);
 
     PROTECT(ans = NEW_OBJECT(MAKE_CLASS("Polygons"))); pc++;

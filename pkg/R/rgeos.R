@@ -1,8 +1,24 @@
 checkPolygonsGEOS <- function(obj) {
     if (!is(obj, "Polygons")) 
         stop("not a Polygons object")
-    lmat <- .Call("rgeos_PolygonsContain", obj)
-    if (is.null(lmat)) return(obj)
+    lmat <- .Call("rgeos_PolygonsContain", obj, PACKAGE="rgeos")
+    if (is.null(lmat)) {
+        Pls <- slot(obj, "Polygons")
+        hls <- sapply(Pls, function(x) slot(x, "hole"))
+        if (any(hls)) {
+            for (i in 1:length(Pls)) {
+                if (hls[i]) {
+                    Pl <- Pls[[i]]
+                    crds <- slot(Pl, "coords")
+                    crds <- crds[nrow(crds):1,]
+                    Pls[[i]] <- Polygon(crds, hole=FALSE)
+                }
+            }
+            slot(obj, "Polygons") <- Pls
+        }
+        comment(obj) <- paste(rep(0, length(hls)), collapse=" ")
+        return(obj)
+    }
     if (sum(lmat %*% lmat) > 0) {
         o <- 1
         l <- list()
