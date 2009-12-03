@@ -1,0 +1,7 @@
+useDynLib(rgeos)
+
+import(methods)
+import(sp)
+
+export(thinnedSpatialPolyGEOS, checkPolygonsGEOS, unionSpatialPolygonsGEOS)
+

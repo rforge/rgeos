@@ -62,7 +62,7 @@ SEXP rgeos_PolCentroid(SEXP mat, SEXP dim) {
 
     SEXP ans;
     
-    ans = rgeos_CoordSeq2crdMat(s, (int) GEOSHasZ(ct));
+    ans = rgeos_CoordSeq2crdMat(s, (int) GEOSHasZ(ct), FALSE);
 
     GEOSGeom_destroy(gl);
     GEOSGeom_destroy(ct);
