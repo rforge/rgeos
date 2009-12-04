@@ -267,7 +267,7 @@ SEXP rgeos_Geom2bbox(GEOSGeom Geom) {
        if (NUMERIC_POINTER(bbmat)[i] > UX) UX = NUMERIC_POINTER(bbmat)[i];
        if (NUMERIC_POINTER(bbmat)[i+n] > UY) UY = NUMERIC_POINTER(bbmat)[i+n];
        if (NUMERIC_POINTER(bbmat)[i] < LX) LX = NUMERIC_POINTER(bbmat)[i];
-       if (NUMERIC_POINTER(bbmat)[i+n] < UY) LY = NUMERIC_POINTER(bbmat)[i+n];
+       if (NUMERIC_POINTER(bbmat)[i+n] < LY) LY = NUMERIC_POINTER(bbmat)[i+n];
     }
 
     PROTECT(ans = NEW_NUMERIC(4)); pc++;
@@ -593,6 +593,10 @@ SEXP rgeos_LinearRingPolygon(GEOSGeom lr, int hole) {
     if (LOGICAL_POINTER(Hole)[0] && INTEGER_POINTER(ringDir)[0] == 1) {
         rev = TRUE;
         INTEGER_POINTER(ringDir)[0] = -1;
+    }
+    if (!LOGICAL_POINTER(Hole)[0] && INTEGER_POINTER(ringDir)[0] == -1) {
+        rev = TRUE;
+        INTEGER_POINTER(ringDir)[0] = 1;
     }
     
     PROTECT(SPans = NEW_OBJECT(MAKE_CLASS("Polygon"))); pc++;
