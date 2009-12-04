@@ -1,3 +1,19 @@
+2009-12-04 09:10  rsbivand
+
+	* DESCRIPTION: small fixes from sp transition
+
+2009-12-04 09:08  rsbivand
+
+	* src/rgeos_sp.c: small fixes from sp transition
+
+2009-12-03 08:50  rsbivand
+
+	* svn2cl.xsl: first release
+
+2009-12-03 08:47  rsbivand
+
+	* ChangeLog, inst/ChangeLog: first release
+
 2009-12-03 08:47  rsbivand
 
 	* src/sp_rgeos.c: first release
