@@ -1,8 +1,9 @@
 Package: rgeos
 Title: Interface to Geometry Engine - Open Source (GEOS)
-Version: 0.0-2
-Date: 2009-12-04
+Version: 0.0-3
+Date: 2009-12-10
 Depends: R (>= 2.10.0), methods, sp
+LinkingTo: sp
 Suggests: maptools
 LazyLoad: yes
 Description: Interface to Geometry Engine - Open Source (GEOS) using the C API for topology operations on geometries. 

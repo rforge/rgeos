@@ -36,7 +36,7 @@ GEOSGeom rgeos_Polygons2GC(SEXP obj) {
     PROTECT(pls = GET_SLOT(obj, install("Polygons"))); pc++;
     npls = length(pls);
 
-    PROTECT(comm = comment2comm(obj)); pc++;
+    PROTECT(comm = SP_PREFIX(comment2comm)(obj)); pc++;
 
     if (comm == R_NilValue) {
 
@@ -453,8 +453,8 @@ SEXP rgeos_GCPolygons(GEOSGeom Geom, char *ibuf, SEXP thresh) {
     int pc=0, ng, i, j, k, kk, nps=0, nirs;
     int *comm, *po, *idareas, *keep;
     GEOSGeom GC, lr;
-    char buf[BUFSIZE], cbuf[15];
     double *areas, *dareas, area;
+    char buf[BUFSIZ];
 
 
     if (GEOSGeomTypeId(Geom) == GEOS_POLYGON) {
@@ -532,44 +532,17 @@ SEXP rgeos_GCPolygons(GEOSGeom Geom, char *ibuf, SEXP thresh) {
             }
         }
     }
-    sprintf(buf, "%d", comm[0]);
-    for (i=1; i<nps; i++) {
-        sprintf(cbuf, " %d", comm[i]);
-        strcat(buf, cbuf);
-    }
+
+    SP_PREFIX(comm2comment)(buf, comm, nps);
     PROTECT(comment = NEW_CHARACTER(1)); pc++;
     SET_STRING_ELT(comment, 0, COPY_TO_USER_STRING(buf));
 
-    areas = (double *) R_alloc((size_t) nps, sizeof(double));
-    for (i=0; i<nps; i++) 
-        areas[i] = NUMERIC_POINTER(GET_SLOT(VECTOR_ELT(pls, i),
-            install("area")))[0]; 
-    po = (int *) R_alloc((size_t) nps, sizeof(int));
-    for (i=0; i<nps; i++) po[i] = i + R_OFFSET;
-    revsort(areas, po, nps);
-
-    PROTECT(ans = NEW_OBJECT(MAKE_CLASS("Polygons"))); pc++;
-    SET_SLOT(ans, install("Polygons"), pls);
-    setAttrib(ans, install("comment"), comment);
-
     PROTECT(iID = NEW_CHARACTER(1)); pc++;
     SET_STRING_ELT(iID, 0, COPY_TO_USER_STRING(ibuf));
-    SET_SLOT(ans, install("ID"), iID);
 
-    PROTECT(Area = NEW_NUMERIC(1)); pc++;
-    for (i=0; i<nps; i++) NUMERIC_POINTER(Area)[0] += fabs(areas[i]);
-    SET_SLOT(ans, install("area"), Area);
+    PROTECT(ans = SP_PREFIX(Polygons_c)(pls, iID)); pc++;
 
-    PROTECT(plotOrder = NEW_INTEGER(nps)); pc++;
-    for (i=0; i<nps; i++) INTEGER_POINTER(plotOrder)[i] = po[i];
-    SET_SLOT(ans, install("plotOrder"), plotOrder);
-
-    PROTECT(labpt = NEW_NUMERIC(2)); pc++;
-    NUMERIC_POINTER(labpt)[0] = NUMERIC_POINTER(GET_SLOT(VECTOR_ELT(pls,
-        (po[0]-1)), install("labpt")))[0];
-    NUMERIC_POINTER(labpt)[1] = NUMERIC_POINTER(GET_SLOT(VECTOR_ELT(pls,
-        (po[0]-1)), install("labpt")))[1];
-    SET_SLOT(ans, install("labpt"), labpt);
+    setAttrib(ans, install("comment"), comment);
 
     GEOSGeom_destroy(GC);
     UNPROTECT(pc);
@@ -577,13 +550,15 @@ SEXP rgeos_GCPolygons(GEOSGeom Geom, char *ibuf, SEXP thresh) {
 }
 
 SEXP rgeos_LinearRingPolygon(GEOSGeom lr, int hole) {
-    SEXP SPans, ans, labpt, Area, Hole, ringDir;
+    SEXP SPans, ans, nn, Hole, ringDir;
     double area[3];
     int pc=0, rev=FALSE;
     GEOSCoordSeq s;
+    unsigned int n;
+
 
     if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq(lr)) == NULL)
-        error("rgeos_lrArea: CoordSeq failure");
+        error("rgeos_LinearRingPolygon: CoordSeq failure");
 
     rgeos_csArea(s, area);
     PROTECT(ringDir = NEW_INTEGER(1)); pc++;
@@ -598,23 +573,15 @@ SEXP rgeos_LinearRingPolygon(GEOSGeom lr, int hole) {
         rev = TRUE;
         INTEGER_POINTER(ringDir)[0] = 1;
     }
-    
-    PROTECT(SPans = NEW_OBJECT(MAKE_CLASS("Polygon"))); pc++;
+    if (GEOSCoordSeq_getSize(s, &n) == 0)
+        error("rgeos_LinearRingPolygon: CoordSeq failure");
+
+    PROTECT(nn = NEW_INTEGER(1)); pc++;
+    INTEGER_POINTER(nn)[0] = n;
 
     PROTECT(ans = rgeos_CoordSeq2crdMat(s, FALSE, rev)); pc++;
-    SET_SLOT(SPans, install("coords"), ans);
 
-    PROTECT(labpt = NEW_NUMERIC(2)); pc++;
-    NUMERIC_POINTER(labpt)[0] = area[0];
-    NUMERIC_POINTER(labpt)[1] = area[1];
-    SET_SLOT(SPans, install("labpt"), labpt);
-
-    PROTECT(Area = NEW_NUMERIC(1)); pc++;
-    NUMERIC_POINTER(Area)[0] = fabs(area[2]);
-    SET_SLOT(SPans, install("area"), Area);
-
-    SET_SLOT(SPans, install("hole"), Hole);
-    SET_SLOT(SPans, install("ringDir"), ringDir);
+    PROTECT(SPans = SP_PREFIX(Polygon_c)(ans, nn, Hole)); pc++;
 
     UNPROTECT(pc);
     return(SPans);
@@ -643,74 +610,5 @@ GEOSGeom rgeos_SpatialPolygonsGC(SEXP obj) {
 
     UNPROTECT(pc);
     return(GC);
-}
-
-SEXP comment2comm(SEXP obj) {
-    SEXP ans, comment, comm;
-    int pc=0, ns, i, j, jj, k;
-    char buf[BUFSIZE], s[15];
-    int *c, *nss, *co, *coo;
-
-    PROTECT(comment = getAttrib(obj, install("comment"))); pc++;
-    if (comment == R_NilValue) {
-        UNPROTECT(pc);
-        return(R_NilValue);
-    }
-    strcpy(buf, CHAR(STRING_ELT(comment, 0)));
-    ns = i = 0;
-    while (buf[i] != '\0') {
-        if (buf[i] == ' ') ns++;
-        ++i;
-    }
-    k = (int) strlen(buf);
-   
-    nss = (int *) R_alloc((size_t) (ns+1), sizeof(int));
-    c = (int *) R_alloc((size_t) (ns+1), sizeof(int));
-    i = j = 0;
-    while (buf[i] != '\0') {
-        if (buf[i] == ' ') {
-            nss[j] = i; ++j;
-        }
-        ++i;
-    }
-    nss[(ns)] = k;
-       
-    strncpy(s, &buf[0], (size_t) nss[0]);
-    c[0] = atoi(s);
-    for (i=0; i<ns; i++) {
-        k = nss[(i+1)]-(nss[i]+1);
-        strncpy(s, &buf[(nss[i]+1)], (size_t) k);
-        s[k] = '\0';
-        c[i+1] = atoi(s);
-    }
-
-    for (i=0, k=0; i<(ns+1); i++) if (c[i] == 0) k++;
-    
-    PROTECT(ans = NEW_LIST((k))); pc++;
-    co = (int *) R_alloc((size_t) k, sizeof(int));
-    coo = (int *) R_alloc((size_t) k, sizeof(int));
-    for (i=0; i<k; i++) co[i] = 1;
-
-    for (i=0, j=0; i<(ns+1); i++)
-        if (c[i] == 0) coo[j++] = i + R_OFFSET;
-
-    for (i=0; i<k; i++)
-        for (j=0; j<(ns+1); j++)
-            if ((c[j]) == coo[i]) co[i]++;
-
-    for (i=0; i<k; i++) SET_VECTOR_ELT(ans, i, NEW_INTEGER(co[i]));
-
-    for (i=0; i<k; i++) {
-        jj = 0;
-        INTEGER_POINTER(VECTOR_ELT(ans, i))[jj++] = coo[i];
-        if (co[i] > 1) {
-            for (j=0; j<(ns+1); j++)
-                if (c[j] == coo[i])
-                    INTEGER_POINTER(VECTOR_ELT(ans, i))[jj++] = j + R_OFFSET;
-        }
-    }
-
-    UNPROTECT(pc);
-    return(ans);
 }
 

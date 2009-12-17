@@ -3,7 +3,7 @@
   require("sp")
   library.dynam('rgeos', pkg, lib)
 
-  .Call('rgeos_Init', PACKAGE="rgeos")
+#  .Call('rgeos_Init', PACKAGE="rgeos")
   cat("GEOS runtime version:", .Call("rgeos_GEOSversion", PACKAGE="rgeos"), "\n")
 }
 

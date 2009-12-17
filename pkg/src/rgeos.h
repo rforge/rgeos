@@ -1,11 +1,16 @@
+#ifndef RGEOS_H
+#define RGEOS_H
+
 #include <R.h>
 #include <Rdefines.h>
 
 #include <geos_c.h>
 
-#define R_OFFSET 1
+/* use same define in package's local_stubs.c file */
+#define SP_XPORT(x) RGEOS_ ## x
+#include "sp.h"
 
-#define BUFSIZE 8192
+#define R_OFFSET 1
 
 GEOSCoordSeq rgeos_crdMat2CoordSeq(SEXP mat, SEXP dim);
 
@@ -28,6 +33,12 @@ GEOSGeom rgeos_SpatialPolygonsGC(SEXP obj);
 GEOSGeom rgeos_Polygons2GC(SEXP obj);
 
 GEOSGeom rgeos_Polygons_i_2Polygon(SEXP pls, SEXP vec);
+
+void rgeos_spRFindCG( int *n, double *x, double *y, double *area );
+
+void rgeos_csArea(GEOSCoordSeq s, double *area);
+
+GEOSGeom rgeos_plsUnion(SEXP ipls, SEXP igrp);
 
 SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh);
 
@@ -55,17 +66,16 @@ SEXP rgeos_MP2crdMat(GEOSGeom GC);
 
 SEXP rgeos_Geom2bbox(GEOSGeom Geom);
 
-SEXP comment2comm(SEXP obj);
-
 SEXP rgeos_GCPolygons(GEOSGeom Geom, char *buf, SEXP thresh);
 
 SEXP rgeos_LinearRingPolygon(GEOSGeom lr, int hole);
 
-void rgeos_spRFindCG( int *n, double *x, double *y, double *area );
-
-void rgeos_csArea(GEOSCoordSeq s, double *area);
-
 SEXP rgeos_SpatialPolygonsUnion(SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh);
 
-GEOSGeom rgeos_plsUnion(SEXP ipls, SEXP igrp);
+SEXP rgeos_Init(void);
+
+SEXP rgeos_GEOSversion(void);
+
+SEXP rgeos_finish(void);
+#endif
 
