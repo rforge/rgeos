@@ -1,3 +1,15 @@
+2009-12-17 18:44  rsbivand
+
+	* src/init.c, src/local_stubs.c: C API tidy
+
+2009-12-17 18:42  rsbivand
+
+	* DESCRIPTION, R/AAA.R, src/rgeos.h, src/rgeos_sp.c: C API tidy
+
+2009-12-04 09:11  rsbivand
+
+	* ChangeLog, inst/ChangeLog: small fixes from sp transition
+
 2009-12-04 09:10  rsbivand
 
 	* DESCRIPTION: small fixes from sp transition
