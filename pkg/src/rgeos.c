@@ -225,25 +225,34 @@ SEXP rgeos_CoordSeq2crdMat(GEOSCoordSeq s, int HasZ, int rev) {
 
 void rgeos_csArea(GEOSCoordSeq s, double *area) {
     double val;
-    int i, n;
-    double *x, *y;
+    int i, n, pc=0;
+    double xc, yc;
+    SEXP coords, nn, dims;
 
     if (GEOSCoordSeq_getSize(s, &n) == 0)
         error("rgeos_lrArea: size failure");
-    x = (double *) R_alloc((size_t) n, sizeof(double));
-    y = (double *) R_alloc((size_t) n, sizeof(double));
+    PROTECT(coords = NEW_NUMERIC(2*n)); pc++;
+    PROTECT(nn = NEW_INTEGER(1)); pc++;
+    INTEGER_POINTER(nn)[0] = n;
+    PROTECT(dims = NEW_INTEGER(2)); pc++;
+    INTEGER_POINTER(dims)[0] = (int) n;
+    INTEGER_POINTER(dims)[1] = (int) 2;
+
     for (i=0; i<n; i++) {
         if (GEOSCoordSeq_getX(s, (unsigned int) i, &val) == 0) {
             error("rgeos_lrArea: x failure");
         }    
-        x[i] = val;
+        NUMERIC_POINTER(coords)[i] = val;
         if (GEOSCoordSeq_getY(s, (unsigned int) i, &val) == 0) {
             error("rgeos_lrArea: y failure");
         }
-        y[i] = val;
+        NUMERIC_POINTER(coords)[i+n] = val;
     }
+    setAttrib(coords, R_DimSymbol, dims);
 
-    rgeos_spRFindCG(&n, x, y, area);
+    SP_PREFIX(spRFindCG_c)(nn, coords, &xc, &yc, area);
+
+    UNPROTECT(pc);
 
     return;
 }

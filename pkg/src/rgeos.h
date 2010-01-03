@@ -34,8 +34,6 @@ GEOSGeom rgeos_Polygons2GC(SEXP obj);
 
 GEOSGeom rgeos_Polygons_i_2Polygon(SEXP pls, SEXP vec);
 
-void rgeos_spRFindCG( int *n, double *x, double *y, double *area );
-
 void rgeos_csArea(GEOSCoordSeq s, double *area);
 
 GEOSGeom rgeos_plsUnion(SEXP ipls, SEXP igrp);

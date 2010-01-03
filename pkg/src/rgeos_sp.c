@@ -551,7 +551,7 @@ SEXP rgeos_GCPolygons(GEOSGeom Geom, char *ibuf, SEXP thresh) {
 
 SEXP rgeos_LinearRingPolygon(GEOSGeom lr, int hole) {
     SEXP SPans, ans, nn, Hole, ringDir;
-    double area[3];
+    double area;
     int pc=0, rev=FALSE;
     GEOSCoordSeq s;
     unsigned int n;
@@ -560,11 +560,11 @@ SEXP rgeos_LinearRingPolygon(GEOSGeom lr, int hole) {
     if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq(lr)) == NULL)
         error("rgeos_LinearRingPolygon: CoordSeq failure");
 
-    rgeos_csArea(s, area);
+    rgeos_csArea(s, &area);
     PROTECT(ringDir = NEW_INTEGER(1)); pc++;
     PROTECT(Hole = NEW_LOGICAL(1)); pc++;
     LOGICAL_POINTER(Hole)[0] = hole;
-    INTEGER_POINTER(ringDir)[0] = (area[2] > 0.0) ? -1 : 1;
+    INTEGER_POINTER(ringDir)[0] = (area > 0.0) ? -1 : 1;
     if (LOGICAL_POINTER(Hole)[0] && INTEGER_POINTER(ringDir)[0] == 1) {
         rev = TRUE;
         INTEGER_POINTER(ringDir)[0] = -1;
