@@ -11,5 +11,6 @@ if test -z "$R_PACKAGE_DIR" ; then
 fi
 
 mkdir "${R_PACKAGE_DIR}/libs"
-cp ${GEOS_HOME}/bin/libgeos-1.dll "${R_PACKAGE_DIR}/libs"
+cp ${GEOS_HOME}/bin/libgeos-3-1-1.dll "${R_PACKAGE_DIR}/libs"
+cp ${GEOS_HOME}/bin/libgeos_c-1.dll "${R_PACKAGE_DIR}/libs"
 
