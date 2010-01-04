@@ -1,6 +1,6 @@
 #!/bin/sh
 if test -z "$GEOS_HOME" ; then
-    GEOS_HOME="C:/work/packages/GDAL161"
+    GEOS_HOME="C:/work/packages/GEOS311"
 fi
 echo "GEOS_HOME=${GEOS_HOME}" > src/Makeconf.win
 
