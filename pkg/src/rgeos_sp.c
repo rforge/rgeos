@@ -322,6 +322,31 @@ SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance, SEXP thresh) {
     return(ans);
 }
 
+SEXP rgeos_Polygons_intersection(SEXP obj1, SEXP obj2) {
+
+    GEOSGeom in1, in2, out;
+    int pc=0, npls, i;
+    SEXP ans, pls, ID;
+
+    PROTECT(ID = NEW_CHARACTER(1)); pc++;
+    SET_STRING_ELT(ID, 0, STRING_ELT(GET_SLOT(obj1, install("ID")), 0));
+    PROTECT(pls = GET_SLOT(obj1, install("Polygons"))); pc++;
+
+    in1 = rgeos_Polygons2GC(obj1);
+    in2 = rgeos_Polygons2GC(obj2);
+
+    if ((out = GEOSIntersection(in1, in2)) == NULL) {
+            error("rgeos_Polygons_intersection: GEOSIntersection failure");
+    }
+
+Rprintf("Type: %s, #: %d\n", GEOSGeomType(out), GEOSGetNumGeometries(out));
+
+    PROTECT(ans = rgeos_Geom2bbox(out)); pc++;
+    UNPROTECT(pc);
+    return(ans);
+
+}
+
 SEXP rgeos_SpatialPolygonsUnion(SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh) {
 
     GEOSGeom GC;

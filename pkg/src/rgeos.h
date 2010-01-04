@@ -75,5 +75,8 @@ SEXP rgeos_Init(void);
 SEXP rgeos_GEOSversion(void);
 
 SEXP rgeos_finish(void);
+
+SEXP rgeos_Polygons_intersection(SEXP obj1, SEXP obj2);
+
 #endif
 

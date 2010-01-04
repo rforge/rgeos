@@ -44,8 +44,8 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_Init", (DL_FUNC) &rgeos_Init, 0},
     {"finishGEOS", (DL_FUNC) &finishGEOS, 0},
     {"rgeos_GEOSversion", (DL_FUNC) &rgeos_GEOSversion, 0},
+    {"rgeos_Polygons_intersection", (DL_FUNC) &rgeos_Polygons_intersection, 2},
     {NULL, NULL, 0}
-
 };
 
 void 
