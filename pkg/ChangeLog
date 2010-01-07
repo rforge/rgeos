@@ -1,3 +1,7 @@
+2010-01-07 18:14  rsbivand
+
+	* ChangeLog, inst/ChangeLog: missing man file
+
 2010-01-07 18:11  rsbivand
 
 	* man/LinesIntersections.Rd: missing man file
