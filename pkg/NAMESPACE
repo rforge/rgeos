@@ -5,3 +5,5 @@ import(sp)
 
 export(thinnedSpatialPolyGEOS, checkPolygonsGEOS, unionSpatialPolygonsGEOS)
 
+export(SpatialLinesIntersections, LinesIntersections, PolygonsIntersections)
+

@@ -34,6 +34,8 @@ GEOSGeom rgeos_Polygons2GC(SEXP obj);
 
 GEOSGeom rgeos_Polygons_i_2Polygon(SEXP pls, SEXP vec);
 
+GEOSGeom rgeos_Lines2GC(SEXP obj);
+
 void rgeos_csArea(GEOSCoordSeq s, double *area);
 
 GEOSGeom rgeos_plsUnion(SEXP ipls, SEXP igrp);
@@ -77,6 +79,8 @@ SEXP rgeos_GEOSversion(void);
 SEXP rgeos_finish(void);
 
 SEXP rgeos_Polygons_intersection(SEXP obj1, SEXP obj2);
+
+SEXP rgeos_Lines_intersection(SEXP obj1, SEXP obj2);
 
 #endif
 

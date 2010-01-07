@@ -26,6 +26,36 @@ GEOSGeom rgeos_SPoints2MP(SEXP obj) {
     return(GC);
 }
 
+GEOSGeom rgeos_Lines2GC(SEXP obj) {
+
+    SEXP lns, crdMat, dim;
+    GEOSGeom *geoms;
+    GEOSGeom ls, GC;
+    int nlns, i, pc=0;
+
+    PROTECT(lns = GET_SLOT(obj, install("Lines"))); pc++;
+    nlns = length(lns);
+
+
+    geoms = (GEOSGeom *) R_alloc((size_t) nlns, sizeof(GEOSGeom));
+
+    for (i=0; i<nlns; i++) {
+        crdMat = GET_SLOT(VECTOR_ELT(lns, i), install("coords"));
+        dim = getAttrib(crdMat, R_DimSymbol);
+        ls = rgeos_crdMat2LineString(crdMat, dim);
+        geoms[i] = ls;
+    }
+    if ((GC = GEOSGeom_createCollection(GEOS_MULTILINESTRING, geoms, 
+        nlns)) == NULL) {
+        error("Lines2GC: collection not created");
+    }
+
+    UNPROTECT(pc);
+    return(GC);
+
+}
+
+
 GEOSGeom rgeos_Polygons2GC(SEXP obj) {
 
     SEXP pls, crdMat, dim, comm;
@@ -183,25 +213,45 @@ SEXP rgeos_MP2crdMat(GEOSGeom GC) {
     SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 0, COPY_TO_USER_STRING("x"));
     SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 1, COPY_TO_USER_STRING("y"));
 
-    for (i=0; i<n; i++) {
+    if (n == 1) {
 
-        if ((pt = (GEOSGeometry *) GEOSGetGeometryN(GC, (int) i)) == NULL) {
-            return(R_NilValue);
+            if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq(GC)) == NULL) {
+                return(R_NilValue);
+            }
+            if (GEOSCoordSeq_getX(s, (unsigned int) 0, &val) == 0) {
+                return(R_NilValue);
+            }    
+
+            NUMERIC_POINTER(ans)[0] = val;
+
+            if (GEOSCoordSeq_getY(s, (unsigned int) 0, &val) == 0) {
+                return(R_NilValue);
+            }
+
+            NUMERIC_POINTER(ans)[1] = val;
+        
+
+    } else {
+        for (i=0; i<n; i++) {
+
+            if ((pt = (GEOSGeometry *) GEOSGetGeometryN(GC, (int) i)) == NULL) {
+                return(R_NilValue);
+            }
+            if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq(pt)) == NULL) {
+                return(R_NilValue);
+            }
+            if (GEOSCoordSeq_getX(s, (unsigned int) 0, &val) == 0) {
+                return(R_NilValue);
+            }    
+
+            NUMERIC_POINTER(ans)[i] = val;
+
+            if (GEOSCoordSeq_getY(s, (unsigned int) 0, &val) == 0) {
+                return(R_NilValue);
+            }
+
+            NUMERIC_POINTER(ans)[i+n] = val;
         }
-        if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq(pt)) == NULL) {
-            return(R_NilValue);
-        }
-        if (GEOSCoordSeq_getX(s, (unsigned int) 0, &val) == 0) {
-            return(R_NilValue);
-        }    
-
-        NUMERIC_POINTER(ans)[i] = val;
-
-        if (GEOSCoordSeq_getY(s, (unsigned int) 0, &val) == 0) {
-            return(R_NilValue);
-        }
-
-        NUMERIC_POINTER(ans)[i+n] = val;
     }
 
     setAttrib(ans, R_DimSymbol, dims);
@@ -322,26 +372,64 @@ SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance, SEXP thresh) {
     return(ans);
 }
 
+SEXP rgeos_Lines_intersection(SEXP obj1, SEXP obj2) {
+
+    GEOSGeom in1, in2, out;
+    int pc=0, i, intersects;
+    SEXP ans;
+
+    in1 = rgeos_Lines2GC(obj1);
+    in2 = rgeos_Lines2GC(obj2);
+
+    if ((intersects = (int) GEOSIntersects(in1, in2)) == 2) {
+        error("rgeos_Lines_intersection: GEOSIntersects failure");
+
+    }
+    if (!intersects) {
+        UNPROTECT(pc);
+        return(R_NilValue);
+    }
+    if ((out = GEOSIntersection(in1, in2)) == NULL) {
+        error("rgeos_Lines_intersection: GEOSIntersection failure");
+    }
+
+    PROTECT(ans = rgeos_MP2crdMat(out)); pc++;
+    UNPROTECT(pc);
+    return(ans);
+
+}
+
 SEXP rgeos_Polygons_intersection(SEXP obj1, SEXP obj2) {
 
     GEOSGeom in1, in2, out;
-    int pc=0, npls, i;
-    SEXP ans, pls, ID;
+    int pc=0, i, intersects;
+    SEXP ans, ID1, ID2, thresh;
+    char ibuf[BUFSIZ];
 
-    PROTECT(ID = NEW_CHARACTER(1)); pc++;
-    SET_STRING_ELT(ID, 0, STRING_ELT(GET_SLOT(obj1, install("ID")), 0));
-    PROTECT(pls = GET_SLOT(obj1, install("Polygons"))); pc++;
+    PROTECT(ID1 = NEW_CHARACTER(1)); pc++;
+    PROTECT(ID2 = NEW_CHARACTER(1)); pc++;
+    PROTECT(thresh = NEW_NUMERIC(1)); pc++;
+    NUMERIC_POINTER(thresh)[0] = 0.0;
+    SET_STRING_ELT(ID1, 0, STRING_ELT(GET_SLOT(obj1, install("ID")), 0));
+    SET_STRING_ELT(ID2, 0, STRING_ELT(GET_SLOT(obj2, install("ID")), 0));
 
     in1 = rgeos_Polygons2GC(obj1);
     in2 = rgeos_Polygons2GC(obj2);
 
+    if ((intersects = (int) GEOSIntersects(in1, in2)) == 2) {
+        error("rgeos_Polygons_intersection: GEOSIntersects failure");
+
+    }
+    if (!intersects) {
+        UNPROTECT(pc);
+        return(R_NilValue);
+    }
     if ((out = GEOSIntersection(in1, in2)) == NULL) {
-            error("rgeos_Polygons_intersection: GEOSIntersection failure");
+        error("rgeos_Polygons_intersection: GEOSIntersection failure");
     }
 
-Rprintf("Type: %s, #: %d\n", GEOSGeomType(out), GEOSGetNumGeometries(out));
-
-    PROTECT(ans = rgeos_Geom2bbox(out)); pc++;
+    strcpy(ibuf, CHAR(STRING_ELT(ID1, 0)));
+    PROTECT(ans = rgeos_GCPolygons(out, ibuf, thresh)); pc++;
     UNPROTECT(pc);
     return(ans);
 

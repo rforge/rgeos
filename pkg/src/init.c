@@ -15,6 +15,7 @@ static const R_CMethodDef CEntries[] = {
     {"rgeos_SPoints2MP", (DL_FUNC) &rgeos_SPoints2MP, 1},
     {"rgeos_SpatialPolygonsGC", (DL_FUNC) &rgeos_SpatialPolygonsGC, 1},
     {"rgeos_Polygons2GC", (DL_FUNC) &rgeos_Polygons2GC, 1},
+    {"rgeos_Liness2GC", (DL_FUNC) &rgeos_Lines2GC, 1},
     {"rgeos_Polygons_i_2Polygon", (DL_FUNC) &rgeos_Polygons_i_2Polygon, 2},
     {"rgeos_csArea", (DL_FUNC) &rgeos_csArea, 2},
     {"rgeos_plsUnion", (DL_FUNC) &rgeos_plsUnion, 2},
@@ -45,6 +46,7 @@ static R_CallMethodDef CallEntries[] = {
     {"finishGEOS", (DL_FUNC) &finishGEOS, 0},
     {"rgeos_GEOSversion", (DL_FUNC) &rgeos_GEOSversion, 0},
     {"rgeos_Polygons_intersection", (DL_FUNC) &rgeos_Polygons_intersection, 2},
+    {"rgeos_Lines_intersection", (DL_FUNC) &rgeos_Lines_intersection, 2},
     {NULL, NULL, 0}
 };
 
