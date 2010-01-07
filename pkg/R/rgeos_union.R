@@ -1,7 +1,7 @@
 unionSpatialPolygonsGEOS <- function(SpP, IDs, threshold=NULL) {
     if (!inherits(SpP, "SpatialPolygons")) stop("not a SpatialPolygons object")
     if (missing(IDs)) stop("IDs required")
-    if (dim(SpP)[1] != length(IDs)) stop("input lengths differ")
+    if (length(row.names(SpP)) != length(IDs)) stop("input lengths differ")
     tab <- table(factor(IDs))
     n <- length(tab)
     IDss <- as.character(names(tab))
