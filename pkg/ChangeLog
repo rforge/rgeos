@@ -1,3 +1,38 @@
+2010-01-07 18:11  rsbivand
+
+	* man/LinesIntersections.Rd: missing man file
+
+2010-01-07 12:08  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/rgeos.R, src/init.c, src/rgeos.h,
+	  src/rgeos_sp.c: maptools integration
+
+2010-01-04 09:35  rsbivand
+
+	* configure.win: prepare for Windows binary
+
+2010-01-04 07:48  rsbivand
+
+	* configure.win: preparing for Windows build
+
+2010-01-04 07:21  rsbivand
+
+	* configure.win, src/Makevars.win, src/init.c, src/rgeos.h,
+	  src/rgeos_sp.c: preparing for Windows build
+
+2010-01-03 16:41  rsbivand
+
+	* src/init.c: tightening sp dependence
+
+2010-01-03 16:36  rsbivand
+
+	* DESCRIPTION, src/init.c, src/rgeos.c, src/rgeos.h,
+	  src/rgeos_sp.c, src/sp_rgeos.c: tightening sp dependence
+
+2009-12-17 18:46  rsbivand
+
+	* ChangeLog, inst/ChangeLog: C API tidy
+
 2009-12-17 18:44  rsbivand
 
 	* src/init.c, src/local_stubs.c: C API tidy
