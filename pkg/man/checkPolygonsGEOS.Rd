@@ -33,10 +33,12 @@ pl_new <- lapply(pl, checkPolygonsGEOS)
 sapply(slot(pl_new[[4]], "Polygons"), function(x) slot(x, "hole"))
 comment(pl_new[[4]])
 srs <- slot(slot(pl[[1]], "Polygons")[[1]], "coords")
-hle2 <- structure(c(-81.64093, -81.38380, -81.34165, -81.66833, -81.64093, 
- 36.57865, 36.57234, 36.47603, 36.47894, 36.57865), .Dim = as.integer(c(5, 2)))
+hle2 <- structure(c(-81.64093, -81.38380, -81.34165, -81.66833, -81.64093,
+ 36.57865, 36.57234, 36.47603, 36.47894, 36.57865), 
+ .Dim = as.integer(c(5, 2)))
 hle3 <- structure(c(-81.47759, -81.39118, -81.38486, -81.46705, -81.47759, 
- 36.56289, 36.55659, 36.49907, 36.50380, 36.56289), .Dim = as.integer(c(5, 2)))
+ 36.56289, 36.55659, 36.49907, 36.50380, 36.56289),
+ .Dim = as.integer(c(5, 2)))
 x <- Polygons(list(Polygon(srs), Polygon(hle2), Polygon(hle3)),
  ID=slot(pl[[1]], "ID"))
 sapply(slot(x, "Polygons"), function(x) slot(x, "hole"))

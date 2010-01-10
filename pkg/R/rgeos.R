@@ -19,32 +19,23 @@ checkPolygonsGEOS <- function(obj) {
         comment(obj) <- paste(rep(0, length(hls)), collapse=" ")
         return(obj)
     }
-    if (sum(lmat %*% lmat) > 0) {
-        o <- 1
-        l <- list()
-        l[[1]] <- lmat
-        while(sum(l[[o]]) > 0) {
-            l[[o+1]] <- l[[o]] %*% lmat
-            o <- o+1
-        }
-        rlmat <- rowSums(lmat)
-        clmat <- colSums(lmat)
-        containers <- which(rlmat > 0 & clmat == 0)
-        if (o >= 3) lmat1 <- lmat - (l[[2]] - l[[3]])
-        for (i in seq(along=containers)) {
-            isn <- which(lmat[containers[i],] > 0)
-            if (any(colSums(l[[2]])[isn] > 0)) {
-                if (o %% 2 == 0) {
-                    Ers <- isn[which(rlmat[isn] %% 2 != 0)]
-                } else {
-                    Ers <- isn[which(rlmat[isn] %% 2 == 0)]
-                }
-                lmat1[, Ers] <- FALSE
-            }
-        }
-        lmat <- lmat1
-    } 
     containsij <- which(lmat == 1, arr.ind=TRUE)
+    if (sum(lmat %*% lmat) > 0) {
+        areas <- sapply(slot(obj, "Polygons"), slot, "area")
+        ss <- split(containsij[,1], containsij[,2])
+        island <- sapply(ss, function(x) (length(x) %% 2) == 0)
+        islands <- as.integer(names(island)[island])
+        sss <- lapply(ss, function(x) {
+            if (length(x) == 1) return(x)
+            x[which.min(areas[x])]
+            })
+        sss <- sss[-match(islands, names(sss))]
+        res <- NULL
+        for (i in seq(along=sss))
+           res <- rbind(res, c(sss[[i]], as.integer(names(sss)[i])))
+        colnames(res) <- c("row", "col")
+        containsij <- res
+    }
     pls <- slot(obj, "Polygons")
     for (i in containsij[,2]) {
         pl <- pls[[i]]
