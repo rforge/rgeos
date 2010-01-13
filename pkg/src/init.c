@@ -43,7 +43,7 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_GCPolygons", (DL_FUNC) &rgeos_GCPolygons, 3},
     {"rgeos_LinearRingPolygon", (DL_FUNC) &rgeos_LinearRingPolygon, 2},
     {"rgeos_Init", (DL_FUNC) &rgeos_Init, 0},
-    {"finishGEOS", (DL_FUNC) &finishGEOS, 0},
+    {"rgeos_finish", (DL_FUNC) &rgeos_finish, 0},
     {"rgeos_GEOSversion", (DL_FUNC) &rgeos_GEOSversion, 0},
     {"rgeos_Polygons_intersection", (DL_FUNC) &rgeos_Polygons_intersection, 2},
     {"rgeos_Lines_intersection", (DL_FUNC) &rgeos_Lines_intersection, 2},
