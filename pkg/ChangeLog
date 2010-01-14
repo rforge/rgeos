@@ -1,3 +1,11 @@
+2010-01-14 07:41  rsbivand
+
+	* inst/README.windows: declaration for Windows binary
+
+2010-01-13 19:37  rsbivand
+
+	* ChangeLog, inst/ChangeLog: rgeos_finish declaration in init.c
+
 2010-01-13 19:37  rsbivand
 
 	* src/init.c: rgeos_finish declaration in init.c
