@@ -139,57 +139,85 @@ GEOSGeom rgeos_Polygons_i_2Polygon(SEXP pls, SEXP vec) {
     return(res);
 }
 
-SEXP rgeos_PolygonsContain(SEXP obj) {
+SEXP GC_Contains(GEOSGeom GC) {
 
     SEXP ans, dim;
     int pc=0;
     unsigned int i, j, n;
-    int contains;
+    int contains, ident;
 
-    GEOSGeom GC, Pi, Pj;
-
-    GC = rgeos_Polygons2GC(obj);
+    GEOSGeom Pi, Pj;
 
     if (!((int) GEOSisValid(GC))) {
         n = (unsigned int) GEOSGetNumGeometries(GC);
-        PROTECT(ans = NEW_LOGICAL((int) (n*n))); pc++;
+        PROTECT(ans = NEW_LIST(2)); pc++;
+        PROTECT(SET_VECTOR_ELT(ans, 0, NEW_LOGICAL((int) (n*n)))); pc++;
+        PROTECT(SET_VECTOR_ELT(ans, 1, NEW_LOGICAL((int) (n*n)))); pc++;
         PROTECT(dim = NEW_INTEGER(2)); pc++;
         INTEGER_POINTER(dim)[0] = (int) n;
         INTEGER_POINTER(dim)[1] = (int) n;
-        setAttrib(ans, R_DimSymbol, dim);
+        setAttrib(VECTOR_ELT(ans, 0), R_DimSymbol, dim);
+        setAttrib(VECTOR_ELT(ans, 1), R_DimSymbol, dim);
 
         for (i=0; i<n; i++) {
             if ((Pi = (GEOSGeometry *) GEOSGetGeometryN(GC, (int) i))
                  == NULL) {
                 GEOSGeom_destroy(GC);
                 return(R_NilValue);
-            }
+            } // Pi invalid
                 for (j=0; j<n; j++) {
                     if ((Pj = (GEOSGeometry *) GEOSGetGeometryN(GC, (int) j))
                         == NULL) {
                         GEOSGeom_destroy(GC);
                         return(R_NilValue);
-                    }
-                    if (i == j) LOGICAL_POINTER(ans)[i+(j*n)] = FALSE;
-                    else {
+                    } // Pj invalid
+                    if (i == j) {
+                        LOGICAL_POINTER(VECTOR_ELT(ans, 0))[i+(j*n)] = FALSE;
+                        LOGICAL_POINTER(VECTOR_ELT(ans, 1))[i+(j*n)] = FALSE;
+                    } else { // i == j
                         contains = (int) GEOSContains(Pi, Pj);
-                        if (contains == 2) 
-                            LOGICAL_POINTER(ans)[i+(j*n)] = NA_LOGICAL;
-                        else
-                            LOGICAL_POINTER(ans)[i+(j*n)] = contains;
-                    }
-                }
+                        if (contains == 2) {
+                            LOGICAL_POINTER(VECTOR_ELT(ans, 0))[i+(j*n)] = 
+                                NA_LOGICAL;
+                            LOGICAL_POINTER(VECTOR_ELT(ans, 1))[i+(j*n)] = 
+                                NA_LOGICAL;
+                        } else { // contains invalid
+                            ident = (int) GEOSEquals(Pi, Pj);
+                            if (ident == 2) {
+                                LOGICAL_POINTER(VECTOR_ELT(ans, 0))[i+(j*n)] = 
+                                    NA_LOGICAL;
+                                LOGICAL_POINTER(VECTOR_ELT(ans, 1))[i+(j*n)] = 
+                                    NA_LOGICAL;
+                            } else { // ident invalid
+                                LOGICAL_POINTER(VECTOR_ELT(ans, 0))[i+(j*n)] = 
+                                    contains;
+                                LOGICAL_POINTER(VECTOR_ELT(ans, 1))[i+(j*n)] = 
+                                  ident;
+                            } // ident valid
+                        } // contains valid
+                    } // i != j
+                } // j
 
-        }
+        } // i
         GEOSGeom_destroy(GC);
 
         UNPROTECT(pc);
         return(ans);
-    }
+    } // is valid
     
     GEOSGeom_destroy(GC);
 
     return(R_NilValue);
+} // end of function
+
+SEXP rgeos_PolygonsContain(SEXP obj) {
+
+    GEOSGeom GC;
+
+    GC = rgeos_Polygons2GC(obj);
+
+    return(GC_Contains(GC));
+
 }
 
 SEXP rgeos_MP2crdMat(GEOSGeom GC) {

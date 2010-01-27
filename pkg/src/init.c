@@ -47,8 +47,13 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_GEOSversion", (DL_FUNC) &rgeos_GEOSversion, 0},
     {"rgeos_Polygons_intersection", (DL_FUNC) &rgeos_Polygons_intersection, 2},
     {"rgeos_Lines_intersection", (DL_FUNC) &rgeos_Lines_intersection, 2},
+    {"SymDiffGpcGEOS", (DL_FUNC) &SymDiffGpcGEOS, 2},
+    {"UnionGpcGEOS", (DL_FUNC) &UnionGpcGEOS, 2},
+    {"IntersectGpcGEOS", (DL_FUNC) &IntersectGpcGEOS, 2},
+    {"checkHolesGPC", (DL_FUNC) &checkHolesGPC, 1},
     {NULL, NULL, 0}
 };
+
 
 void 
 #ifdef HAVE_VISIBILITY_ATTRIBUTE

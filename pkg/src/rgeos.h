@@ -40,6 +40,16 @@ void rgeos_csArea(GEOSCoordSeq s, double *area);
 
 GEOSGeom rgeos_plsUnion(SEXP ipls, SEXP igrp);
 
+GEOSGeom GPCptPolygon(SEXP obj);
+
+GEOSGeom GPCpt2LinearRing(SEXP obj);
+
+GEOSCoordSeq GPCpt2CoordSeq(SEXP obj);
+
+GEOSGeom GCPPtsGC(SEXP pls);
+
+GEOSGeom GPCpt_i_Polygon(SEXP pls, SEXP vec);
+
 SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh);
 
 SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance, SEXP thresh);
@@ -81,6 +91,18 @@ SEXP rgeos_finish(void);
 SEXP rgeos_Polygons_intersection(SEXP obj1, SEXP obj2);
 
 SEXP rgeos_Lines_intersection(SEXP obj1, SEXP obj2);
+
+SEXP SymDiffGpcGEOS(SEXP A, SEXP B);
+
+SEXP UnionGpcGEOS(SEXP A, SEXP B);
+
+SEXP IntersectGpcGEOS(SEXP A, SEXP B);
+
+SEXP checkHolesGPC(SEXP A);
+
+SEXP GC_Contains(GEOSGeom GC);
+
+SEXP GCpolysGPCpts(GEOSGeom GC);
 
 #endif
 

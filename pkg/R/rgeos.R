@@ -1,8 +1,11 @@
 checkPolygonsGEOS <- function(obj) {
     if (!is(obj, "Polygons")) 
         stop("not a Polygons object")
-    lmat <- .Call("rgeos_PolygonsContain", obj, PACKAGE="rgeos")
-    if (is.null(lmat)) {
+    res0 <- .Call("rgeos_PolygonsContain", obj, PACKAGE="rgeos")
+    lmat <- res0[[1]]
+    idmat <- res0[[2]]
+# handle equals deletion
+    if (is.null(res0)) {
         Pls <- slot(obj, "Polygons")
         hls <- sapply(Pls, function(x) slot(x, "hole"))
         if (any(hls)) {
