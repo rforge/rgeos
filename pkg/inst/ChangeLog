@@ -1,3 +1,27 @@
+2010-01-31 19:21  rsbivand
+
+	* man/checkHolesGPC.Rd: union buffer scale problem
+
+2010-01-31 19:19  rsbivand
+
+	* R/gpc_geos.R, R/rgeos.R, R/rgeos_union.R,
+	  man/checkPolygonsGEOS.Rd, man/unionSpatialPolygonsGEOS.Rd,
+	  src/gpc_geos.c, src/init.c, src/rgeos.h, src/rgeos_sp.c: union
+	  buffer scale problem
+
+2010-01-27 10:53  rsbivand
+
+	* R/gpc_geos.R, src/gpc_geos.c: refactoring for gpcpoly objects
+
+2010-01-27 10:20  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/rgeos.R, src/init.c, src/rgeos.h,
+	  src/rgeos_sp.c: refactoring for gpcpoly objects
+
+2010-01-14 07:41  rsbivand
+
+	* ChangeLog, inst/ChangeLog: declaration for Windows binary
+
 2010-01-14 07:41  rsbivand
 
 	* inst/README.windows: declaration for Windows binary
