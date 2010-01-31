@@ -18,14 +18,14 @@ static const R_CMethodDef CEntries[] = {
     {"rgeos_Liness2GC", (DL_FUNC) &rgeos_Lines2GC, 1},
     {"rgeos_Polygons_i_2Polygon", (DL_FUNC) &rgeos_Polygons_i_2Polygon, 2},
     {"rgeos_csArea", (DL_FUNC) &rgeos_csArea, 2},
-    {"rgeos_plsUnion", (DL_FUNC) &rgeos_plsUnion, 2},
+    {"rgeos_plsbufUnion", (DL_FUNC) &rgeos_plsbufUnion, 2},
     {NULL, NULL, 0}
 };
 
 
 static R_CallMethodDef CallEntries[] = {
 
-    {"rgeos_SpatialPolygonsUnion", (DL_FUNC) &rgeos_SpatialPolygonsUnion, 4},
+    {"rgeos_SpatialPolygonsUnion", (DL_FUNC) &rgeos_SpatialPolygonsUnion, 5},
     {"rgeos_GCSpatialPolygons", (DL_FUNC) &rgeos_GCSpatialPolygons, 4},
     {"rgeos_SpatialPolygonsSimplify",
         (DL_FUNC) &rgeos_SpatialPolygonsSimplify, 3},

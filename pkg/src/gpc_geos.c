@@ -78,7 +78,7 @@ GEOSGeom GPCpt2LinearRing(SEXP obj) {
         warning("GPCpt2LinearRing: validity failure");
     }
 
-
+    return(gl);
 }
 
 GEOSCoordSeq GPCpt2CoordSeq(SEXP obj) {

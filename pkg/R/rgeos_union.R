@@ -1,4 +1,4 @@
-unionSpatialPolygonsGEOS <- function(SpP, IDs, threshold=NULL) {
+unionSpatialPolygonsGEOS <- function(SpP, IDs, threshold=NULL, buffer=TRUE) {
     if (!inherits(SpP, "SpatialPolygons")) stop("not a SpatialPolygons object")
     if (missing(IDs)) stop("IDs required")
     if (length(row.names(SpP)) != length(IDs)) stop("input lengths differ")
@@ -9,7 +9,9 @@ unionSpatialPolygonsGEOS <- function(SpP, IDs, threshold=NULL) {
     belongs <- lapply(1:n, function(x) as.integer(which(x == reg)))
     if (is.null(threshold)) threshold <- 0.0
     threshold <- as.double(threshold)
+    stopifnot(is.logical(buffer))
+    stopifnot(!is.na(buffer))
     res <- .Call("rgeos_SpatialPolygonsUnion", SpP, belongs, IDss, threshold,
-        PACKAGE="rgeos")
+        buffer, PACKAGE="rgeos")
     res
 }

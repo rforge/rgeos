@@ -22,6 +22,24 @@ checkPolygonsGEOS <- function(obj) {
         comment(obj) <- paste(rep(0, length(hls)), collapse=" ")
         return(obj)
     }
+    if (any(idmat == 1)) {
+        idents <- which(idmat == 1, arr.ind = TRUE)
+        idents2 <- which(idmat %*% idmat == 1, arr.ind=TRUE)
+        if (all(idents2[,1] == idents2[,2])) {
+            done <- NULL
+            for (i in 1:nrow(idents)) {
+                j <- idents[i,1]
+                if (is.na(match(j, done))) {
+                    jj <- match(j, idents[,2])
+                    if (!is.na(jj)) {
+                        done <- c(done, c(j, idents[i,2]))
+                        lmat[j, idents[i,2]] <- FALSE
+                    } else 
+                        warning("Odd cycles: no adjustment for equal polygons")
+                }
+            }
+        } else warning("Odd cycles: no adjustment for equal polygons")
+    }
     containsij <- which(lmat == 1, arr.ind=TRUE)
     if (sum(lmat %*% lmat) > 0) {
         areas <- sapply(slot(obj, "Polygons"), slot, "area")
@@ -47,13 +65,14 @@ checkPolygonsGEOS <- function(obj) {
             pls[[i]] <- pl
         }
     }
-    slot(obj, "Polygons") <- pls
+#    slot(obj, "Polygons") <- pls
+    oobj <- Polygons(pls, ID=slot(obj, "ID"))
     n <- dim(lmat)[1]
     eRiR <- as.integer(1:n %in% containsij[,2])
     eRiR[containsij[,2]] <- containsij[,1]
     ceRiR <- paste(eRiR, collapse=" ")
-    comment(obj) <- ceRiR
-    return(obj)
+    comment(oobj) <- ceRiR
+    return(oobj)
 }
 
 comment2comm <- function(str) {

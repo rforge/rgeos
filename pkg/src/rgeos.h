@@ -38,7 +38,9 @@ GEOSGeom rgeos_Lines2GC(SEXP obj);
 
 void rgeos_csArea(GEOSCoordSeq s, double *area);
 
-GEOSGeom rgeos_plsUnion(SEXP ipls, SEXP igrp);
+GEOSGeom rgeos_plsbufUnion(SEXP ipls, SEXP igrp);
+
+GEOSGeom rgeos_plspairUnion(SEXP ipls, SEXP igrp);
 
 GEOSGeom GPCptPolygon(SEXP obj);
 
@@ -80,7 +82,7 @@ SEXP rgeos_GCPolygons(GEOSGeom Geom, char *buf, SEXP thresh);
 
 SEXP rgeos_LinearRingPolygon(GEOSGeom lr, int hole);
 
-SEXP rgeos_SpatialPolygonsUnion(SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh);
+SEXP rgeos_SpatialPolygonsUnion(SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh, SEXP buffer);
 
 SEXP rgeos_Init(void);
 

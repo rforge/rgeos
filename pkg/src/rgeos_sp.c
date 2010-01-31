@@ -463,7 +463,7 @@ SEXP rgeos_Polygons_intersection(SEXP obj1, SEXP obj2) {
 
 }
 
-SEXP rgeos_SpatialPolygonsUnion(SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh) {
+SEXP rgeos_SpatialPolygonsUnion(SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh, SEXP buffer) {
 
     GEOSGeom GC;
     GEOSGeom *geoms;
@@ -477,8 +477,15 @@ SEXP rgeos_SpatialPolygonsUnion(SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh) {
     PROTECT(ipls = GET_SLOT(obj, install("polygons"))); pc++;
 
     for (i=0; i<ngrps; i++) {
-        GC = rgeos_plsUnion(ipls, VECTOR_ELT(grps, i));
-        geoms[i] = GC;
+        if (LOGICAL_POINTER(buffer)[0])
+            GC = rgeos_plsbufUnion(ipls, VECTOR_ELT(grps, i));
+        else 
+            GC = rgeos_plspairUnion(ipls, VECTOR_ELT(grps, i));
+        if (GC != NULL) geoms[i] = GC;
+    }
+    if (!LOGICAL_POINTER(buffer)[0]) {
+         UNPROTECT(pc);
+         return(R_NilValue);
     }
     
     if ((GC = GEOSGeom_createCollection(GEOS_GEOMETRYCOLLECTION, geoms,
@@ -493,7 +500,55 @@ SEXP rgeos_SpatialPolygonsUnion(SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh) {
 
 }
 
-GEOSGeom rgeos_plsUnion(SEXP ipls, SEXP igrp) {
+GEOSGeom rgeos_plspairUnion(SEXP ipls, SEXP igrp) {
+
+    GEOSGeom GC, iGC, oGC;
+    GEOSGeom *geoms, *ggeoms;
+    int npls, i, ii, j, nnpls, touches;
+    int *ngeoms;
+    SEXP pl;
+
+    npls = length(igrp);
+    geoms = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
+    ngeoms = (int *) R_alloc((size_t) npls, sizeof(int));
+
+    for (i=0, nnpls=0; i<npls; i++) {
+        ii = INTEGER_POINTER(igrp)[i] - R_OFFSET;
+        pl = VECTOR_ELT(ipls, ii);
+        GC = rgeos_Polygons2GC(pl);
+        geoms[i] = GC;
+        ngeoms[i] = GEOSGetNumGeometries(GC);
+        nnpls += ngeoms[i];
+    }
+
+    ggeoms = (GEOSGeom *) R_alloc((size_t) nnpls, sizeof(GEOSGeom));
+    for(i=0, ii=0; i<npls; i++) {
+        GC = geoms[i];
+        for (j=0; j<ngeoms[i]; j++) {
+            ggeoms[ii] = (GEOSGeometry *) GEOSGetGeometryN(GC, j);
+            ii++;
+        }
+    }
+    
+Rprintf("npls: %d, nnpls: %d\n", npls, nnpls);
+    for (i=0; i<nnpls; i++) {
+Rprintf("type[%d] %s\n", i, GEOSGeomType(ggeoms[i]));
+
+        for (j=(i+1); j<nnpls; j++) {
+            if ((touches = (int) GEOSTouches(ggeoms[i], ggeoms[j])) == 2) {
+                error("rgeos_plspairUnion: GEOSTouches failure");
+            }
+Rprintf("i: %d, j: %d, touches: %d\n", i, j, touches);
+        }
+    }
+
+
+Rprintf("out of function\n");
+    return(NULL);
+
+}
+
+GEOSGeom rgeos_plsbufUnion(SEXP ipls, SEXP igrp) {
 
     GEOSGeom GC, iGC, oGC;
     GEOSGeom *geoms, *ggeoms;
@@ -525,10 +580,10 @@ GEOSGeom rgeos_plsUnion(SEXP ipls, SEXP igrp) {
     
     if ((iGC = GEOSGeom_createCollection(GEOS_MULTIPOLYGON, ggeoms,
         nnpls)) == NULL) {
-            error("rgeos_plsUnion: collection not created");
+            error("rgeos_plsbufUnion: collection not created");
     }
     if ((oGC = GEOSBuffer(iGC, 0.0, 100)) == NULL) {
-            error("rgeos_plsUnion: buffer not created");
+            error("rgeos_plsbufUnion: buffer not created");
     }
 
     return(oGC);
