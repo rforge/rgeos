@@ -4,5 +4,5 @@ GEOS_INC_DIR=${GEOS_HOME}/include
 GEOS_LIB_DIR=${GEOS_HOME}/lib
 
 PKG_CPPFLAGS=-I${GEOS_INC_DIR}
-PKG_LIBS=-L${GEOS_LIB_DIR} -lgeos -lgeos_c
+PKG_LIBS=-L${GEOS_LIB_DIR} -lgeos_c -lgeos -lstdc++
 
