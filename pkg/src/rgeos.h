@@ -12,99 +12,111 @@
 
 #define R_OFFSET 1
 
-GEOSCoordSeq rgeos_crdMat2CoordSeq(SEXP mat, SEXP dim);
+GEOSCoordSeq rgeos_crdMat2CoordSeq(SEXP env, SEXP mat, SEXP dim);
 
-GEOSCoordSeq rgeos_xy2CoordSeq(double x, double y);
+GEOSCoordSeq rgeos_xy2CoordSeq(SEXP env, double x, double y);
 
-GEOSGeom rgeos_Geom2Env(GEOSGeom Geom);
+GEOSGeom rgeos_Geom2Env(SEXP env, GEOSGeom Geom);
 
-GEOSGeom rgeos_xy2Pt(double x, double y);
+GEOSGeom rgeos_xy2Pt(SEXP env, double x, double y);
 
-GEOSGeom rgeos_crdMat2LineString(SEXP mat, SEXP dim);
+GEOSGeom rgeos_crdMat2LineString(SEXP env, SEXP mat, SEXP dim);
 
-GEOSGeom rgeos_crdMat2LinearRing(SEXP mat, SEXP dim);
+GEOSGeom rgeos_crdMat2LinearRing(SEXP env, SEXP mat, SEXP dim);
 
-GEOSGeom rgeos_crdMat2Polygon(SEXP mat, SEXP dim);
+GEOSGeom rgeos_crdMat2Polygon(SEXP env, SEXP mat, SEXP dim);
 
-GEOSGeom rgeos_SPoints2MP(SEXP obj);
+GEOSGeom rgeos_SPoints2MP(SEXP env, SEXP obj);
 
-GEOSGeom rgeos_SpatialPolygonsGC(SEXP obj);
+GEOSGeom rgeos_SpatialPolygonsGC(SEXP env, SEXP obj);
 
-GEOSGeom rgeos_Polygons2GC(SEXP obj);
+GEOSGeom rgeos_Polygons2GC(SEXP env, SEXP obj);
 
-GEOSGeom rgeos_Polygons_i_2Polygon(SEXP pls, SEXP vec);
+GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec);
 
-GEOSGeom rgeos_Lines2GC(SEXP obj);
+GEOSGeom rgeos_Lines2GC(SEXP env, SEXP obj);
 
-void rgeos_csArea(GEOSCoordSeq s, double *area);
+void rgeos_csArea(SEXP env, GEOSCoordSeq s, double *area);
 
-GEOSGeom rgeos_plsbufUnion(SEXP ipls, SEXP igrp);
+GEOSGeom rgeos_plsbufUnion(SEXP env, SEXP ipls, SEXP igrp);
 
-GEOSGeom rgeos_plspairUnion(SEXP ipls, SEXP igrp);
+/*GEOSGeom rgeos_plspairUnion(SEXP env, SEXP ipls, SEXP igrp);*/
 
-GEOSGeom GPCptPolygon(SEXP obj);
+GEOSGeom GPCptPolygon(SEXP env, SEXP obj);
 
-GEOSGeom GPCpt2LinearRing(SEXP obj);
+GEOSGeom GPCpt2LinearRing(SEXP env, SEXP obj);
 
-GEOSCoordSeq GPCpt2CoordSeq(SEXP obj);
+GEOSCoordSeq GPCpt2CoordSeq(SEXP env, SEXP obj);
 
-GEOSGeom GCPPtsGC(SEXP pls);
+GEOSGeom GCPPtsGC(SEXP env, SEXP pls);
 
-GEOSGeom GPCpt_i_Polygon(SEXP pls, SEXP vec);
+GEOSGeom GPCpt_i_Polygon(SEXP env, SEXP pls, SEXP vec);
 
-SEXP rgeos_GCSpatialPolygons(GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh);
+SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh);
 
-SEXP rgeos_SpatialPolygonsSimplify(SEXP obj, SEXP tolerance, SEXP thresh);
+SEXP rgeos_SpatialPolygonsSimplify(SEXP env, SEXP obj, SEXP tolerance, SEXP thresh);
 
-SEXP rgeos_PolygonsContain(SEXP obj);
+SEXP rgeos_PolygonsContain(SEXP env, SEXP obj);
 
-SEXP rgeos_lineLength(SEXP mat, SEXP dim);
+SEXP rgeos_lineLength(SEXP env, SEXP mat, SEXP dim);
 
-SEXP rgeos_PolArea(SEXP mat, SEXP dim);
+SEXP rgeos_PolArea(SEXP env, SEXP mat, SEXP dim);
 
-SEXP rgeos_PolCentroid(SEXP mat, SEXP dim);
+SEXP rgeos_PolCentroid(SEXP env, SEXP mat, SEXP dim);
 
-SEXP rgeos_Contains1Pol1pt(SEXP mat, SEXP dim, SEXP x, SEXP y);
+SEXP rgeos_Contains1Pol1pt(SEXP env, SEXP mat, SEXP dim, SEXP x, SEXP y);
 
-SEXP rgeos_Within1Pol1pt(SEXP mat, SEXP dim, SEXP x, SEXP y);
+SEXP rgeos_Within1Pol1pt(SEXP env, SEXP mat, SEXP dim, SEXP x, SEXP y);
 
-SEXP rgeos_DistNpts1pt(SEXP mat, SEXP dim, SEXP x2, SEXP y2);
+SEXP rgeos_DistNpts1pt(SEXP env, SEXP mat, SEXP dim, SEXP x2, SEXP y2);
 
-SEXP rgeos_Dist1LR1pt(SEXP mat, SEXP dim, SEXP x, SEXP y);
+SEXP rgeos_Dist1LR1pt(SEXP env, SEXP mat, SEXP dim, SEXP x, SEXP y);
 
-SEXP rgeos_CoordSeq2crdMat(GEOSCoordSeq s, int HasZ, int rev);
+SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev);
 
-SEXP rgeos_MP2crdMat(GEOSGeom GC);
+SEXP rgeos_MP2crdMat(SEXP env, GEOSGeom GC);
 
-SEXP rgeos_Geom2bbox(GEOSGeom Geom);
+SEXP rgeos_Geom2bbox(SEXP env, GEOSGeom Geom);
 
-SEXP rgeos_GCPolygons(GEOSGeom Geom, char *buf, SEXP thresh);
+SEXP rgeos_GCPolygons(SEXP env, GEOSGeom Geom, char *buf, SEXP thresh);
 
-SEXP rgeos_LinearRingPolygon(GEOSGeom lr, int hole);
+SEXP rgeos_LinearRingPolygon(SEXP env, GEOSGeom lr, int hole);
 
-SEXP rgeos_SpatialPolygonsUnion(SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh, SEXP buffer);
+SEXP rgeos_SpatialPolygonsUnion(SEXP env, SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh);
 
 SEXP rgeos_Init(void);
 
 SEXP rgeos_GEOSversion(void);
 
-SEXP rgeos_finish(void);
+SEXP rgeos_finish(SEXP env);
 
-SEXP rgeos_Polygons_intersection(SEXP obj1, SEXP obj2);
+static void rgeos_finish_handle(SEXP ptr);
 
-SEXP rgeos_Lines_intersection(SEXP obj1, SEXP obj2);
+SEXP rgeos_Polygons_intersection(SEXP env, SEXP obj1, SEXP obj2);
 
-SEXP SymDiffGpcGEOS(SEXP A, SEXP B);
+SEXP rgeos_Lines_intersection(SEXP env, SEXP obj1, SEXP obj2);
 
-SEXP UnionGpcGEOS(SEXP A, SEXP B);
+SEXP SymDiffGpcGEOS(SEXP env, SEXP A, SEXP B);
 
-SEXP IntersectGpcGEOS(SEXP A, SEXP B);
+SEXP UnaryUnionGpcGEOS(SEXP env, SEXP A);
 
-SEXP checkHolesGPC(SEXP A);
+SEXP UnionGpcGEOS(SEXP env, SEXP A, SEXP B);
 
-SEXP GC_Contains(GEOSGeom GC);
+SEXP IntersectGpcGEOS(SEXP env, SEXP A, SEXP B);
 
-SEXP GCpolysGPCpts(GEOSGeom GC);
+SEXP DiffGpcGEOS(SEXP env, SEXP A, SEXP B);
+
+SEXP checkHolesGPC(SEXP env, SEXP A);
+
+SEXP GC_Contains(SEXP env, GEOSGeom GC);
+
+/* SEXP GCpolysGPCpts(SEXP env, GEOSGeom GC); */
+
+SEXP GCGCPPts(SEXP env, GEOSGeom Geom);
+
+SEXP rgeos_LinearRingGCPPts(SEXP env, GEOSGeom lr, int hole);
+
+GEOSContextHandle_t getContextHandle(SEXP env);
 
 #endif
 

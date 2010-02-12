@@ -1,7 +1,7 @@
 checkPolygonsGEOS <- function(obj) {
     if (!is(obj, "Polygons")) 
         stop("not a Polygons object")
-    res0 <- .Call("rgeos_PolygonsContain", obj, PACKAGE="rgeos")
+    res0 <- .Call("rgeos_PolygonsContain", .RGEOS_HANDLE, obj, PACKAGE="rgeos")
     lmat <- res0[[1]]
     idmat <- res0[[2]]
 # handle equals deletion
@@ -112,12 +112,12 @@ SpatialLinesIntersections <- function(SL1, SL2) {
 LinesIntersections <- function(Lobj1, Lobj2) {
     stopifnot(is(Lobj1, "Lines"))
     stopifnot(is(Lobj2, "Lines"))
-    .Call("rgeos_Lines_intersection", Lobj1, Lobj2, PACKAGE="rgeos")
+    .Call("rgeos_Lines_intersection", .RGEOS_HANDLE, Lobj1, Lobj2, PACKAGE="rgeos")
 }
 
 PolygonsIntersections <- function(Pobj1, Pobj2) {
     stopifnot(is(Pobj1, "Polygons"))
     stopifnot(is(Pobj2, "Polygons"))
-    .Call("rgeos_Polygons_intersection", Pobj1, Pobj2, PACKAGE="rgeos")
+    .Call("rgeos_Polygons_intersection", .RGEOS_HANDLE, Pobj1, Pobj2, PACKAGE="rgeos")
 }
 

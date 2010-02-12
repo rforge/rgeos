@@ -3,16 +3,30 @@ SymDiffGpcGEOS <- function(gpclist1, gpclist2) {
     stopifnot(length(gpclist2) > 0)
     gpclist1 <- checkHolesGPC(gpclist1)
     gpclist2 <- checkHolesGPC(gpclist2)
-    .Call("SymDiffGpcGEOS", gpclist1, gpclist2, PACKAGE="rgeos")
+    .Call("SymDiffGpcGEOS", .RGEOS_HANDLE, gpclist1, gpclist2, PACKAGE="rgeos")
 }
 
-
-UnionGpcGEOS <- function(gpclist1, gpclist2) {
+DiffGpcGEOS <- function(gpclist1, gpclist2) {
     stopifnot(length(gpclist1) > 0)
     stopifnot(length(gpclist2) > 0)
     gpclist1 <- checkHolesGPC(gpclist1)
     gpclist2 <- checkHolesGPC(gpclist2)
-    .Call("UnionGpcGEOS", gpclist1, gpclist2, PACKAGE="rgeos")
+    .Call("DiffGpcGEOS", .RGEOS_HANDLE, gpclist1, gpclist2, PACKAGE="rgeos")
+}
+
+
+UnionGpcGEOS <- function(gpclist1, gpclist2, unary=TRUE) {
+    stopifnot(length(gpclist1) > 0)
+    stopifnot(length(gpclist2) > 0)
+    gpclist1 <- checkHolesGPC(gpclist1)
+    gpclist2 <- checkHolesGPC(gpclist2)
+    if (unary) {
+        gpclist <- c(gpclist1, gpclist2)
+        res <- .Call("UnaryUnionGpcGEOS", .RGEOS_HANDLE, gpclist, PACKAGE="rgeos")
+    } else {
+        res <- .Call("UnionGpcGEOS", .RGEOS_HANDLE, gpclist1, gpclist2, PACKAGE="rgeos")
+    }
+    res
 }
 
 
@@ -21,16 +35,16 @@ IntersectGpcGEOS <- function(gpclist1, gpclist2) {
     stopifnot(length(gpclist2) > 0)
     gpclist1 <- checkHolesGPC(gpclist1)
     gpclist2 <- checkHolesGPC(gpclist2)
-    .Call("IntersectGpcGEOS", gpclist1, gpclist2, PACKAGE="rgeos")
+    .Call("IntersectGpcGEOS", .RGEOS_HANDLE, gpclist1, gpclist2, PACKAGE="rgeos")
 }
 
 
 checkHolesGPC <- function(gpclist) {
     stopifnot(length(gpclist) > 0)
-    res0 <- .Call("checkHolesGPC", gpclist, PACKAGE="rgeos")
+    res0 <- .Call("checkHolesGPC", .RGEOS_HANDLE, gpclist, PACKAGE="rgeos")
     if (is.null(res0)) {
         obj <- gpclist
-        hls <- sapply(obj, , "[[", "hole")
+        hls <- sapply(obj, "[[", "hole")
         if (any(hls)) {
             for (i in seq(along=obj)) 
                 if (hls[i]) obj[[i]][["hole"]] <- FALSE

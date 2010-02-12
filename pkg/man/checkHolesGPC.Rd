@@ -13,7 +13,7 @@ checkHolesGPC(gpclist)
 
 \details{}
 \value{}
-\author{}
+\author{Roger Bivand}
 \note{}
 
 

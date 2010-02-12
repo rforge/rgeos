@@ -7,4 +7,14 @@ export(thinnedSpatialPolyGEOS, checkPolygonsGEOS, unionSpatialPolygonsGEOS)
 
 export(SpatialLinesIntersections, LinesIntersections, PolygonsIntersections)
 
-export(SymDiffGpcGEOS, UnionGpcGEOS, IntersectGpcGEOS, checkHolesGPC)
+export(DiffGpcGEOS, SymDiffGpcGEOS, UnionGpcGEOS, UnionGpcGEOS, IntersectGpcGEOS, checkHolesGPC)
+
+# gpclib shadows
+
+exportClasses("gpc.poly")
+
+exportMethods("show", "get.bbox", "plot", "intersect", "union",
+              "setdiff", "[", "append.poly", "scale.poly", "area.poly",
+              "coerce", "symdiff")
+
+
