@@ -121,3 +121,17 @@ PolygonsIntersections <- function(Pobj1, Pobj2) {
     .Call("rgeos_Polygons_intersection", .RGEOS_HANDLE, Pobj1, Pobj2, PACKAGE="rgeos")
 }
 
+poly2nbGEOS(pl, row.names=NULL, snap=NULL, queen=NULL, nn=NULL) {
+    if (!is.null(snap)) warning("snap ignored in GEOS")
+    if (!is.null(queen)) warning("snap ignored in GEOS")
+    stopifnot(is(pl, "SpatialPolygons"))
+    n <- length(slot(pl, "polygons"))
+    stopifnot(is.matrix(nn))
+    stopifnot(is.integer(nn))
+    stopifnot(nrow(nn) == n)
+    if (!is.null(row.names)) {
+        stopifnot(length(row.names) == n)
+        stopifnot(is.character(row.names))
+    }
+    .Call("rgeos_poly2nb", .RGEOS_HANDLE, pl, row.names, nn)
+}
