@@ -16,7 +16,8 @@ SEXP rgeos_DistNpts1pt(SEXP env, SEXP mat, SEXP dim, SEXP x2, SEXP y2) {
     PROTECT(ans = NEW_NUMERIC(n)); pc++;
 
     for (i=0; i<n; i++) {
-        p1 = rgeos_xy2Pt(env, NUMERIC_POINTER(mat)[i], NUMERIC_POINTER(mat)[i+n]);
+        p1 = rgeos_xy2Pt(env, NUMERIC_POINTER(mat)[i],
+            NUMERIC_POINTER(mat)[i+n]);
         if (GEOSDistance_r(GEOShandle, p1, p2, &dist) == 0) {
             GEOSGeom_destroy_r(GEOShandle, p1);
             GEOSGeom_destroy_r(GEOShandle, p2);

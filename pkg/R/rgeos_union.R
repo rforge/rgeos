@@ -9,7 +9,7 @@ unionSpatialPolygonsGEOS <- function(SpP, IDs, threshold=NULL) {
     belongs <- lapply(1:n, function(x) as.integer(which(x == reg)))
     if (is.null(threshold)) threshold <- 0.0
     threshold <- as.double(threshold)
-    res <- .Call("rgeos_SpatialPolygonsUnion", .RGEOS_HANDLE, SpP, belongs, IDss, threshold,
-        PACKAGE="rgeos")
+    res <- .Call("rgeos_SpatialPolygonsUnion", .RGEOS_HANDLE, SpP, belongs,
+        IDss, threshold, PACKAGE="rgeos")
     res
 }

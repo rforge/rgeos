@@ -143,7 +143,8 @@ GEOSGeom GPCptPolygon(SEXP env, SEXP obj) {
 
     g1 = GPCpt2LinearRing(env, obj);
 
-    if ((p1 = GEOSGeom_createPolygon_r(GEOShandle, g1, NULL, (unsigned int) 0)) == NULL) {
+    if ((p1 = GEOSGeom_createPolygon_r(GEOShandle, g1, NULL,
+        (unsigned int) 0)) == NULL) {
         GEOSGeom_destroy_r(GEOShandle, g1);
         error("GPCptPolygon: Polygon not created");
     }
@@ -235,8 +236,8 @@ GEOSGeom GCPPtsGC(SEXP env, SEXP pls) {
             Pol = GPCptPolygon(env, VECTOR_ELT(pls, i));
             geoms[i] = Pol;
         }
-        if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, 
-            npls)) == NULL) {
+        if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON,
+            geoms, npls)) == NULL) {
             error("GCPPtsGC: collection not created");
         }
     } else {
@@ -247,8 +248,8 @@ GEOSGeom GCPPtsGC(SEXP env, SEXP pls) {
             Pol = GPCpt_i_Polygon(env, pls, VECTOR_ELT(comm, i));
             geoms[i] = Pol;
         }
-        if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, 
-            nErings)) == NULL) {
+        if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON,
+            geoms, nErings)) == NULL) {
             error("GCPPtsGC: collection not created");
         }
     }
@@ -272,8 +273,8 @@ GEOSGeom GPCpt_i_Polygon(SEXP env, SEXP pls, SEXP vec) {
 
     pol = GPCpt2LinearRing(env, VECTOR_ELT(pls, i));
     if (n == 1) {
-        if ((res = GEOSGeom_createPolygon_r(GEOShandle, pol, NULL, (unsigned int) 0))
-            == NULL) {
+        if ((res = GEOSGeom_createPolygon_r(GEOShandle, pol, NULL,
+            (unsigned int) 0)) == NULL) {
             GEOSGeom_destroy_r(GEOShandle, pol);
             error("GPCpt_i_Polygon: Polygon not created");
         }
@@ -284,8 +285,8 @@ GEOSGeom GPCpt_i_Polygon(SEXP env, SEXP pls, SEXP vec) {
             hole = GPCpt2LinearRing(env, VECTOR_ELT(pls, i));
             holes[(j-1)] = hole;
         }
-        if ((res = GEOSGeom_createPolygon_r(GEOShandle, pol, holes, (unsigned int) (n-1)))
-            == NULL) {
+        if ((res = GEOSGeom_createPolygon_r(GEOShandle, pol, holes,
+            (unsigned int) (n-1))) == NULL) {
             GEOSGeom_destroy_r(GEOShandle, pol);
             error("GPCpt_i_Polygon: Polygon not created");
         }
@@ -311,8 +312,8 @@ SEXP GCGCPPts(SEXP env, GEOSGeom Geom) {
         n = GEOSGetNumInteriorRings_r(GEOShandle, Geom) + 1;
         PROTECT(res = NEW_LIST(n)); pc++;
 
-        if ((lr = (GEOSGeometry *) GEOSGetExteriorRing_r(GEOShandle, Geom)) == NULL)
-            error("GCGCPPts: exterior ring failure");
+        if ((lr = (GEOSGeometry *) GEOSGetExteriorRing_r(GEOShandle, Geom))
+            == NULL) error("GCGCPPts: exterior ring failure");
         comm = (int *) R_alloc((size_t) n, sizeof(int));
 
         SET_VECTOR_ELT(res, 0, rgeos_LinearRingGCPPts(env, lr, FALSE));
@@ -320,8 +321,8 @@ SEXP GCGCPPts(SEXP env, GEOSGeom Geom) {
         comm[0] = 0;
 
         for (i=1; i<n; i++) {
-            if ((lr = (GEOSGeometry *) GEOSGetInteriorRingN_r(GEOShandle, Geom, (int) (i-1)))
-                 == NULL)
+            if ((lr = (GEOSGeometry *) GEOSGetInteriorRingN_r(GEOShandle,
+                 Geom, (int) (i-1))) == NULL)
                     error("GCGCPPts: interior ring failure");
             comm[i] = 1;
             SET_VECTOR_ELT(res, i, rgeos_LinearRingGCPPts(env, lr, TRUE));
@@ -342,8 +343,8 @@ SEXP GCGCPPts(SEXP env, GEOSGeom Geom) {
 
             GC = (GEOSGeometry *) GEOSGetGeometryN_r(GEOShandle, Geom, i);
 
-            if ((lr = (GEOSGeometry *) GEOSGetExteriorRing_r(GEOShandle, GC)) == NULL)
-                error("GCGCPPts: exterior ring failure");
+            if ((lr = (GEOSGeometry *) GEOSGetExteriorRing_r(GEOShandle, GC))
+                == NULL) error("GCGCPPts: exterior ring failure");
 
             SET_VECTOR_ELT(res, j, rgeos_LinearRingGCPPts(env, lr, FALSE));
 
@@ -353,8 +354,9 @@ SEXP GCGCPPts(SEXP env, GEOSGeom Geom) {
             
             nr = GEOSGetNumInteriorRings_r(GEOShandle, GC);
             for (k=0; k<nr; k++) {
-                if ((lr = (GEOSGeometry *) GEOSGetInteriorRingN_r(GEOShandle, GC, (int) i))
-                     == NULL) error("GCGCPPts: interior ring failure");
+                if ((lr = (GEOSGeometry *) GEOSGetInteriorRingN_r(GEOShandle,
+                     GC, (int) i)) == NULL)
+                     error("GCGCPPts: interior ring failure");
                 comm[j] = jj;
                 SET_VECTOR_ELT(res, j, rgeos_LinearRingGCPPts(env, lr, TRUE));
                 j++;
@@ -382,8 +384,8 @@ SEXP rgeos_LinearRingGCPPts(SEXP env, GEOSGeom lr, int hole) {
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
-    if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq_r(GEOShandle, lr)) == NULL)
-        error("rgeos_LinearRingGCPPts: CoordSeq failure");
+    if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq_r(GEOShandle, lr))
+        == NULL) error("rgeos_LinearRingGCPPts: CoordSeq failure");
 
     GEOSCoordSeq_getSize_r(GEOShandle, s, &n);
 

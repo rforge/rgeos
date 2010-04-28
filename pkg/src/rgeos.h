@@ -52,9 +52,11 @@ GEOSGeom GCPPtsGC(SEXP env, SEXP pls);
 
 GEOSGeom GPCpt_i_Polygon(SEXP env, SEXP pls, SEXP vec);
 
-SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh);
+SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs,
+    SEXP thresh);
 
-SEXP rgeos_SpatialPolygonsSimplify(SEXP env, SEXP obj, SEXP tolerance, SEXP thresh);
+SEXP rgeos_SpatialPolygonsSimplify(SEXP env, SEXP obj, SEXP tolerance,
+    SEXP thresh);
 
 SEXP rgeos_PolygonsContain(SEXP env, SEXP obj);
 
@@ -82,7 +84,8 @@ SEXP rgeos_GCPolygons(SEXP env, GEOSGeom Geom, char *buf, SEXP thresh);
 
 SEXP rgeos_LinearRingPolygon(SEXP env, GEOSGeom lr, int hole);
 
-SEXP rgeos_SpatialPolygonsUnion(SEXP env, SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh);
+SEXP rgeos_SpatialPolygonsUnion(SEXP env, SEXP obj, SEXP grps, SEXP grpIDs,
+    SEXP thresh);
 
 SEXP rgeos_Init(void);
 

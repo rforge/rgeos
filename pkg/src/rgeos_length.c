@@ -60,7 +60,8 @@ SEXP rgeos_PolCentroid(SEXP env, SEXP mat, SEXP dim) {
 
     GEOSCoordSeq s;
 
-    if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq_r(GEOShandle, ct)) == NULL) {
+    if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq_r(GEOShandle, ct))
+         == NULL) {
         GEOSGeom_destroy_r(GEOShandle, gl);
         GEOSGeom_destroy_r(GEOShandle, ct);
         error("rgeos_PolCentroid: problem extracting centroid");

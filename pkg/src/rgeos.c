@@ -214,7 +214,8 @@ GEOSGeom rgeos_crdMat2Polygon(SEXP env, SEXP mat, SEXP dim) {
 
     g1 = rgeos_crdMat2LinearRing(env, mat, dim);
 
-    if ((p1 = GEOSGeom_createPolygon_r(GEOShandle, g1, NULL, (unsigned int) 0)) == NULL) {
+    if ((p1 = GEOSGeom_createPolygon_r(GEOShandle, g1, NULL,
+        (unsigned int) 0)) == NULL) {
         GEOSGeom_destroy_r(GEOShandle, g1);
         error("rgeos_crdMat2Polygon: Polygon not created");
     }

@@ -7,7 +7,8 @@
 
   GEOSptr <- .Call('rgeos_Init', PACKAGE="rgeos")
   assign("GEOSptr", GEOSptr, envir=.RGEOS_HANDLE)
-  cat("GEOS runtime version:", .Call("rgeos_GEOSversion", PACKAGE="rgeos"), "\n")
+  cat("GEOS runtime version:", .Call("rgeos_GEOSversion", PACKAGE="rgeos"),
+    "\n")
 }
 
 .onUnload <- function(libpath) {
