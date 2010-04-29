@@ -123,7 +123,7 @@ PolygonsIntersections <- function(Pobj1, Pobj2) {
         PACKAGE="rgeos")
 }
 
-poly2nbGEOS(pl, row.names=NULL, snap=NULL, queen=NULL, nn=NULL) {
+poly2nbGEOS <- function(pl, row.names=NULL, snap=NULL, queen=NULL, nn=NULL) {
     if (!is.null(snap)) warning("snap ignored in GEOS")
     if (!is.null(queen)) warning("snap ignored in GEOS")
     stopifnot(is(pl, "SpatialPolygons"))

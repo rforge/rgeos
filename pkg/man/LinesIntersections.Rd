@@ -26,6 +26,8 @@ PolygonsIntersections(Pobj1, Pobj2)
 
 \examples{
 require(maptools)
+if (require(rgeos)) {
+assign("rgeos", TRUE, envir=maptools:::.MAPTOOLS_CACHE)
 xx <- readShapeSpatial(system.file("shapes/fylk-val-ll.shp",
  package="maptools")[1], proj4string=CRS("+proj=longlat +datum=WGS84"))
 bbxx <- bbox(xx)
@@ -35,9 +37,10 @@ res <- SpatialLinesIntersections(xx, xxx)
 plot(xx, axes=TRUE)
 plot(xxx, lty=2, add=TRUE)
 plot(res, add=TRUE, pch=16)
-row.names(xx)
-row.names(xxx)
-summary(res)
+print(row.names(xx))
+print(row.names(xxx))
+print(summary(res))
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
