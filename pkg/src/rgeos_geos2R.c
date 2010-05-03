@@ -319,3 +319,4 @@ GEOSGeom rgeos_SpatialPolygonsGC(SEXP env, SEXP obj) {
     UNPROTECT(pc);
     return(GC);
 }
+

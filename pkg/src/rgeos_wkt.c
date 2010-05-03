@@ -1,9 +1,10 @@
 #include "rgeos.h"
 
-SEXP rgeos_wkt2sp(SEXP env,SEXP obj,SEXP id,SEXP thres) {
+SEXP rgeos_wkt2sp(SEXP env, SEXP obj, SEXP id, SEXP thres) {
     GEOSGeom GC;
     SEXP ans;
     int pc=0;
+    char ibuf[BUFSIZ];
     
     GEOSWKTReader *reader;
     
@@ -19,8 +20,10 @@ SEXP rgeos_wkt2sp(SEXP env,SEXP obj,SEXP id,SEXP thres) {
     GEOSWKTReader_destroy_r(GEOShandle,reader);
     
     
-    PROTECT( ans = rgeos_GCPolygons(env, GC, CHAR(STRING_ELT(id, 0)), thres)); pc++;
+    strcpy(ibuf, CHAR(STRING_ELT(id, 0)));
+    PROTECT( ans = rgeos_GCPolygons(env, GC, ibuf, thres)); pc++;
     UNPROTECT(pc);
     
     return(ans);
 }
+

@@ -105,6 +105,11 @@ double getScale(SEXP env) {
     return(r);
 }
 
+double rgeos_round(double val) {
+    return java_math_round(val);
+}
+
+
 double makePrecise(double val, double scale) {
     return( rgeos_round(val*scale)/scale );
 }

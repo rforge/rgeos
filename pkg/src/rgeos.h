@@ -128,9 +128,9 @@ double java_math_round(double val);
 double rint_vc(double val);
 // Based on geos rounding methods, use just one global 
 // round function, so it can be easily switched globally 
-inline double rgeos_round(double val) {
-    return java_math_round(val);
-}
+double rgeos_round(double val);
+// inline removed, see Writing R extensions, section 6.14
+// http://cran.r-project.org/doc/manuals/R-exts.html#Inlining-C-functions
 
 #endif
 

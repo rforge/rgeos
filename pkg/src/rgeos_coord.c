@@ -241,3 +241,4 @@ GEOSGeom rgeos_xy2Pt(SEXP env, double x, double y) {
     return(gl);
 
 }
+

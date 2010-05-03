@@ -72,3 +72,4 @@ SEXP rgeos_PolygonsContain(SEXP env, SEXP obj) {
     return(GC_Contains(env, GC));
 
 }
+
