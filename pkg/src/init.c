@@ -7,7 +7,6 @@
 static const R_CMethodDef CEntries[] = {
     {"rgeos_crdMat2CoordSeq", (DL_FUNC) &rgeos_crdMat2CoordSeq, 3},
     {"rgeos_xy2CoordSeq", (DL_FUNC) &rgeos_xy2CoordSeq, 3},
-    {"rgeos_Geom2Env", (DL_FUNC) &rgeos_Geom2Env, 2},
     {"rgeos_xy2Pt", (DL_FUNC) &rgeos_xy2Pt, 3},
     {"rgeos_crdMat2LineString", (DL_FUNC) &rgeos_crdMat2LineString, 3},
     {"rgeos_crdMat2LinearRing", (DL_FUNC) &rgeos_crdMat2LinearRing, 3},
@@ -27,8 +26,7 @@ static R_CallMethodDef CallEntries[] = {
 
     {"rgeos_SpatialPolygonsUnion", (DL_FUNC) &rgeos_SpatialPolygonsUnion, 5},
     {"rgeos_GCSpatialPolygons", (DL_FUNC) &rgeos_GCSpatialPolygons, 5},
-    {"rgeos_SpatialPolygonsSimplify",
-        (DL_FUNC) &rgeos_SpatialPolygonsSimplify, 4},
+    {"rgeos_SpatialPolygonsSimplify", (DL_FUNC) &rgeos_SpatialPolygonsSimplify, 4},
     {"rgeos_PolygonsContain", (DL_FUNC) &rgeos_PolygonsContain, 2},
     {"rgeos_lineLength", (DL_FUNC) &rgeos_lineLength, 3},
     {"rgeos_PolArea", (DL_FUNC) &rgeos_PolArea, 3},
@@ -53,6 +51,7 @@ static R_CallMethodDef CallEntries[] = {
     {"IntersectGpcGEOS", (DL_FUNC) &IntersectGpcGEOS, 3},
     {"UnaryUnionGpcGEOS", (DL_FUNC) &UnaryUnionGpcGEOS, 2},
     {"checkHolesGPC", (DL_FUNC) &checkHolesGPC, 2},
+    {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp,4}, 
     {NULL, NULL, 0}
 };
 

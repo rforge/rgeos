@@ -135,5 +135,5 @@ poly2nbGEOS <- function(pl, row.names=NULL, snap=NULL, queen=NULL, nn=NULL) {
         stopifnot(length(row.names) == n)
         stopifnot(is.character(row.names))
     }
-    .Call("rgeos_poly2nb", .RGEOS_HANDLE, pl, row.names, nn)
+    .Call("rgeos_poly2nb", .RGEOS_HANDLE, pl, row.names, nn,PACKAGE="rgeos")
 }

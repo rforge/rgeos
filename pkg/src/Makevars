@@ -1,0 +1,3 @@
+PKG_CPPFLAGS=-I/opt/local/include
+PKG_LIBS=-L/opt/local/lib -lgeos -lgeos_c
+

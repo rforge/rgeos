@@ -3,6 +3,10 @@ useDynLib(rgeos)
 import(methods)
 import(sp)
 
+export(getScale,setScale)
+
+export(WKT2SP, SP2WKT)
+
 export(thinnedSpatialPolyGEOS, checkPolygonsGEOS, unionSpatialPolygonsGEOS)
 
 export(SpatialLinesIntersections, LinesIntersections, PolygonsIntersections)

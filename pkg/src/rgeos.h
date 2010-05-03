@@ -16,8 +16,6 @@ GEOSCoordSeq rgeos_crdMat2CoordSeq(SEXP env, SEXP mat, SEXP dim);
 
 GEOSCoordSeq rgeos_xy2CoordSeq(SEXP env, double x, double y);
 
-GEOSGeom rgeos_Geom2Env(SEXP env, GEOSGeom Geom);
-
 GEOSGeom rgeos_xy2Pt(SEXP env, double x, double y);
 
 GEOSGeom rgeos_crdMat2LineString(SEXP env, SEXP mat, SEXP dim);
@@ -84,8 +82,7 @@ SEXP rgeos_GCPolygons(SEXP env, GEOSGeom Geom, char *buf, SEXP thresh);
 
 SEXP rgeos_LinearRingPolygon(SEXP env, GEOSGeom lr, int hole);
 
-SEXP rgeos_SpatialPolygonsUnion(SEXP env, SEXP obj, SEXP grps, SEXP grpIDs,
-    SEXP thresh);
+SEXP rgeos_SpatialPolygonsUnion(SEXP env, SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh);
 
 SEXP rgeos_Init(void);
 
@@ -94,6 +91,8 @@ SEXP rgeos_GEOSversion(void);
 SEXP rgeos_finish(SEXP env);
 
 static void rgeos_finish_handle(SEXP ptr);
+
+double getScale(SEXP env);
 
 SEXP rgeos_Polygons_intersection(SEXP env, SEXP obj1, SEXP obj2);
 
@@ -119,7 +118,19 @@ SEXP GCGCPPts(SEXP env, GEOSGeom Geom);
 
 SEXP rgeos_LinearRingGCPPts(SEXP env, GEOSGeom lr, int hole);
 
+SEXP rgeos_wkt2sp(SEXP env,SEXP obj,SEXP id,SEXP thres);
+
 GEOSContextHandle_t getContextHandle(SEXP env);
+
+double makePrecise(double val, double scale);
+double sym_round(double val);
+double java_math_round(double val);
+double rint_vc(double val);
+// Based on geos rounding methods, use just one global 
+// round function, so it can be easily switched globally 
+inline double rgeos_round(double val) {
+    return java_math_round(val);
+}
 
 #endif
 
