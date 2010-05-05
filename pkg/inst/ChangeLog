@@ -1,3 +1,84 @@
+2010-05-05 08:41  rsbivand
+
+	* NAMESPACE, R/rgeos.R, src/init.c, src/rgeos.h,
+	  src/rgeos_poly2nb.c: bounding box intersections
+
+2010-05-03 17:19  rsbivand
+
+	* DESCRIPTION: increment DESCRIPTION version #
+
+2010-05-03 16:35  rsbivand
+
+	* DESCRIPTION, R/AAA.R, R/rgeos.R: increment DESCRIPTION version #
+
+2010-05-03 14:04  rsbivand
+
+	* src/rgeos.c, src/rgeos.h, src/rgeos_coord.c, src/rgeos_geos2R.c,
+	  src/rgeos_validate.c, src/rgeos_wkt.c: removing inline
+	  declaration in rgeos.h - see comment
+
+2010-05-03 13:33  rsbivand
+
+	* src/Makevars: removing pkg/src/Makevars - auto-generated from
+	  Makevars.in
+
+2010-05-03 05:24  crundel
+
+	* NAMESPACE, R/AAA.R, R/rgeos.R, R/rgeos_util.R, R/rgeos_wkt.R,
+	  src/Makevars, src/init.c, src/rgeos.c, src/rgeos.h,
+	  src/rgeos_R2geos.c, src/rgeos_area.c, src/rgeos_coord.c,
+	  src/rgeos_geos2R.c, src/rgeos_sp.c, src/rgeos_validate.c,
+	  src/rgeos_wkt.c: Tidying existing functions, roughly grouped into
+	  files by task.
+	  
+	  Added functions for WKT output.
+	  
+	  Fixed precision issue leading to small polygons not being joined.
+	  Added functionality to get, set, and use a scale variable that
+	  determines min precision with appropriate rounding functions from
+	  GEOS.
+
+2010-04-29 14:35  rsbivand
+
+	* R/rgeos.R, man/LinesIntersections.Rd: fix poly2nb framework
+	  (non-operational)
+
+2010-04-28 08:44  rsbivand
+
+	* R/AAA.R, R/rgeos.R, R/rgeos_simplify.R, R/rgeos_union.R,
+	  src/gpc_geos.c, src/rgeos.c, src/rgeos.h, src/rgeos_distance.c,
+	  src/rgeos_length.c, src/rgeos_sp.c: tidy
+
+2010-04-26 08:32  rsbivand
+
+	* R/rgeos.R: starting poly2nb
+
+2010-02-12 12:27  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/AAA.R, R/Rgpc_funcs.R, R/gpc_geos.R,
+	  R/rgeos.R, R/rgeos_simplify.R, R/rgeos_union.R, data,
+	  data/poly_ex.rda, man/checkHolesGPC.Rd, man/gpc.poly-class.Rd,
+	  man/new-generics.Rd, man/unionSpatialPolygonsGEOS.Rd,
+	  src/gpc_geos.c, src/init.c, src/rgeos.c, src/rgeos.h,
+	  src/rgeos_contains.c, src/rgeos_distance.c, src/rgeos_length.c,
+	  src/rgeos_sp.c: adding gpc.poly <-> GEOS interface
+
+2010-02-08 14:55  rsbivand
+
+	* configure.win, src/Makevars.win: Windows DLL to static
+
+2010-02-01 18:01  rsbivand
+
+	* R/Rgpc_funcs.R: Rgpc functions
+
+2010-02-01 12:21  rsbivand
+
+	* configure.win: Win binaries to 320
+
+2010-01-31 19:22  rsbivand
+
+	* ChangeLog, inst/ChangeLog: union buffer scale problem
+
 2010-01-31 19:21  rsbivand
 
 	* man/checkHolesGPC.Rd: union buffer scale problem
