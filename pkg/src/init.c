@@ -51,10 +51,10 @@ static R_CallMethodDef CallEntries[] = {
     {"IntersectGpcGEOS", (DL_FUNC) &IntersectGpcGEOS, 3},
     {"UnaryUnionGpcGEOS", (DL_FUNC) &UnaryUnionGpcGEOS, 2},
     {"checkHolesGPC", (DL_FUNC) &checkHolesGPC, 2},
-    {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp,4}, 
+    {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp, 4}, 
+    {"rgeos_poly_findInBox", (DL_FUNC) &rgeos_poly_findInBox, 2}, 
     {NULL, NULL, 0}
 };
-
 
 void 
 #ifdef HAVE_VISIBILITY_ATTRIBUTE

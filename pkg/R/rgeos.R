@@ -123,17 +123,8 @@ PolygonsIntersections <- function(Pobj1, Pobj2) {
         PACKAGE="rgeos")
 }
 
-poly2nbGEOS <- function(pl, row.names=NULL, snap=NULL, queen=NULL) {
-    if (!is.null(snap)) warning("snap ignored in GEOS")
-    if (!is.null(queen)) warning("queen ignored in GEOS")
-    stopifnot(is(pl, "SpatialPolygons"))
-    n <- length(slot(pl, "polygons"))
-    stopifnot(is.matrix(nn))
-    stopifnot(is.integer(nn))
-    stopifnot(nrow(nn) == n)
-    if (!is.null(row.names)) {
-        stopifnot(length(row.names) == n)
-        stopifnot(is.character(row.names))
-    }
-    .Call("rgeos_poly2nb", .RGEOS_HANDLE, pl, row.names, PACKAGE="rgeos")
+poly_findInBoxGEOS <- function(spl) {
+    stopifnot(is(spl, "SpatialPolygons"))
+    pls <- slot(spl, "polygons")
+    .Call("rgeos_poly_findInBox", .RGEOS_HANDLE, pls, PACKAGE="rgeos")
 }

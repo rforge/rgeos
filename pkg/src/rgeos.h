@@ -118,9 +118,11 @@ SEXP GCGCPPts(SEXP env, GEOSGeom Geom);
 
 SEXP rgeos_LinearRingGCPPts(SEXP env, GEOSGeom lr, int hole);
 
-SEXP rgeos_wkt2sp(SEXP env,SEXP obj,SEXP id,SEXP thres);
+SEXP rgeos_wkt2sp(SEXP env, SEXP obj, SEXP id, SEXP thres);
 
 GEOSContextHandle_t getContextHandle(SEXP env);
+
+SEXP rgeos_poly_findInBox(SEXP env, SEXP pls);
 
 double makePrecise(double val, double scale);
 double sym_round(double val);

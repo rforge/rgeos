@@ -11,6 +11,8 @@ export(thinnedSpatialPolyGEOS, checkPolygonsGEOS, unionSpatialPolygonsGEOS)
 
 export(SpatialLinesIntersections, LinesIntersections, PolygonsIntersections)
 
+export(poly_findInBoxGEOS)
+
 export(DiffGpcGEOS, SymDiffGpcGEOS, UnionGpcGEOS, UnionGpcGEOS, IntersectGpcGEOS, checkHolesGPC)
 
 # gpclib shadows
