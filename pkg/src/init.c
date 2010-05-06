@@ -52,7 +52,7 @@ static R_CallMethodDef CallEntries[] = {
     {"UnaryUnionGpcGEOS", (DL_FUNC) &UnaryUnionGpcGEOS, 2},
     {"checkHolesGPC", (DL_FUNC) &checkHolesGPC, 2},
     {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp, 4}, 
-    {"rgeos_poly_findInBox", (DL_FUNC) &rgeos_poly_findInBox, 2}, 
+    {"rgeos_poly_findInBox", (DL_FUNC) &rgeos_poly_findInBox, 3}, 
     {NULL, NULL, 0}
 };
 

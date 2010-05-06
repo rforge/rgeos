@@ -111,3 +111,45 @@ GEOSGeom rgeos_Polygons2GC(SEXP env, SEXP obj) {
     return(GC);
 
 }
+
+// Spatial polygons to fish soup geometry collection (multipoint) 
+GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj) {
+
+    SEXP pls, crdMat, dim;
+    GEOSGeom *geoms;
+    GEOSGeom pt, GC;
+    int npls, i, ii, j, n, nn=0, pc=0;
+
+    GEOSContextHandle_t GEOShandle = getContextHandle(env);
+
+    PROTECT(pls = GET_SLOT(obj, install("Polygons"))); pc++;
+    npls = length(pls);
+
+    for (i=0; i<npls; i++) {
+        crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
+        dim = getAttrib(crdMat, R_DimSymbol);
+        nn += (INTEGER_POINTER(dim)[0]-1);
+    }
+
+    geoms = (GEOSGeom *) R_alloc((size_t) nn, sizeof(GEOSGeom));
+
+    for (i=0, ii=0; i<npls; i++) {
+        crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
+        dim = getAttrib(crdMat, R_DimSymbol);
+        n = INTEGER_POINTER(dim)[0];
+        for (j=0; j<(n-1); j++) {
+            pt = rgeos_xy2Pt(env, NUMERIC_POINTER(crdMat)[j],
+                NUMERIC_POINTER(crdMat)[j+n]);
+            geoms[ii] = pt;
+            ii++;
+        }
+    }
+
+    if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOINT, 
+        geoms, nn)) == NULL) {
+        error("rgeos_Polygons2MP: collection not created");
+    }
+
+    UNPROTECT(pc);
+    return(GC);
+}

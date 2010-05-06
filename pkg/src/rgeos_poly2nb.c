@@ -14,7 +14,7 @@ void cb(void *item, void *userdata) {
 
 static struct ud UD;
 
-SEXP rgeos_poly_findInBox(SEXP env, SEXP pls) {
+SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points) {
 
     GEOSGeom *bbs;
     int npls, i, j, jj, pc=0;
@@ -22,6 +22,7 @@ SEXP rgeos_poly_findInBox(SEXP env, SEXP pls) {
     SEXP pl, bblist;
     GEOSSTRtree *str;
     int *icard, *ids, *oids;
+    int asPTS = LOGICAL_POINTER(as_points)[0];
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
@@ -36,8 +37,14 @@ SEXP rgeos_poly_findInBox(SEXP env, SEXP pls) {
     for (i=0; i<npls; i++) {
         ids[i] = i;
         pl = VECTOR_ELT(pls, i);
-        if ((GC = rgeos_Polygons2GC(env, pl)) == NULL) {
-            error("rgeos_poly2nb: GC[%d] not created", i);
+        if (asPTS) {
+              if ((GC = rgeos_Polygons2MP(env, pl)) == NULL) {
+                error("rgeos_poly2nb: MP GC[%d] not created", i);
+            }
+        } else {
+              if ((GC = rgeos_Polygons2GC(env, pl)) == NULL) {
+                error("rgeos_poly2nb: GC[%d] not created", i);
+            }
         }
         if ((bb = GEOSEnvelope_r(GEOShandle, GC)) == NULL) {
             error("rgeos_poly2nb: envelope [%d] not created", i);

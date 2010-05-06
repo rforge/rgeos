@@ -30,6 +30,8 @@ GEOSGeom rgeos_SpatialPolygonsGC(SEXP env, SEXP obj);
 
 GEOSGeom rgeos_Polygons2GC(SEXP env, SEXP obj);
 
+GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj);
+
 GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec);
 
 GEOSGeom rgeos_Lines2GC(SEXP env, SEXP obj);
@@ -122,7 +124,7 @@ SEXP rgeos_wkt2sp(SEXP env, SEXP obj, SEXP id, SEXP thres);
 
 GEOSContextHandle_t getContextHandle(SEXP env);
 
-SEXP rgeos_poly_findInBox(SEXP env, SEXP pls);
+SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points);
 
 double makePrecise(double val, double scale);
 double sym_round(double val);

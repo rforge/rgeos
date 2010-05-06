@@ -123,8 +123,11 @@ PolygonsIntersections <- function(Pobj1, Pobj2) {
         PACKAGE="rgeos")
 }
 
-poly_findInBoxGEOS <- function(spl) {
+poly_findInBoxGEOS <- function(spl, as_points=TRUE) {
     stopifnot(is(spl, "SpatialPolygons"))
+    stopifnot(is.logical(as_points))
+    stopifnot(!is.na(as_points))
     pls <- slot(spl, "polygons")
-    .Call("rgeos_poly_findInBox", .RGEOS_HANDLE, pls, PACKAGE="rgeos")
+    .Call("rgeos_poly_findInBox", .RGEOS_HANDLE, pls, as_points,
+       PACKAGE="rgeos")
 }
