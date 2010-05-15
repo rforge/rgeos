@@ -1,94 +1,5 @@
 #include "rgeos.h"
 
-// TODO - Rename function
-SEXP rgeos_inout(SEXP env, SEXP obj) {
-
-    SEXP ans, p4s, bb, SPans;
-    GEOSGeom GC, bbG;
-    int pc=0;
-
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    PROTECT(p4s = GET_SLOT(obj, install("proj4string"))); pc++;
-
-    GC = rgeos_SPoints2MP(env, obj);
-
-    PROTECT(ans = rgeos_MP2crdMat(env, GC)); pc++;
-    if (ans == R_NilValue) error("MultiPoint to matrix conversion failed");
-
-    PROTECT(bb = rgeos_Geom2bbox(env, GC)); pc++;
-    if (bb == R_NilValue) error("Bounding box creation failed");
-
-    PROTECT(SPans = NEW_OBJECT(MAKE_CLASS("SpatialPoints"))); pc++;
-    SET_SLOT(SPans, install("coords"), ans);
-    SET_SLOT(SPans, install("proj4string"), p4s);
-    SET_SLOT(SPans, install("bbox"), bb);
-
-    GEOSGeom_destroy_r(GEOShandle, GC);
-
-    UNPROTECT(pc);
-    return(SPans);
-}
-
-
-SEXP rgeos_Geom2bbox(SEXP env, GEOSGeom Geom) {
-
-    GEOSGeom bb, bbER;
-    GEOSCoordSeq s;
-    unsigned int i, n;
-    double UX=-DBL_MAX, LX=DBL_MAX, UY=-DBL_MAX, LY=DBL_MAX;
-    SEXP bbmat, ans, dim, dimnames;
-    int pc=0;
-
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    if ((bb = GEOSEnvelope_r(GEOShandle, Geom)) == NULL) {
-        return(R_NilValue);
-    }
-
-    if ((bbER = (GEOSGeometry *) GEOSGetExteriorRing_r(GEOShandle, bb)) == NULL) {
-        return(R_NilValue);
-    }
-
-    if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq_r(GEOShandle, bbER)) == NULL) {
-        return(R_NilValue);
-    }
-    
-    GEOSCoordSeq_getSize_r(GEOShandle, s, &n);
-    if (n == 0) {
-        return(R_NilValue);
-    }
-    
-    bbmat = rgeos_CoordSeq2crdMat(env, s, (int) GEOSHasZ(bb), FALSE); 
-    for (i=0; i<n; i++) {
-       if (NUMERIC_POINTER(bbmat)[i] > UX) UX = NUMERIC_POINTER(bbmat)[i];
-       if (NUMERIC_POINTER(bbmat)[i+n] > UY) UY = NUMERIC_POINTER(bbmat)[i+n];
-       if (NUMERIC_POINTER(bbmat)[i] < LX) LX = NUMERIC_POINTER(bbmat)[i];
-       if (NUMERIC_POINTER(bbmat)[i+n] < LY) LY = NUMERIC_POINTER(bbmat)[i+n];
-    }
-
-    PROTECT(ans = NEW_NUMERIC(4)); pc++;
-    NUMERIC_POINTER(ans)[0] = LX;
-    NUMERIC_POINTER(ans)[1] = LY;
-    NUMERIC_POINTER(ans)[2] = UX;
-    NUMERIC_POINTER(ans)[3] = UY;
-    PROTECT(dim = NEW_INTEGER(2)); pc++;
-    INTEGER_POINTER(dim)[0] = 2;
-    INTEGER_POINTER(dim)[1] = 2;
-    setAttrib(ans, R_DimSymbol, dim);
-    PROTECT(dimnames = NEW_LIST(2)); pc++;
-    SET_VECTOR_ELT(dimnames, 0, NEW_CHARACTER(2));
-    SET_STRING_ELT(VECTOR_ELT(dimnames, 0), 0, COPY_TO_USER_STRING("x"));
-    SET_STRING_ELT(VECTOR_ELT(dimnames, 0), 1, COPY_TO_USER_STRING("y"));
-    SET_VECTOR_ELT(dimnames, 1, NEW_CHARACTER(2));
-    SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 0, COPY_TO_USER_STRING("min"));
-    SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 1, COPY_TO_USER_STRING("max"));
-    setAttrib(ans, R_DimNamesSymbol, dimnames);
-    UNPROTECT(pc);
-    return(ans);
-}
-
-
 SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh) {
     
     SEXP ans, pls, bbox, plotOrder;
@@ -268,10 +179,13 @@ SEXP rgeos_LinearRingPolygon(SEXP env, GEOSGeom lr, int hole) {
         error("rgeos_LinearRingPolygon: CoordSeq failure");
 
     rgeos_csArea(env, s, &area);
+    
     PROTECT(ringDir = NEW_INTEGER(1)); pc++;
     PROTECT(Hole = NEW_LOGICAL(1)); pc++;
+    
     LOGICAL_POINTER(Hole)[0] = hole;
     INTEGER_POINTER(ringDir)[0] = (area > 0.0) ? -1 : 1;
+    
     if (LOGICAL_POINTER(Hole)[0] && INTEGER_POINTER(ringDir)[0] == 1) {
         rev = TRUE;
         INTEGER_POINTER(ringDir)[0] = -1;
@@ -280,6 +194,7 @@ SEXP rgeos_LinearRingPolygon(SEXP env, GEOSGeom lr, int hole) {
         rev = TRUE;
         INTEGER_POINTER(ringDir)[0] = 1;
     }
+    
     if (GEOSCoordSeq_getSize_r(GEOShandle, s, &n) == 0)
         error("rgeos_LinearRingPolygon: CoordSeq failure");
 
@@ -292,31 +207,46 @@ SEXP rgeos_LinearRingPolygon(SEXP env, GEOSGeom lr, int hole) {
 
     UNPROTECT(pc);
     return(SPans);
-
 }
 
-GEOSGeom rgeos_SpatialPolygonsGC(SEXP env, SEXP obj) {
 
-    SEXP pls;
-    int npls, i, pc=0;
-    GEOSGeom *geoms;
-    GEOSGeom GC;
+
+SEXP rgeos_multipoint2SpatialPoints(SEXP env, GEOSGeom mpt) {
+
+    SEXP SPans, crdmat, bbox, p4s;
+    int pc=0, hasZ;
+    int n, type;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    PROTECT(pls = GET_SLOT(obj, install("polygons"))); pc++;
-    npls = length(pls);
-
-    geoms = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
-
-    for (i=0; i<npls; i++)
-        geoms[i] = rgeos_Polygons2GC(env, VECTOR_ELT(pls, i));
-
-    if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, npls)) == NULL) {
-        error("rgeos_SpatialPolygonsGC: collection not created");
+    
+    type = GEOSGeomTypeId_r(GEOShandle, mpt);
+    
+    if ( type == GEOS_POINT ) {
+        n = 1;
+    } else if ( type == GEOS_MULTIPOINT ) {
+        n = GEOSGetNumGeometries_r(GEOShandle, mpt);
+    } else {
+        error("rgeos_multipoint2SpatialPoints: unknown type");
     }
+    
+    if (n < 1) error("rgeos_multipoint2SpatialPoints: invalid number of geometries");
+
+    PROTECT(crdmat = rgeos_multipoint2crdMat(env, mpt, n)); pc++;
+    if (crdmat == R_NilValue) error("rgeos_multipoint2SpatialPoints: MultiPoint to matrix conversion failed");
+    
+    PROTECT(bbox = rgeos_crdMat2bbox(crdmat, n)); pc++;
+    if (bbox == R_NilValue) error("rgeos_multipoint2SpatialPoints: bounding box creation failed");
+    
+    PROTECT(p4s = NEW_OBJECT(MAKE_CLASS("CRS"))); pc++;
+    SET_SLOT(p4s, install("projargs"), R_NilValue); //R_NaString);
+
+    PROTECT(SPans = NEW_OBJECT(MAKE_CLASS("SpatialPoints"))); pc++;    
+    SET_SLOT(SPans, install("coords"), crdmat);
+    SET_SLOT(SPans, install("bbox"), bbox);
+    SET_SLOT(SPans, install("proj4string"), p4s);
+
 
     UNPROTECT(pc);
-    return(GC);
+    return(SPans);
 }
 

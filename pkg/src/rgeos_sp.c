@@ -96,7 +96,7 @@ SEXP rgeos_Lines_intersection(SEXP env, SEXP obj1, SEXP obj2) {
         error("rgeos_Lines_intersection: GEOSIntersection failure");
     }
 
-    PROTECT(ans = rgeos_MP2crdMat(env, out)); pc++;
+    PROTECT(ans = rgeos_multipoint2crdMat(env, out)); pc++;
     UNPROTECT(pc);
     return(ans);
 

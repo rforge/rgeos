@@ -111,6 +111,32 @@ GEOSGeom rgeos_Polygons2GC(SEXP env, SEXP obj) {
     return(GC);
 
 }
+<<<<<<< .mine
+
+GEOSGeom rgeos_SpatialPolygonsGC(SEXP env, SEXP obj) {
+
+    SEXP pls;
+    int npls, i, pc=0;
+    GEOSGeom *geoms;
+    GEOSGeom GC;
+
+    GEOSContextHandle_t GEOShandle = getContextHandle(env);
+
+    PROTECT(pls = GET_SLOT(obj, install("polygons"))); pc++;
+    npls = length(pls);
+
+    geoms = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
+
+    for (i=0; i<npls; i++)
+        geoms[i] = rgeos_Polygons2GC(env, VECTOR_ELT(pls, i));
+
+    if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, npls)) == NULL) {
+        error("rgeos_SpatialPolygonsGC: collection not created");
+    }
+
+    UNPROTECT(pc);
+    return(GC);
+}=======
 
 // Spatial polygons to fish soup geometry collection (multipoint) 
 GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj) {
@@ -153,3 +179,4 @@ GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj) {
     UNPROTECT(pc);
     return(GC);
 }
+>>>>>>> .r63

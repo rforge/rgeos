@@ -407,7 +407,9 @@ SEXP rgeos_LinearRingGCPPts(SEXP env, GEOSGeom lr, int hole) {
         GEOSCoordSeq_getY_r(GEOShandle, s, i, &val);
         NUMERIC_POINTER(VECTOR_ELT(res, 1))[i] = val;
     }
-
+    
+    GEOSCoordSeq_destroy_r(GEOShandle,s); 
+    
     UNPROTECT(pc);
     return(res);
 }

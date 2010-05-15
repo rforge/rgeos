@@ -1,8 +1,15 @@
-str_stripws = function(str) {
-    str = sub('\\s+$', '', str, perl = TRUE)
-    str = sub('^\\s+', '', str, perl = TRUE)
-    return(str)
+
+#TODO - this should probably be more robust
+isWKT = function( s ) {
+    
+    s = str_trim(s)
+    validWKT = c("^POINT", "^LINESTRING", "^LINEARRING", "^POLYGON", "^MULTIPOINT", 
+                 "^MULTILINESTRING", "^MULTIPOLYGON", "^GEOMETRYCOLLECTION")
+    
+    return(any( sapply(validWKT, function(x) str_detect(s,x)) ))
 }
+
+
 
 SP2WKT = function( sp,belongs=NULL ) {
 
@@ -48,7 +55,7 @@ SP2WKT = function( sp,belongs=NULL ) {
 
 WKT2SP = function( text,id=NULL,threshold=0.0 ) {
 
-    wkts = lapply( strsplit(text,'\n'), str_stripws)
+    wkts = lapply( strsplit(text,'\n'), str_trim)
     if(is.null(id))
         id = 1:length( wkts[[1]] )
     
@@ -67,4 +74,67 @@ WKT2SP = function( text,id=NULL,threshold=0.0 ) {
         }
     }
     return( SpatialPolygons(res) )
+}
+
+readWKT = function( text, id = NULL ) {
+    threshold=0
+    wkts = cleanWKT(text)
+    
+    if(is.null(id))
+        id = 1:length(wkts)
+    
+    if( length(wkts) != length(id) )
+        stop("number of WKT strings does not match number of ids")
+    
+    threshold=as.double(threshold)
+    id = as.character(id)
+        
+    res = list()
+    for(i in 1:length(wkts) ) {
+        res[[i]] <- .Call("rgeos_readWKT", .RGEOS_HANDLE, wkts[i], id[i], threshold,PACKAGE="rgeos")
+    }
+    
+    return( res )
+}
+
+
+# TODO - could be done more efficiently with regexs
+cleanWKT = function( text ) {
+    
+    text = str_replace(str_trim(text),"\n","")
+
+    openPos  = c( gregexpr("\\(", text)[[1]], nchar(text)+1)
+    closePos = c( gregexpr("\\)", text)[[1]], nchar(text)+1)
+
+    i = 1
+    j = 1
+    splitPos = c()
+    count = 0
+    while ( i < length(openPos) | j < length(closePos) ) {
+        if (openPos[i] < closePos[j]) {
+            count = count+1
+            i = i+1
+        } else {
+            count = count-1
+            j = j+1
+        }
+    
+        if (count < 0) stop("invalid WKT text, unbalanced parenthesis")
+        
+        if (count == 0) splitPos = c(splitPos, closePos[j-1])
+    }
+    
+    if (count != 0 ) stop("invalid WKT text, unbalanced parenthesis")
+    
+    startPos = c(1, splitPos[-length(splitPos)]+1)
+    
+    rep = str_trim( substring(text,startPos,splitPos) )
+    
+    validWKTs = sapply(rep,isWKT)
+    if ( !all(validWKTs) ) {
+        warning(paste("cleanWKT: following WKT strings are invalid, ignoring.\n",
+                      paste( rep[validWKTs],collapse="\n" ) ))
+    }
+    
+    return( rep[validWKTs] )
 }

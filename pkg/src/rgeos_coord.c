@@ -80,8 +80,7 @@ GEOSGeom rgeos_crdMat2Polygon(SEXP env, SEXP mat, SEXP dim) {
 
     g1 = rgeos_crdMat2LinearRing(env, mat, dim);
 
-    if ((p1 = GEOSGeom_createPolygon_r(GEOShandle, g1, NULL,
-        (unsigned int) 0)) == NULL) {
+    if ((p1 = GEOSGeom_createPolygon_r(GEOShandle, g1, NULL, (unsigned int) 0)) == NULL) {
         GEOSGeom_destroy_r(GEOShandle, g1);
         error("rgeos_crdMat2Polygon: Polygon not created");
     }
@@ -95,6 +94,7 @@ SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev) {
 
     int pc=0, i, n, m, ii;
     double val,scale = getScale(env);
+    SEXP ans, dims, dimnames;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
@@ -105,38 +105,48 @@ SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev) {
     if (m == 3 && HasZ == 1)
         warning("rgeos_CoordSeq2crdMat: only 2D coordinates respected");
     
-    SEXP ans, dims;
+    
     PROTECT(ans = NEW_NUMERIC(n*2)); pc++;
+    
     PROTECT(dims = NEW_INTEGER(2)); pc++;
     INTEGER_POINTER(dims)[0] = n;
     INTEGER_POINTER(dims)[1] = 2;
+    
+    PROTECT(dimnames = NEW_LIST(2)); pc++;
+    SET_VECTOR_ELT(dimnames, 1, NEW_CHARACTER(2));
+    SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 0, COPY_TO_USER_STRING("x"));
+    SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 1, COPY_TO_USER_STRING("y"));
+    
 
     for (i=0; i<n; i++){
         ii = (rev) ? (n-1)-i : i;
         if (GEOSCoordSeq_getX_r(GEOShandle, s, (unsigned int) i, &val) == 0) {
             return(R_NilValue);
         }    
-
         NUMERIC_POINTER(ans)[ii] = makePrecise( val, scale);
 
         if (GEOSCoordSeq_getY_r(GEOShandle, s, (unsigned int) i, &val) == 0) {
             return(R_NilValue);
         }
-
         NUMERIC_POINTER(ans)[ii+n] = makePrecise(val, scale);
     }
 
     setAttrib(ans, R_DimSymbol, dims);
+    
+    // unclear if this is good or bad, added while removing redundancy from rgeos_multipoint2crdMat
+    // leaving it commented out for now
+    
+    // setAttrib(ans, R_DimNamesSymbol, dimnames);
+    
     UNPROTECT(pc);
     return(ans);
 
 }
 
 
-SEXP rgeos_MP2crdMat(SEXP env, GEOSGeom GC) {
+SEXP rgeos_multipoint2crdMat(SEXP env, GEOSGeom GC, int n) {
 
-    int pc=0;
-    unsigned int i, n;
+    int i, pc=0;
     SEXP ans, dims, dimnames;
     GEOSGeom pt;
     GEOSCoordSeq s;
@@ -144,58 +154,38 @@ SEXP rgeos_MP2crdMat(SEXP env, GEOSGeom GC) {
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
-    n = (unsigned int) GEOSGetNumGeometries_r(GEOShandle, GC);
-
-
     PROTECT(ans = NEW_NUMERIC(n*2)); pc++;
     PROTECT(dims = NEW_INTEGER(2)); pc++;
-    INTEGER_POINTER(dims)[0] = (int) n;
-    INTEGER_POINTER(dims)[1] = (int) 2;
+    INTEGER_POINTER(dims)[0] = n;
+    INTEGER_POINTER(dims)[1] = 2;
+
     PROTECT(dimnames = NEW_LIST(2)); pc++;
     SET_VECTOR_ELT(dimnames, 1, NEW_CHARACTER(2));
     SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 0, COPY_TO_USER_STRING("x"));
     SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 1, COPY_TO_USER_STRING("y"));
 
-    if (n == 1) {
-
-            if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq_r(GEOShandle,GC)) == NULL) {
-                return(R_NilValue);
-            }
-            if (GEOSCoordSeq_getX_r(GEOShandle, s, (unsigned int) 0, &val) == 0) {
-                return(R_NilValue);
-            }    
-
-            NUMERIC_POINTER(ans)[0] = makePrecise(val, scale);
-
-            if (GEOSCoordSeq_getY_r(GEOShandle, s, (unsigned int) 0, &val) == 0) {
-                return(R_NilValue);
-            }
-
-            NUMERIC_POINTER(ans)[1] = makePrecise(val, scale);
+    if ( n==1 ) pt = GC;
+    for (i=0; i<n; i++) {
         
-
-    } else {
-        for (i=0; i<n; i++) {
-
-            if ((pt = (GEOSGeometry *) GEOSGetGeometryN_r(GEOShandle, GC, (int) i)) == NULL) {
+        if( n != 1) {
+            if ((pt = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, GC, i)) == NULL)
                 return(R_NilValue);
-            }
-            if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq_r(GEOShandle, pt)) == NULL) {
-                return(R_NilValue);
-            }
-            if (GEOSCoordSeq_getX_r(GEOShandle, s, (unsigned int) 0, &val) == 0) {
-                return(R_NilValue);
-            }    
-
-            NUMERIC_POINTER(ans)[i] = makePrecise(val, scale);
-
-            if (GEOSCoordSeq_getY_r(GEOShandle, s, (unsigned int) 0, &val) == 0) {
-                return(R_NilValue);
-            }
-
-            NUMERIC_POINTER(ans)[i+n] = makePrecise(val, scale);
         }
+           
+        if ((s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, pt)) == NULL)
+            return(R_NilValue);
+        
+        if (GEOSCoordSeq_getX_r(GEOShandle, s, (unsigned int) 0, &val) == 0)
+            return(R_NilValue);
+        NUMERIC_POINTER(ans)[i] = makePrecise(val, scale);
+
+        if (GEOSCoordSeq_getY_r(GEOShandle, s, (unsigned int) 0, &val) == 0)
+            return(R_NilValue);
+        NUMERIC_POINTER(ans)[i+n] = makePrecise(val, scale);
+    
+        GEOSCoordSeq_destroy_r(GEOShandle,s); 
     }
+
 
     setAttrib(ans, R_DimSymbol, dims);
     setAttrib(ans, R_DimNamesSymbol, dimnames);
@@ -204,7 +194,6 @@ SEXP rgeos_MP2crdMat(SEXP env, GEOSGeom GC) {
 }
 
 GEOSCoordSeq rgeos_xy2CoordSeq(SEXP env, double x, double y) {
-
 
     GEOSCoordSeq s;
 
@@ -222,7 +211,6 @@ GEOSCoordSeq rgeos_xy2CoordSeq(SEXP env, double x, double y) {
     }
 
     return(s);
-
 }
 
 GEOSGeom rgeos_xy2Pt(SEXP env, double x, double y) {

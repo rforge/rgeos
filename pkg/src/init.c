@@ -36,7 +36,7 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_DistNpts1pt", (DL_FUNC) &rgeos_DistNpts1pt, 5},
     {"rgeos_Dist1LR1pt", (DL_FUNC) &rgeos_Dist1LR1pt, 5},
     {"rgeos_CoordSeq2crdMat", (DL_FUNC) &rgeos_CoordSeq2crdMat, 4},
-    {"rgeos_MP2crdMat", (DL_FUNC) &rgeos_MP2crdMat, 2},
+    {"rgeos_multipoint2crdMat", (DL_FUNC) &rgeos_multipoint2crdMat, 2},
     {"rgeos_Geom2bbox", (DL_FUNC) &rgeos_Geom2bbox, 2},
     {"rgeos_GCPolygons", (DL_FUNC) &rgeos_GCPolygons, 4},
     {"rgeos_LinearRingPolygon", (DL_FUNC) &rgeos_LinearRingPolygon, 3},
@@ -51,8 +51,13 @@ static R_CallMethodDef CallEntries[] = {
     {"IntersectGpcGEOS", (DL_FUNC) &IntersectGpcGEOS, 3},
     {"UnaryUnionGpcGEOS", (DL_FUNC) &UnaryUnionGpcGEOS, 2},
     {"checkHolesGPC", (DL_FUNC) &checkHolesGPC, 2},
+<<<<<<< .mine
+    {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp,4},
+    {"rgeos_readWKT", (DL_FUNC) &rgeos_readWKT,4}, 
+=======
     {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp, 4}, 
     {"rgeos_poly_findInBox", (DL_FUNC) &rgeos_poly_findInBox, 3}, 
+>>>>>>> .r63
     {NULL, NULL, 0}
 };
 

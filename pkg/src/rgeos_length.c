@@ -49,6 +49,8 @@ SEXP rgeos_PolArea(SEXP env, SEXP mat, SEXP dim){
 SEXP rgeos_PolCentroid(SEXP env, SEXP mat, SEXP dim) {
 
     GEOSGeom gl, ct;
+    SEXP ans;
+    int pc = 0;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
@@ -60,23 +62,22 @@ SEXP rgeos_PolCentroid(SEXP env, SEXP mat, SEXP dim) {
 
     GEOSCoordSeq s;
 
-    if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq_r(GEOShandle, ct))
-         == NULL) {
+    if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq_r(GEOShandle, ct)) == NULL) {
         GEOSGeom_destroy_r(GEOShandle, gl);
         GEOSGeom_destroy_r(GEOShandle, ct);
         error("rgeos_PolCentroid: problem extracting centroid");
     }
 
-    SEXP ans;
     
-    ans = rgeos_CoordSeq2crdMat(env, s, (int) GEOSHasZ(ct), FALSE);
+    PROTECT(ans = rgeos_CoordSeq2crdMat(env, s, (int) GEOSHasZ(ct), FALSE)); pc++;
 
     GEOSGeom_destroy_r(GEOShandle, gl);
     GEOSGeom_destroy_r(GEOShandle, ct);
+    GEOSCoordSeq_destroy_r(GEOShandle,s); 
 
     if (ans == R_NilValue) 
         error("rgeos_PolCentroid: problem extracting coordinates");
 
+    UNPROTECT(pc);
     return(ans);
-
 }

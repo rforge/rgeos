@@ -3,6 +3,7 @@
 .onLoad <- function(lib, pkg) {
   require(methods, quietly = TRUE, warn.conflicts = FALSE)
   require("sp")
+  require("stringr")
   library.dynam('rgeos', pkg, lib)
 
   GEOSptr <- .Call('rgeos_Init', PACKAGE="rgeos")

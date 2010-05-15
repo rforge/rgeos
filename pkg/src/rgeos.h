@@ -12,17 +12,49 @@
 
 #define R_OFFSET 1
 
+// Utility functioncs
+GEOSContextHandle_t getContextHandle(SEXP env);
+
+double makePrecise(double val, double scale);
+double sym_round(double val);
+double java_math_round(double val);
+double rint_vc(double val);
+// Based on geos rounding methods, use just one global 
+// round function, so it can be easily switched globally 
+double rgeos_round(double val);
+// inline removed, see Writing R extensions, section 6.14
+// http://cran.r-project.org/doc/manuals/R-exts.html#Inlining-C-functions
+
+
+// Bounding Box functions - rgeos_bbox.c
+SEXP rgeos_CoordSeq2bbox(SEXP env, GEOSCoordSeq coord);
+SEXP rgeos_crdMat2bbox(SEXP crdmat, unsigned int n);
+SEXP rgeos_Geom2bbox(SEXP env, GEOSGeom Geom);
+
+
+// Coordinate sequence and matrix functions - rgeos_coord.c
 GEOSCoordSeq rgeos_crdMat2CoordSeq(SEXP env, SEXP mat, SEXP dim);
-
 GEOSCoordSeq rgeos_xy2CoordSeq(SEXP env, double x, double y);
-
 GEOSGeom rgeos_xy2Pt(SEXP env, double x, double y);
-
 GEOSGeom rgeos_crdMat2LineString(SEXP env, SEXP mat, SEXP dim);
-
 GEOSGeom rgeos_crdMat2LinearRing(SEXP env, SEXP mat, SEXP dim);
-
 GEOSGeom rgeos_crdMat2Polygon(SEXP env, SEXP mat, SEXP dim);
+
+SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev);
+SEXP rgeos_multipoint2crdMat(SEXP env, GEOSGeom GC, int n);
+
+
+// Translate functions GEOS to R - rgeos_geos2R.c
+SEXP rgeos_multipoint2SpatialPoints(SEXP env, GEOSGeom mpt);
+SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh);
+
+
+// WKT Functions - rgeos_wkt.c
+SEXP rgeos_readWKT(SEXP env, SEXP obj, SEXP id, SEXP thres);
+SEXP rgeos_wkt2sp(SEXP env,SEXP obj,SEXP id,SEXP thres);
+
+
+// Needs to be classified
 
 GEOSGeom rgeos_SPoints2MP(SEXP env, SEXP obj);
 
@@ -52,11 +84,7 @@ GEOSGeom GCPPtsGC(SEXP env, SEXP pls);
 
 GEOSGeom GPCpt_i_Polygon(SEXP env, SEXP pls, SEXP vec);
 
-SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs,
-    SEXP thresh);
-
-SEXP rgeos_SpatialPolygonsSimplify(SEXP env, SEXP obj, SEXP tolerance,
-    SEXP thresh);
+SEXP rgeos_SpatialPolygonsSimplify(SEXP env, SEXP obj, SEXP tolerance, SEXP thresh);
 
 SEXP rgeos_PolygonsContain(SEXP env, SEXP obj);
 
@@ -73,12 +101,6 @@ SEXP rgeos_Within1Pol1pt(SEXP env, SEXP mat, SEXP dim, SEXP x, SEXP y);
 SEXP rgeos_DistNpts1pt(SEXP env, SEXP mat, SEXP dim, SEXP x2, SEXP y2);
 
 SEXP rgeos_Dist1LR1pt(SEXP env, SEXP mat, SEXP dim, SEXP x, SEXP y);
-
-SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev);
-
-SEXP rgeos_MP2crdMat(SEXP env, GEOSGeom GC);
-
-SEXP rgeos_Geom2bbox(SEXP env, GEOSGeom Geom);
 
 SEXP rgeos_GCPolygons(SEXP env, GEOSGeom Geom, char *buf, SEXP thresh);
 
@@ -120,10 +142,14 @@ SEXP GCGCPPts(SEXP env, GEOSGeom Geom);
 
 SEXP rgeos_LinearRingGCPPts(SEXP env, GEOSGeom lr, int hole);
 
+<<<<<<< .mine
+=======
 SEXP rgeos_wkt2sp(SEXP env, SEXP obj, SEXP id, SEXP thres);
+>>>>>>> .r63
 
-GEOSContextHandle_t getContextHandle(SEXP env);
 
+<<<<<<< .mine
+=======
 SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points);
 
 double makePrecise(double val, double scale);
@@ -135,6 +161,7 @@ double rint_vc(double val);
 double rgeos_round(double val);
 // inline removed, see Writing R extensions, section 6.14
 // http://cran.r-project.org/doc/manuals/R-exts.html#Inlining-C-functions
+>>>>>>> .r63
 
 #endif
 

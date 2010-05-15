@@ -5,7 +5,7 @@ import(sp)
 
 export(getScale,setScale)
 
-export(WKT2SP, SP2WKT)
+export(isWKT, WKT2SP, SP2WKT, readWKT, cleanWKT)
 
 export(thinnedSpatialPolyGEOS, checkPolygonsGEOS, unionSpatialPolygonsGEOS)
 
@@ -15,10 +15,31 @@ export(poly_findInBoxGEOS)
 
 export(DiffGpcGEOS, SymDiffGpcGEOS, UnionGpcGEOS, UnionGpcGEOS, IntersectGpcGEOS, checkHolesGPC)
 
+
+# GEOS unary predicate functions
+export(RGEOSisEmpty, RGEOSisValid, RGEOSisValidReason, RGEOSisSimple, RGEOSisRing, RGEOSHasZ)
+
+# GEOS binary predicate functions
+export( RGEOSRelatePattern, RGEOSDisjoint, RGEOSTouches, RGEOSIntersects, RGEOSCrosses,
+		RGEOSWithin, RGEOSContains, RGEOSOverlaps, RGEOSEquals, RGEOSEqualsExact)
+
+# GEOS misc functions
+export( RGEOSArea, RGEOSLength, RGEOSDistance, RGEOSisWithinDistance, 
+		RGEOSHausdorffDistance, RGEOSHausdorffDistanceDensify)
+
+# GEOS topology functions
+export( RGEOSEnvelope, RGEOSConvexHull, RGEOSBoundary, RGEOSGetCentroid, RGEOSSimplify, 
+		RGEOSTopologyPreserveSimplify, RGEOSPolygonize, RGEOSPolygonizer_getCutEdges,
+		RGEOSPointOnSurface, RGEOSLineMerge)
+		
+# GEOS topology relation functions
+export( RGEOSRelate, RGEOSDifference, RGEOSSymDifference, RGEOSIntersection, RGEOSUnion, RGEOSUnionCascaded) 
+
+
+
 # gpclib shadows
 
 exportClasses("gpc.poly")
-
 exportMethods("show", "get.bbox", "plot", "intersect", "union",
               "setdiff", "[", "append.poly", "scale.poly", "area.poly",
               "coerce", "symdiff")
