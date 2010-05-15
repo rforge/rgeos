@@ -142,14 +142,8 @@ SEXP GCGCPPts(SEXP env, GEOSGeom Geom);
 
 SEXP rgeos_LinearRingGCPPts(SEXP env, GEOSGeom lr, int hole);
 
-<<<<<<< .mine
-=======
 SEXP rgeos_wkt2sp(SEXP env, SEXP obj, SEXP id, SEXP thres);
->>>>>>> .r63
 
-
-<<<<<<< .mine
-=======
 SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points);
 
 double makePrecise(double val, double scale);
@@ -161,7 +155,6 @@ double rint_vc(double val);
 double rgeos_round(double val);
 // inline removed, see Writing R extensions, section 6.14
 // http://cran.r-project.org/doc/manuals/R-exts.html#Inlining-C-functions
->>>>>>> .r63
 
 #endif
 
