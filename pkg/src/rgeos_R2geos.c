@@ -111,7 +111,7 @@ GEOSGeom rgeos_Polygons2GC(SEXP env, SEXP obj) {
     return(GC);
 
 }
-<<<<<<< .mine
+
 
 GEOSGeom rgeos_SpatialPolygonsGC(SEXP env, SEXP obj) {
 
@@ -136,7 +136,7 @@ GEOSGeom rgeos_SpatialPolygonsGC(SEXP env, SEXP obj) {
 
     UNPROTECT(pc);
     return(GC);
-}=======
+}
 
 // Spatial polygons to fish soup geometry collection (multipoint) 
 GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj) {
@@ -179,4 +179,3 @@ GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj) {
     UNPROTECT(pc);
     return(GC);
 }
->>>>>>> .r63

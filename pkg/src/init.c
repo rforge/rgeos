@@ -51,13 +51,10 @@ static R_CallMethodDef CallEntries[] = {
     {"IntersectGpcGEOS", (DL_FUNC) &IntersectGpcGEOS, 3},
     {"UnaryUnionGpcGEOS", (DL_FUNC) &UnaryUnionGpcGEOS, 2},
     {"checkHolesGPC", (DL_FUNC) &checkHolesGPC, 2},
-<<<<<<< .mine
     {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp,4},
     {"rgeos_readWKT", (DL_FUNC) &rgeos_readWKT,4}, 
-=======
     {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp, 4}, 
     {"rgeos_poly_findInBox", (DL_FUNC) &rgeos_poly_findInBox, 3}, 
->>>>>>> .r63
     {NULL, NULL, 0}
 };
 
