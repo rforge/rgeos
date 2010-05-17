@@ -27,8 +27,9 @@ double rgeos_round(double val);
 
 
 // Bounding Box functions - rgeos_bbox.c
-SEXP rgeos_CoordSeq2bbox(SEXP env, GEOSCoordSeq coord);
-SEXP rgeos_crdMat2bbox(SEXP crdmat, unsigned int n);
+SEXP rgeos_initbbox();
+SEXP rgeos_formatbbox(SEXP bbox);
+void rgeos_updatebbox_crdmat(SEXP curbbox, SEXP crdmat, unsigned int n);
 SEXP rgeos_Geom2bbox(SEXP env, GEOSGeom Geom);
 
 
@@ -45,12 +46,16 @@ SEXP rgeos_multipoint2crdMat(SEXP env, GEOSGeom GC, int n);
 
 
 // Translate functions GEOS to R - rgeos_geos2R.c
-SEXP rgeos_multipoint2SpatialPoints(SEXP env, GEOSGeom mpt);
+SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres);
+SEXP rgeos_multipoint2SpatialPoints(SEXP env, GEOSGeom mpt, SEXP p4s);
+SEXP rgeos_multiline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id);
+
 SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh);
 
 
+
 // WKT Functions - rgeos_wkt.c
-SEXP rgeos_readWKT(SEXP env, SEXP obj, SEXP id, SEXP thres);
+SEXP rgeos_readWKT(SEXP env, SEXP obj, SEXP p4s, SEXP id, SEXP thres);
 SEXP rgeos_wkt2sp(SEXP env,SEXP obj,SEXP id,SEXP thres);
 
 
@@ -146,15 +151,6 @@ SEXP rgeos_wkt2sp(SEXP env, SEXP obj, SEXP id, SEXP thres);
 
 SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points);
 
-double makePrecise(double val, double scale);
-double sym_round(double val);
-double java_math_round(double val);
-double rint_vc(double val);
-// Based on geos rounding methods, use just one global 
-// round function, so it can be easily switched globally 
-double rgeos_round(double val);
-// inline removed, see Writing R extensions, section 6.14
-// http://cran.r-project.org/doc/manuals/R-exts.html#Inlining-C-functions
 
 #endif
 

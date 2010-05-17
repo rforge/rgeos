@@ -23,7 +23,15 @@ static const R_CMethodDef CEntries[] = {
 
 
 static R_CallMethodDef CallEntries[] = {
-
+    
+    //Utility Functions
+    {"rgeos_Init", (DL_FUNC) &rgeos_Init, 0},
+    {"rgeos_finish", (DL_FUNC) &rgeos_finish, 1},
+    {"rgeos_GEOSversion", (DL_FUNC) &rgeos_GEOSversion, 0},
+    //WKT Functions
+    {"rgeos_readWKT", (DL_FUNC) &rgeos_readWKT,5}, 
+    {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp, 4}, 
+    
     {"rgeos_SpatialPolygonsUnion", (DL_FUNC) &rgeos_SpatialPolygonsUnion, 5},
     {"rgeos_GCSpatialPolygons", (DL_FUNC) &rgeos_GCSpatialPolygons, 5},
     {"rgeos_SpatialPolygonsSimplify", (DL_FUNC) &rgeos_SpatialPolygonsSimplify, 4},
@@ -40,9 +48,6 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_Geom2bbox", (DL_FUNC) &rgeos_Geom2bbox, 2},
     {"rgeos_GCPolygons", (DL_FUNC) &rgeos_GCPolygons, 4},
     {"rgeos_LinearRingPolygon", (DL_FUNC) &rgeos_LinearRingPolygon, 3},
-    {"rgeos_Init", (DL_FUNC) &rgeos_Init, 0},
-    {"rgeos_finish", (DL_FUNC) &rgeos_finish, 1},
-    {"rgeos_GEOSversion", (DL_FUNC) &rgeos_GEOSversion, 0},
     {"rgeos_Polygons_intersection", (DL_FUNC) &rgeos_Polygons_intersection, 3},
     {"rgeos_Lines_intersection", (DL_FUNC) &rgeos_Lines_intersection, 3},
     {"SymDiffGpcGEOS", (DL_FUNC) &SymDiffGpcGEOS, 3},
@@ -51,9 +56,6 @@ static R_CallMethodDef CallEntries[] = {
     {"IntersectGpcGEOS", (DL_FUNC) &IntersectGpcGEOS, 3},
     {"UnaryUnionGpcGEOS", (DL_FUNC) &UnaryUnionGpcGEOS, 2},
     {"checkHolesGPC", (DL_FUNC) &checkHolesGPC, 2},
-    {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp,4},
-    {"rgeos_readWKT", (DL_FUNC) &rgeos_readWKT,4}, 
-    {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp, 4}, 
     {"rgeos_poly_findInBox", (DL_FUNC) &rgeos_poly_findInBox, 3}, 
     {NULL, NULL, 0}
 };

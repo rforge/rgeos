@@ -76,22 +76,23 @@ WKT2SP = function( text,id=NULL,threshold=0.0 ) {
     return( SpatialPolygons(res) )
 }
 
-readWKT = function( text, id = NULL ) {
-    threshold=0
+readWKT = function( text, id = NULL, p4s = NULL, threshold=0) {
+    
     wkts = cleanWKT(text)
     
-    if(is.null(id))
-        id = 1:length(wkts)
-    
+    if(is.null(id)) id = 1:length(wkts)
+
     if( length(wkts) != length(id) )
-        stop("number of WKT strings does not match number of ids")
+        stop("number of WKT strings does not match number of ids")        
+
+    p4s = checkP4S(p4s)
     
     threshold=as.double(threshold)
     id = as.character(id)
         
     res = list()
     for(i in 1:length(wkts) ) {
-        res[[i]] <- .Call("rgeos_readWKT", .RGEOS_HANDLE, wkts[i], id[i], threshold,PACKAGE="rgeos")
+        res[[i]] <- .Call("rgeos_readWKT", .RGEOS_HANDLE, wkts[i], p4s, id[i], threshold, PACKAGE="rgeos")
     }
     
     return( res )

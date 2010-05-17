@@ -28,7 +28,7 @@ SEXP rgeos_Geom2bbox(SEXP env, GEOSGeom Geom) {
         return(R_NilValue);
     }
     
-    bbmat = rgeos_CoordSeq2crdMat(env, s, (int) GEOSHasZ(bb), FALSE); 
+    bbmat = rgeos_CoordSeq2crdMat(env, s, (int) GEOSHasZ_r(GEOShandle, bb), FALSE); 
     for (i=0; i<n; i++) {
        if (NUMERIC_POINTER(bbmat)[i] > UX) UX = NUMERIC_POINTER(bbmat)[i];
        if (NUMERIC_POINTER(bbmat)[i+n] > UY) UY = NUMERIC_POINTER(bbmat)[i+n];
@@ -60,29 +60,28 @@ SEXP rgeos_Geom2bbox(SEXP env, GEOSGeom Geom) {
     return(ans);
 }
 
-SEXP rgeos_crdMat2bbox(SEXP crdmat, unsigned int n) {
-    
+SEXP rgeos_initbbox() {
     SEXP ans, dim, dimnames;
-    double UX=-DBL_MAX, LX=DBL_MAX, UY=-DBL_MAX, LY=DBL_MAX;
-    int i,pc=0;    
-    
-    for (i=0; i<n; i++) {
-       if (NUMERIC_POINTER(crdmat)[i]    > UX) UX = NUMERIC_POINTER(crdmat)[i];
-       if (NUMERIC_POINTER(crdmat)[i+n]  > UY) UY = NUMERIC_POINTER(crdmat)[i+n];
-       if (NUMERIC_POINTER(crdmat)[i]    < LX) LX = NUMERIC_POINTER(crdmat)[i];
-       if (NUMERIC_POINTER(crdmat)[i+n]  < LY) LY = NUMERIC_POINTER(crdmat)[i+n];
-    }
+    int pc=0;    
 
     PROTECT(ans = NEW_NUMERIC(4)); pc++;
-    NUMERIC_POINTER(ans)[0] = LX;
-    NUMERIC_POINTER(ans)[1] = LY;
-    NUMERIC_POINTER(ans)[2] = UX;
-    NUMERIC_POINTER(ans)[3] = UY;
-    
+    NUMERIC_POINTER(ans)[0] = DBL_MAX;
+    NUMERIC_POINTER(ans)[1] = DBL_MAX;
+    NUMERIC_POINTER(ans)[2] = -DBL_MAX;
+    NUMERIC_POINTER(ans)[3] = -DBL_MAX;
+     
+    UNPROTECT(pc);
+    return(ans);
+}
+
+SEXP rgeos_formatbbox(SEXP bbox) {
+    SEXP dim, dimnames;
+    int pc=0;    
+ 
     PROTECT(dim = NEW_INTEGER(2)); pc++;
     INTEGER_POINTER(dim)[0] = 2;
     INTEGER_POINTER(dim)[1] = 2;
-    setAttrib(ans, R_DimSymbol, dim);
+    setAttrib(bbox, R_DimSymbol, dim);
     
     PROTECT(dimnames = NEW_LIST(2)); pc++;
     SET_VECTOR_ELT(dimnames, 0, NEW_CHARACTER(2));
@@ -91,29 +90,30 @@ SEXP rgeos_crdMat2bbox(SEXP crdmat, unsigned int n) {
     SET_VECTOR_ELT(dimnames, 1, NEW_CHARACTER(2));
     SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 0, COPY_TO_USER_STRING("min"));
     SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 1, COPY_TO_USER_STRING("max"));
-    setAttrib(ans, R_DimNamesSymbol, dimnames);
+    setAttrib(bbox, R_DimNamesSymbol, dimnames);
 
     UNPROTECT(pc);
-    return(ans);
+    return(bbox);
 }
 
-SEXP rgeos_CoordSeq2bbox(SEXP env, GEOSCoordSeq coord) {
-
-    unsigned int n, dim;
-    SEXP bbmat,ans;
-    int pc=0;
-
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
+void rgeos_updatebbox_crdmat(SEXP curbbox, SEXP crdmat, unsigned int n ) {
     
+    int i;    
     
-    if (GEOSCoordSeq_getSize_r(GEOShandle, coord, &n) == 0 ||
-        GEOSCoordSeq_getDimensions_r(GEOShandle, coord, &dim) == 0) {
-        return(R_NilValue);
+    for (i=0; i<n; i++) {
+        if (NUMERIC_POINTER(crdmat)[i]  > NUMERIC_POINTER(curbbox)[2]) 
+            NUMERIC_POINTER(curbbox)[2] = NUMERIC_POINTER(crdmat)[i];
+        
+        if (NUMERIC_POINTER(crdmat)[i+n]> NUMERIC_POINTER(curbbox)[3]) 
+            NUMERIC_POINTER(curbbox)[3] = NUMERIC_POINTER(crdmat)[i+n];
+        
+        if (NUMERIC_POINTER(crdmat)[i]  < NUMERIC_POINTER(curbbox)[0])
+            NUMERIC_POINTER(curbbox)[0] = NUMERIC_POINTER(crdmat)[i];
+        
+        if (NUMERIC_POINTER(crdmat)[i+n]< NUMERIC_POINTER(curbbox)[1])
+            NUMERIC_POINTER(curbbox)[1] = NUMERIC_POINTER(crdmat)[i+n];
     }
     
-    PROTECT( bbmat = rgeos_CoordSeq2crdMat(env, coord, (dim==3), FALSE)); pc++; 
-    PROTECT( ans = rgeos_crdMat2bbox(bbmat, n) ); pc++;
     
-    UNPROTECT(pc);
-    return(ans);
+    return;
 }
