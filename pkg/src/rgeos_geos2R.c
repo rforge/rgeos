@@ -66,15 +66,13 @@ SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP t
         strcpy(ibuf, CHAR(STRING_ELT(IDs, i)));
         SET_VECTOR_ELT(pls, i, rgeos_GCPolygons(env, GC, ibuf, thresh));
     }
-    if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, envs,
-        ng)) == NULL) {
+    if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, envs, ng)) == NULL) {
         error("rgeos_GCSpatialPolygons: collection not created");
     }
 
     areas = (double *) R_alloc((size_t) ng, sizeof(double));
     for (i=0; i<ng; i++) 
-        areas[i] = NUMERIC_POINTER(GET_SLOT(VECTOR_ELT(pls, i),
-            install("area")))[0]; 
+        areas[i] = NUMERIC_POINTER(GET_SLOT(VECTOR_ELT(pls, i), install("area")))[0]; 
     po = (int *) R_alloc((size_t) ng, sizeof(int));
     for (i=0; i<ng; i++) po[i] = i + R_OFFSET;
     revsort(areas, po, ng);
@@ -295,7 +293,7 @@ SEXP rgeos_multipoint2SpatialPoints(SEXP env, GEOSGeom mpt, SEXP p4s) {
 
 SEXP rgeos_multiline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
 
-    SEXP line, line_list, lines, ans, crdmat, bbox;
+    SEXP line, line_list, lines, lines_list, ans, crdmat, bbox;
     int pc=0;
     int i, n, type, hasZ,ncoord;
     GEOSGeom curgeom;
@@ -348,9 +346,12 @@ SEXP rgeos_multiline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
     PROTECT(lines = NEW_OBJECT(MAKE_CLASS("Lines"))); pc++;
     SET_SLOT(lines, install("Lines"), line_list); //R_NaString);
     SET_SLOT(lines, install("ID"), id);
-
+    
+    PROTECT(lines_list = NEW_LIST(1)); pc++;
+    SET_VECTOR_ELT(lines_list, 0, lines );
+    
     PROTECT(ans = NEW_OBJECT(MAKE_CLASS("SpatialLines"))); pc++;    
-    SET_SLOT(ans, install("lines"), lines);
+    SET_SLOT(ans, install("lines"), lines_list);
     SET_SLOT(ans, install("bbox"), bbox);
     SET_SLOT(ans, install("proj4string"), p4s);
 
