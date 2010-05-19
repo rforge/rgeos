@@ -3,7 +3,12 @@
 SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres) {
     
     SEXP ans;
-    int type, pc=0;
+    GEOSGeom subgeom;
+    int type, i,pc=0;
+    int ng, ns, n=0;
+    int gctypes[] = {0,0,0,0,0,0,0,0};
+    int isPoint, isLine, isPoly, isRing, isGC;
+    
     char ibuf[BUFSIZ];
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
@@ -11,28 +16,68 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
     strcpy(ibuf, CHAR(STRING_ELT(id, 0)));
 
     type = GEOSGeomTypeId_r(GEOShandle, geom);
+    ng = GEOSGetNumGeometries_r(GEOShandle, geom);
+    if (ng == -1) error("rgeos_convert_geos2R: invalid number of subgeometries"); 
+    
     switch(type) { // Determine appropriate type for the collection
         case -1:
-            error("rgeos_readWKT: unknown geometry type");
+            error("rgeos_convert_geos2R: unknown geometry type");
             break;
+            
         case GEOS_POINT:
         case GEOS_MULTIPOINT:
-            PROTECT( ans = rgeos_multipoint2SpatialPoints(env, geom, p4s) ); pc++;
+            PROTECT( ans = rgeos_geospoint2SpatialPoints(env, geom, p4s, id, ng) ); pc++;
+            break;
+    
+        case GEOS_LINEARRING:
+        case GEOS_LINESTRING:
+        case GEOS_MULTILINESTRING:
+            PROTECT( ans = rgeos_geosline2SpatialLines(env, geom, p4s, id, ng) ); pc++;
             break;
     
         case GEOS_POLYGON:
             PROTECT( ans = rgeos_GCPolygons(env, geom, ibuf, thres) ); pc++;
             break;
-    
-        case GEOS_LINESTRING:
-        case GEOS_MULTILINESTRING:
-            PROTECT( ans = rgeos_multiline2SpatialLines(env, geom, p4s, id) ); pc++;
-            break;
-        case GEOS_LINEARRING:
-        case GEOS_MULTIPOLYGON:
+        
         case GEOS_GEOMETRYCOLLECTION:
+            
+            for (i=0; i<ng; i++) {
+                if ((subgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, i)) == NULL)
+                    error("rgeos_convert_geos2R: unable to retrieve subgeometry");
+                
+                type = GEOSGeomTypeId_r(GEOShandle, subgeom);
+                ns = GEOSGetNumGeometries_r(GEOShandle, subgeom);
+                if(ns == -1) error("rgeos_convert_geos2R: invalid number of geometries in subgeometry");
+                n += ns;
+                
+                gctypes[type] = TRUE; 
+            }
+            isPoint = gctypes[GEOS_POINT] || gctypes[GEOS_MULTIPOINT];
+            isLine  = gctypes[GEOS_LINESTRING] || gctypes[GEOS_MULTILINESTRING];
+            isPoly  = gctypes[GEOS_POLYGON] || gctypes[GEOS_MULTIPOLYGON];
+            isRing  = gctypes[GEOS_LINEARRING];
+            isGC    = gctypes[GEOS_GEOMETRYCOLLECTION];
+            
+            Rprintf("isPoint: %d  isLine: %d  isPoly: %d  isRing: %d  isGC: %d\n",isPoint, isLine, isPoly, isRing, isGC);
+            
+            if ( isPoint && !isLine && !isPoly && !isRing && !isGC ) {
+                PROTECT( ans = rgeos_geospoint2SpatialPoints(env, geom, p4s, id, n) ); pc++;
+            /*} else if ( !isPoint && isLine && !isPoly && !isRing && !isGC ) {
+                PROTECT( ans = rgeos_geosline2SpatialLines(env, geom, p4s, id, ng) ); pc++;
+            } else if ( !isPoint && !isLine && isPoly && !isRing && !isGC ) {
+                PROTECT( ans = rgeos_GCPolygons(env, geom, ibuf, thres) ); pc++;
+            } else if ( !isPoint && !isLine && !isPoly && isRing && !isGC ) {
+                PROTECT( ans = rgeos_geosline2SpatialLines(env, geom, p4s, id, ng) ); pc++;
+            */    
+            } else {
+                error("Geometry Collection Invalid - heterogenous collections cannot be processed");
+            }
+            
+            break;
+            
+        case GEOS_MULTIPOLYGON:
             error("Sorry I don't know how to handle this type yet");
-            PROTECT( ans = R_NilValue ); pc++;
+            //PROTECT( ans = R_NilValue ); pc++;
     }
 
 
@@ -248,35 +293,28 @@ SEXP rgeos_LinearRingPolygon(SEXP env, GEOSGeom lr, int hole) {
     return(SPans);
 }
 
-SEXP rgeos_multipoint2SpatialPoints(SEXP env, GEOSGeom mpt, SEXP p4s) {
+SEXP rgeos_geospoint2SpatialPoints(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, int n) {
 
     SEXP ans, crdmat, bbox;
     int pc=0;
-    int n, type;
-
+    int i, type;
+    GEOSGeom subgeom;
+    
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
-    type = GEOSGeomTypeId_r(GEOShandle, mpt);
+    type = GEOSGeomTypeId_r(GEOShandle, geom);
     
-    if ( type == GEOS_POINT ) {
-        n = 1;
-    } else if ( type == GEOS_MULTIPOINT ) {
-        n = GEOSGetNumGeometries_r(GEOShandle, mpt);
-    } else {
-        error("rgeos_multipoint2SpatialPoints: unknown type");
-    }
+    if ( type != GEOS_POINT && type != GEOS_MULTIPOINT && type != GEOS_GEOMETRYCOLLECTION )
+        error("rgeos_geospoint2SpatialPoints: invalid geometry type");
     
-    if (n < 1) error("rgeos_multipoint2SpatialPoints: invalid number of geometries");
+    if (n < 1) error("rgeos_geospoint2SpatialPoints: invalid number of geometries");
 
-    PROTECT(crdmat = rgeos_multipoint2crdMat(env, mpt, n)); pc++;
-    if (crdmat == R_NilValue) error("rgeos_multipoint2SpatialPoints: MultiPoint to matrix conversion failed");
+    PROTECT(crdmat = rgeos_geospoint2crdMat(env, geom, n, type)); pc++;
+    if (crdmat == R_NilValue) error("rgeos_geospoint2SpatialPoints: geos point to coord matrix conversion failed");
     
     PROTECT(bbox = rgeos_initbbox()); pc++;
     rgeos_updatebbox_crdmat(bbox, crdmat, n);
     PROTECT(bbox = rgeos_formatbbox(bbox)); pc++;
-    
-    //PROTECT(p4s = NEW_OBJECT(MAKE_CLASS("CRS"))); pc++;
-    //SET_SLOT(p4s, install("projargs"), R_NilValue); //R_NaString);
 
     PROTECT(ans = NEW_OBJECT(MAKE_CLASS("SpatialPoints"))); pc++;    
     SET_SLOT(ans, install("coords"), crdmat);
@@ -291,26 +329,27 @@ SEXP rgeos_multipoint2SpatialPoints(SEXP env, GEOSGeom mpt, SEXP p4s) {
 
 
 
-SEXP rgeos_multiline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
+SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, int ng) {
 
     SEXP line, line_list, lines, lines_list, ans, crdmat, bbox;
     int pc=0;
     int i, n, type, hasZ,ncoord;
     GEOSGeom curgeom;
     GEOSCoordSeq s;
+    double val,xs,ys,xe,ye,scale = getScale(env);
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
     type = GEOSGeomTypeId_r(GEOShandle, geom);
     
-    if ( type == GEOS_LINESTRING ) {
+    if ( type == GEOS_LINESTRING || type == GEOS_LINEARRING ) {
         n = 1;
     } else if ( type == GEOS_MULTILINESTRING ) {
         n = GEOSGetNumGeometries_r(GEOShandle, geom);
     } else {
-        error("rgeos_multiline2SpatialLines: unknown type");
+        error("rgeos_geosline2SpatialLines: unknown type");
     }
-    if (n < 1) error("rgeos_multiline2SpatialLines: invalid number of geometries");
+    if (n < 1) error("rgeos_geosline2SpatialLines: invalid number of geometries");
 
     PROTECT(line_list = NEW_LIST(n)); pc++;
     PROTECT(bbox = rgeos_initbbox()); pc++;
@@ -319,18 +358,18 @@ SEXP rgeos_multiline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
     for(i = 0; i < n; i++) {
         if( n != 1) {
             if ((curgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, i)) == NULL)
-                error("rgeos_multiline2SpatialLines: unable to get GetGeometryN");
+                error("rgeos_geosline2SpatialLines: unable to get GetGeometryN");
         }
     
         hasZ = (int) GEOSHasZ_r(GEOShandle, curgeom);
         if ((s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, curgeom)) == NULL)
-            error("rgeos_multiline2SpatialLines: unable to generate coordinate sequence");
+            error("rgeos_geosline2SpatialLines: unable to generate coordinate sequence");
         
         if (GEOSCoordSeq_getSize_r(GEOShandle, s, &ncoord) == 0)
-            error("rgeos_multiline2SpatialLines: unable to determine length of coordinate sequence");
+            error("rgeos_geosline2SpatialLines: unable to determine length of coordinate sequence");
                 
         PROTECT( crdmat = rgeos_CoordSeq2crdMat(env, s, hasZ, FALSE)); //pc++;
-        if (crdmat == R_NilValue) error("rgeos_multiline2SpatialLines: CoordSeq to crdMat conversion failed");
+        if (crdmat == R_NilValue) error("rgeos_geosline2SpatialLines: CoordSeq to crdMat conversion failed");
         rgeos_updatebbox_crdmat(bbox, crdmat, ncoord);
 
         PROTECT(line = NEW_OBJECT(MAKE_CLASS("Line"))); //pc++;    

@@ -42,13 +42,14 @@ GEOSGeom rgeos_crdMat2LinearRing(SEXP env, SEXP mat, SEXP dim);
 GEOSGeom rgeos_crdMat2Polygon(SEXP env, SEXP mat, SEXP dim);
 
 SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev);
-SEXP rgeos_multipoint2crdMat(SEXP env, GEOSGeom GC, int n);
+SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom GC, int ntotal, int type);
 
+SEXP rgeos_formatcrdMat( SEXP crdMat, int n );
 
 // Translate functions GEOS to R - rgeos_geos2R.c
 SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres);
-SEXP rgeos_multipoint2SpatialPoints(SEXP env, GEOSGeom mpt, SEXP p4s);
-SEXP rgeos_multiline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id);
+SEXP rgeos_geospoint2SpatialPoints(SEXP env, GEOSGeom mpt, SEXP p4s, SEXP id, int n);
+SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, int ng);
 
 SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh);
 
@@ -57,6 +58,7 @@ SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP t
 // WKT Functions - rgeos_wkt.c
 SEXP rgeos_readWKT(SEXP env, SEXP obj, SEXP p4s, SEXP id, SEXP thres);
 SEXP rgeos_wkt2sp(SEXP env,SEXP obj,SEXP id,SEXP thres);
+
 
 
 // Needs to be classified

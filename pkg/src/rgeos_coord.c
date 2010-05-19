@@ -94,7 +94,7 @@ SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev) {
 
     int pc=0, i, n, m, ii;
     double val,scale = getScale(env);
-    SEXP ans, dims, dimnames;
+    SEXP ans;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
@@ -107,16 +107,6 @@ SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev) {
     
     
     PROTECT(ans = NEW_NUMERIC(n*2)); pc++;
-    
-    PROTECT(dims = NEW_INTEGER(2)); pc++;
-    INTEGER_POINTER(dims)[0] = n;
-    INTEGER_POINTER(dims)[1] = 2;
-    
-    PROTECT(dimnames = NEW_LIST(2)); pc++;
-    SET_VECTOR_ELT(dimnames, 1, NEW_CHARACTER(2));
-    SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 0, COPY_TO_USER_STRING("x"));
-    SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 1, COPY_TO_USER_STRING("y"));
-    
 
     for (i=0; i<n; i++){
         ii = (rev) ? (n-1)-i : i;
@@ -131,66 +121,103 @@ SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev) {
         NUMERIC_POINTER(ans)[ii+n] = makePrecise(val, scale);
     }
 
-    setAttrib(ans, R_DimSymbol, dims);
-    
-    // unclear if this is good or bad, added while removing redundancy from rgeos_multipoint2crdMat
-    // leaving it commented out for now
-    
-    // setAttrib(ans, R_DimNamesSymbol, dimnames);
+    PROTECT(ans = rgeos_formatcrdMat(ans,n));pc++;
     
     UNPROTECT(pc);
     return(ans);
-
 }
 
 
-SEXP rgeos_multipoint2crdMat(SEXP env, GEOSGeom GC, int n) {
+SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, int ntotal, int type) {
 
-    int i, pc=0;
-    SEXP ans, dims, dimnames;
-    GEOSGeom pt;
+    int i,j,k=0;
+    int m,n,pc=0;
+    int subtype;
+    SEXP ans;
+    GEOSGeom subgeom, subsubgeom;
     GEOSCoordSeq s;
-    double val, scale=getScale(env);
+    double x, y, scale=getScale(env);
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
-    PROTECT(ans = NEW_NUMERIC(n*2)); pc++;
+    PROTECT(ans = NEW_NUMERIC(ntotal*2)); pc++;
+
+    m = GEOSGetNumGeometries_r(GEOShandle, geom);
+    if (m == -1) return(R_NilValue);
+    
+    for(j = 0; j<m; j++) {
+        
+        if (type == GEOS_POINT) {
+            subgeom = geom;
+            n = 1;
+            
+        } else if (type == GEOS_MULTIPOINT || type == GEOS_GEOMETRYCOLLECTION) {
+            if ((subgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, j)) == NULL)
+                return(R_NilValue);
+                
+            n = GEOSGetNumGeometries_r(GEOShandle, subgeom);
+            
+            subtype = GEOSGeomTypeId_r(GEOShandle, subgeom);
+            
+            if(subtype != GEOS_POINT && subtype != GEOS_MULTIPOINT)
+                return(R_NilValue); //Subgeometry must be either point or multipoint
+        } else {
+            return(R_NilValue); //Geometry must be point, multipoint, or geometrycollection
+        }
+        
+        if (n == -1) return(R_NilValue);
+
+        for (i=0; i<n; i++) {
+        
+            if (type == GEOS_GEOMETRYCOLLECTION && subtype == GEOS_MULTIPOINT) {
+                if ((subsubgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, subgeom, i)) == NULL)
+                    return(R_NilValue);
+            } else {
+                subsubgeom = subgeom; // if subtype is a point we dont need to get subsubgeom
+            }
+           
+            if ((s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, subsubgeom)) == NULL)
+                return(R_NilValue);
+        
+            if (GEOSCoordSeq_getX_r(GEOShandle, s, (unsigned int) 0, &x) == 0 ||
+                GEOSCoordSeq_getY_r(GEOShandle, s, (unsigned int) 0, &y) == 0 ) {
+                
+                return(R_NilValue);
+            }
+            
+            NUMERIC_POINTER(ans)[k]        = makePrecise(x, scale);
+            NUMERIC_POINTER(ans)[k+ntotal] = makePrecise(y, scale);
+    
+            GEOSCoordSeq_destroy_r(GEOShandle,s);
+            k++;
+        }
+    }
+    
+    PROTECT(ans = rgeos_formatcrdMat(ans,ntotal));pc++;
+    
+    UNPROTECT(pc);
+    return(ans);
+}
+
+
+SEXP rgeos_formatcrdMat( SEXP crdMat, int n ) {
+    SEXP dims, dimnames;
+    int pc = 0;
+    
     PROTECT(dims = NEW_INTEGER(2)); pc++;
     INTEGER_POINTER(dims)[0] = n;
     INTEGER_POINTER(dims)[1] = 2;
-
+    
     PROTECT(dimnames = NEW_LIST(2)); pc++;
     SET_VECTOR_ELT(dimnames, 1, NEW_CHARACTER(2));
     SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 0, COPY_TO_USER_STRING("x"));
     SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 1, COPY_TO_USER_STRING("y"));
-
-    if ( n==1 ) pt = GC;
-    for (i=0; i<n; i++) {
-        
-        if( n != 1) {
-            if ((pt = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, GC, i)) == NULL)
-                return(R_NilValue);
-        }
-           
-        if ((s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, pt)) == NULL)
-            return(R_NilValue);
-        
-        if (GEOSCoordSeq_getX_r(GEOShandle, s, (unsigned int) 0, &val) == 0)
-            return(R_NilValue);
-        NUMERIC_POINTER(ans)[i] = makePrecise(val, scale);
-
-        if (GEOSCoordSeq_getY_r(GEOShandle, s, (unsigned int) 0, &val) == 0)
-            return(R_NilValue);
-        NUMERIC_POINTER(ans)[i+n] = makePrecise(val, scale);
     
-        GEOSCoordSeq_destroy_r(GEOShandle,s); 
-    }
-
-
-    setAttrib(ans, R_DimSymbol, dims);
-    setAttrib(ans, R_DimNamesSymbol, dimnames);
+    setAttrib(crdMat, R_DimSymbol, dims);
+    setAttrib(crdMat, R_DimNamesSymbol, dimnames);
+    
     UNPROTECT(pc);
-    return(ans);
+    return(crdMat);
 }
 
 GEOSCoordSeq rgeos_xy2CoordSeq(SEXP env, double x, double y) {

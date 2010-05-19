@@ -44,7 +44,6 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_DistNpts1pt", (DL_FUNC) &rgeos_DistNpts1pt, 5},
     {"rgeos_Dist1LR1pt", (DL_FUNC) &rgeos_Dist1LR1pt, 5},
     {"rgeos_CoordSeq2crdMat", (DL_FUNC) &rgeos_CoordSeq2crdMat, 4},
-    {"rgeos_multipoint2crdMat", (DL_FUNC) &rgeos_multipoint2crdMat, 2},
     {"rgeos_Geom2bbox", (DL_FUNC) &rgeos_Geom2bbox, 2},
     {"rgeos_GCPolygons", (DL_FUNC) &rgeos_GCPolygons, 4},
     {"rgeos_LinearRingPolygon", (DL_FUNC) &rgeos_LinearRingPolygon, 3},

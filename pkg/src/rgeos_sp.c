@@ -77,7 +77,7 @@ SEXP rgeos_Lines_intersection(SEXP env, SEXP obj1, SEXP obj2) {
 
     GEOSGeom in1, in2, out;
     int pc=0, i, intersects;
-    SEXP ans;
+    SEXP ans,p4s;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
@@ -95,8 +95,11 @@ SEXP rgeos_Lines_intersection(SEXP env, SEXP obj1, SEXP obj2) {
     if ((out = GEOSIntersection_r(GEOShandle, in1, in2)) == NULL) {
         error("rgeos_Lines_intersection: GEOSIntersection failure");
     }
-
-    PROTECT(ans = rgeos_multipoint2crdMat(env, out)); pc++;
+    
+    // FIXME
+    PROTECT(p4s = GET_SLOT(obj1, install("proj4string"))); pc++;
+    
+    PROTECT(ans = rgeos_geospoint2SpatialPoints(env, out,p4s)); pc++;
     UNPROTECT(pc);
     return(ans);
 
