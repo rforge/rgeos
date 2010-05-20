@@ -132,9 +132,9 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, int ntotal, int type) {
 
     int i,j,k=0;
     int m,n,pc=0;
-    int subtype;
+    int curtype;
     SEXP ans;
-    GEOSGeom subgeom, subsubgeom;
+    GEOSGeom curgeom, subgeom;
     GEOSCoordSeq s;
     double x, y, scale=getScale(env);
     
@@ -145,39 +145,31 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, int ntotal, int type) {
     m = GEOSGetNumGeometries_r(GEOShandle, geom);
     if (m == -1) return(R_NilValue);
     
+    curgeom = geom;
+    curtype = type;
     for(j = 0; j<m; j++) {
         
-        if (type == GEOS_POINT) {
-            subgeom = geom;
-            n = 1;
+        if (type == GEOS_GEOMETRYCOLLECTION) {
+            curgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, j);
+            if(curgeom == NULL) return(R_NilValue);
             
-        } else if (type == GEOS_MULTIPOINT || type == GEOS_GEOMETRYCOLLECTION) {
-            if ((subgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, j)) == NULL)
-                return(R_NilValue);
-                
-            n = GEOSGetNumGeometries_r(GEOShandle, subgeom);
-            
-            subtype = GEOSGeomTypeId_r(GEOShandle, subgeom);
-            
-            if(subtype != GEOS_POINT && subtype != GEOS_MULTIPOINT)
-                return(R_NilValue); //Subgeometry must be either point or multipoint
-        } else {
-            return(R_NilValue); //Geometry must be point, multipoint, or geometrycollection
+            curtype = GEOSGeomTypeId_r(GEOShandle, curgeom);
         }
         
+        n = GEOSGetNumGeometries_r(GEOShandle, subgeom);
         if (n == -1) return(R_NilValue);
 
         for (i=0; i<n; i++) {
         
-            if (type == GEOS_GEOMETRYCOLLECTION && subtype == GEOS_MULTIPOINT) {
-                if ((subsubgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, subgeom, i)) == NULL)
-                    return(R_NilValue);
+            if (curtype == GEOS_MULTIPOINT) {
+                subgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, subgeom, i);
+                if (subgeom == NULL) return(R_NilValue);
             } else {
-                subsubgeom = subgeom; // if subtype is a point we dont need to get subsubgeom
+                subgeom = curgeom; // if curtype is a point we dont need to get subgeom
             }
            
-            if ((s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, subsubgeom)) == NULL)
-                return(R_NilValue);
+            s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, subgeom);
+            if (s == NULL) return(R_NilValue);
         
             if (GEOSCoordSeq_getX_r(GEOShandle, s, (unsigned int) 0, &x) == 0 ||
                 GEOSCoordSeq_getY_r(GEOShandle, s, (unsigned int) 0, &y) == 0 ) {

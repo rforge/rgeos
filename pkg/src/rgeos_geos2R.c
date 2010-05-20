@@ -50,7 +50,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
                 if(ns == -1) error("rgeos_convert_geos2R: invalid number of geometries in subgeometry");
                 n += ns;
                 
-                gctypes[type] = TRUE; 
+                gctypes[type] += 1; 
             }
             isPoint = gctypes[GEOS_POINT] || gctypes[GEOS_MULTIPOINT];
             isLine  = gctypes[GEOS_LINESTRING] || gctypes[GEOS_MULTILINESTRING];
@@ -350,22 +350,20 @@ SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, int
     PROTECT(lines_list = NEW_LIST(nlines)); pc++;
     PROTECT(bbox = rgeos_initbbox()); pc++;
     
+    curgeom = geom;
+    curtype = type;
     for(j = 0; j < nlines; j++) {
         
-        switch(type) {
-            case GEOS_LINESTRING:
-            case GEOS_LINEARRING:
-            case GEOS_MULTILINESTRING:
-                curgeom = geom;
-                break;
-            case GEOS_GEOMETRYCOLLECTION:
+        if (type == GEOS_GEOMETRYCOLLECTION) {
                 curgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, j);
                 if (curgeom == NULL) 
                     error("rgeos_geosline2SpatialLines: unable to get geometry collection geometry");
+                curtype = GEOSGeomTypeId_r(GEOShandle, curgeom);
         }
         
         n = GEOSGetNumGeometries_r(GEOShandle, curgeom);
-        curtype = GEOSGeomTypeId_r(GEOShandle, curgeom);
+        if (n == -1) error("rgeos_geosline2SpatialLines: invalid number of geometries in current geometry");
+        
         PROTECT(line_list = NEW_LIST(n));
         
         for(i = 0; i < n; i++) {
