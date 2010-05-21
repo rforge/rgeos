@@ -94,6 +94,9 @@ readWKT = function( text, id = NULL, p4s = NULL, threshold=0) {
     for(i in 1:length(wkts) ) {
         res[[i]] <- .Call("rgeos_readWKT", .RGEOS_HANDLE, wkts[i], p4s, id[i], threshold, PACKAGE="rgeos")
     }
+    if(length(res) == 1) {
+        res <- res[[1]]
+    }
     
     return( res )
 }

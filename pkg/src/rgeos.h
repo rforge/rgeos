@@ -13,8 +13,15 @@
 #define R_OFFSET 1
 
 // Utility functioncs
+SEXP rgeos_GEOSversion(void);
+SEXP rgeos_Init(void);
+SEXP rgeos_finish(SEXP env);
+static void rgeos_finish_handle(SEXP ptr);
 GEOSContextHandle_t getContextHandle(SEXP env);
 
+SEXP rgeos_double_translate(SEXP env, SEXP obj, SEXP id, SEXP thres);
+
+double getScale(SEXP env);
 double makePrecise(double val, double scale);
 double sym_round(double val);
 double java_math_round(double val);
@@ -48,11 +55,23 @@ SEXP rgeos_formatcrdMat( SEXP crdMat, int n );
 
 // Translate functions GEOS to R - rgeos_geos2R.c
 SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres);
+
 SEXP rgeos_geospoint2SpatialPoints(SEXP env, GEOSGeom mpt, SEXP p4s, SEXP id, int n);
 SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, int ng);
 
 SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh);
 
+//Translate functions R to GEOS - rgeos_R2geos.c
+GEOSGeom rgeos_convert_R2geos(SEXP env, SEXP obj);
+
+GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj);
+GEOSGeom rgeos_SpatialLines2geosline(SEXP env, SEXP obj);
+GEOSGeom rgeos_Lines2GC(SEXP env, SEXP obj);
+
+GEOSGeom rgeos_SpatialPolygonsGC(SEXP env, SEXP obj);
+GEOSGeom rgeos_Polygons2GC(SEXP env, SEXP obj);
+GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj);
+GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec);
 
 
 // WKT Functions - rgeos_wkt.c
@@ -63,17 +82,6 @@ SEXP rgeos_wkt2sp(SEXP env,SEXP obj,SEXP id,SEXP thres);
 
 // Needs to be classified
 
-GEOSGeom rgeos_SPoints2MP(SEXP env, SEXP obj);
-
-GEOSGeom rgeos_SpatialPolygonsGC(SEXP env, SEXP obj);
-
-GEOSGeom rgeos_Polygons2GC(SEXP env, SEXP obj);
-
-GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj);
-
-GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec);
-
-GEOSGeom rgeos_Lines2GC(SEXP env, SEXP obj);
 
 void rgeos_csArea(SEXP env, GEOSCoordSeq s, double *area);
 
@@ -115,15 +123,7 @@ SEXP rgeos_LinearRingPolygon(SEXP env, GEOSGeom lr, int hole);
 
 SEXP rgeos_SpatialPolygonsUnion(SEXP env, SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh);
 
-SEXP rgeos_Init(void);
 
-SEXP rgeos_GEOSversion(void);
-
-SEXP rgeos_finish(SEXP env);
-
-static void rgeos_finish_handle(SEXP ptr);
-
-double getScale(SEXP env);
 
 SEXP rgeos_Polygons_intersection(SEXP env, SEXP obj1, SEXP obj2);
 

@@ -4,7 +4,10 @@
 
 #include <R_ext/Rdynload.h>
 
+// TODO - do any of these functions need to be called from R?
+
 static const R_CMethodDef CEntries[] = {
+    /*
     {"rgeos_crdMat2CoordSeq", (DL_FUNC) &rgeos_crdMat2CoordSeq, 3},
     {"rgeos_xy2CoordSeq", (DL_FUNC) &rgeos_xy2CoordSeq, 3},
     {"rgeos_xy2Pt", (DL_FUNC) &rgeos_xy2Pt, 3},
@@ -19,6 +22,7 @@ static const R_CMethodDef CEntries[] = {
     {"rgeos_csArea", (DL_FUNC) &rgeos_csArea, 3},
     {"rgeos_plsbufUnion", (DL_FUNC) &rgeos_plsbufUnion, 3},
     {NULL, NULL, 0}
+    */
 };
 
 
@@ -28,6 +32,7 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_Init", (DL_FUNC) &rgeos_Init, 0},
     {"rgeos_finish", (DL_FUNC) &rgeos_finish, 1},
     {"rgeos_GEOSversion", (DL_FUNC) &rgeos_GEOSversion, 0},
+    {"rgeos_double_translate", (DL_FUNC) &rgeos_double_translate, 4},
     //WKT Functions
     {"rgeos_readWKT", (DL_FUNC) &rgeos_readWKT,5}, 
     {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp, 4}, 

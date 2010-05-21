@@ -30,4 +30,8 @@ checkP4S = function(proj4string) {
     
     return( proj4string )
 }
-    
+
+doubletranslate = function(obj) {
+    x = .Call("rgeos_double_translate", .RGEOS_HANDLE, obj, 1, "0", PACKAGE="rgeos")
+    return(x)
+}

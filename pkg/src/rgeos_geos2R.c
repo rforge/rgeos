@@ -13,7 +13,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
-    strcpy(ibuf, CHAR(STRING_ELT(id, 0)));
+    
 
     type = GEOSGeomTypeId_r(GEOShandle, geom);
     ng = GEOSGetNumGeometries_r(GEOShandle, geom);
@@ -36,6 +36,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
             break;
     
         case GEOS_POLYGON:
+            strcpy(ibuf, CHAR(STRING_ELT(id, 0)));
             PROTECT( ans = rgeos_GCPolygons(env, geom, ibuf, thres) ); pc++;
             break;
         
@@ -58,7 +59,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
             isRing  = gctypes[GEOS_LINEARRING];
             isGC    = gctypes[GEOS_GEOMETRYCOLLECTION];
             
-            Rprintf("isPoint: %d  isLine: %d  isPoly: %d  isRing: %d  isGC: %d\n",isPoint, isLine, isPoly, isRing, isGC);
+            //Rprintf("isPoint: %d  isLine: %d  isPoly: %d  isRing: %d  isGC: %d\n",isPoint, isLine, isPoly, isRing, isGC);
             
             if ( isPoint && !isLine && !isPoly && !isRing && !isGC ) {
                 PROTECT( ans = rgeos_geospoint2SpatialPoints(env, geom, p4s, id, n) ); pc++;

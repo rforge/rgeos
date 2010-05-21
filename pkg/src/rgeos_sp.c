@@ -1,47 +1,6 @@
 #include "rgeos.h"
 
 
-GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec) {
-
-    GEOSGeom res, pol, hole;
-    GEOSGeom *holes;
-    SEXP mat, dim;
-
-    int n = length(vec);
-    int i, j;
-
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    i = INTEGER_POINTER(vec)[0]-R_OFFSET;
-
-    mat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
-    dim = getAttrib(mat, R_DimSymbol);
-    pol = rgeos_crdMat2LinearRing(env, mat, dim);
-    if (n == 1) {
-        if ((res = GEOSGeom_createPolygon_r(GEOShandle, pol, NULL, (unsigned int) 0)) == NULL) {
-            GEOSGeom_destroy_r(GEOShandle, pol);
-            error("rgeos_Polygons_i_2Polygon: Polygon not created");
-        }
-    } else {
-        holes = (GEOSGeom *) R_alloc((size_t) (n-1), sizeof(GEOSGeom));
-        for (j=1; j<n; j++) {
-            i = INTEGER_POINTER(vec)[j]-R_OFFSET;
-            mat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
-            dim = getAttrib(mat, R_DimSymbol);
-            hole = rgeos_crdMat2LinearRing(env, mat, dim);
-            holes[(j-1)] = hole;
-        }
-        if ((res = GEOSGeom_createPolygon_r(GEOShandle, pol, holes,
-            (unsigned int) (n-1))) == NULL) {
-            GEOSGeom_destroy_r(GEOShandle, pol);
-            error("rgeos_Polygons_i_2Polygon: Polygon not created");
-        }
-    }
-    return(res);
-}
-
-
-
 SEXP rgeos_SpatialPolygonsSimplify(SEXP env, SEXP obj, SEXP tolerance, SEXP thresh) {
 
     double tol = NUMERIC_POINTER(tolerance)[0];

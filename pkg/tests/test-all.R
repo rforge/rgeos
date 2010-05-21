@@ -69,7 +69,7 @@ SummaryByContextReporter$do({
             cat("\n")
             cat(paste(  colourise(header, "red"), "\n", 
                         message, "\n", sep = "", collapse = "\n") )      
-            stop("", call. = FALSE)
+            #stop("", call. = FALSE)
         }
         cat("\n")
     }
