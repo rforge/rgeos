@@ -142,8 +142,14 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, int ntotal, int type) {
 
     PROTECT(ans = NEW_NUMERIC(ntotal*2)); pc++;
 
-    m = GEOSGetNumGeometries_r(GEOShandle, geom);
+    if (type == GEOS_GEOMETRYCOLLECTION) {
+        m = GEOSGetNumGeometries_r(GEOShandle, geom);
+    } else {
+        m = 1;
+    }
+    
     if (m == -1) return(R_NilValue);
+    
     
     curgeom = geom;
     curtype = type;
@@ -156,13 +162,13 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, int ntotal, int type) {
             curtype = GEOSGeomTypeId_r(GEOShandle, curgeom);
         }
         
-        n = GEOSGetNumGeometries_r(GEOShandle, subgeom);
+        n = GEOSGetNumGeometries_r(GEOShandle, curgeom);
         if (n == -1) return(R_NilValue);
-
+                
         for (i=0; i<n; i++) {
-        
+            
             if (curtype == GEOS_MULTIPOINT) {
-                subgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, subgeom, i);
+                subgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, curgeom, i);
                 if (subgeom == NULL) return(R_NilValue);
             } else {
                 subgeom = curgeom; // if curtype is a point we dont need to get subgeom
