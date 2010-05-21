@@ -3,7 +3,7 @@ useDynLib(rgeos)
 import(methods)
 import(sp)
 
-export(getScale,setScale)
+export(getScale,setScale,doubletranslate)
 
 export(isWKT, WKT2SP, SP2WKT, readWKT, cleanWKT)
 
