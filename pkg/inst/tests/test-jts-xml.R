@@ -44,6 +44,7 @@ for (d in testdirs) {
             validNodeTypes = c("precisionModel","case","comment")
             expect_that( all(nodes %in% validNodeTypes), is_true() )
         })
+        next
         
         #Handle precisionModel nodes - only use the first model
         pmAttrs =  xmlAttrs( x[[ which(nodes == "precisionModel")[1] ]] )
@@ -128,7 +129,7 @@ for (d in testdirs) {
                             }
 
                             funcReturn = do.call(funcPtr, funcArgs, envir=as.environment("package:rgeos"))
-                            print(opReturn)
+                            #print(opReturn)
                         }
                     }) 
                 }                

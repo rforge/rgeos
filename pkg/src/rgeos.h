@@ -49,7 +49,7 @@ GEOSGeom rgeos_crdMat2LinearRing(SEXP env, SEXP mat, SEXP dim);
 GEOSGeom rgeos_crdMat2Polygon(SEXP env, SEXP mat, SEXP dim);
 
 SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev);
-SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom GC, int ntotal, int type);
+SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, int type);
 
 SEXP rgeos_formatcrdMat( SEXP crdMat, int n );
 

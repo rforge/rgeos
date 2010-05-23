@@ -15,20 +15,36 @@ test_that("translate points", {
     
     spp = SpatialPoints(list(x=1,y=1))
     spmp = SpatialPoints(list(x=1:5,y=1:5))
-  
     
-    expect_that( p   , is_identical_to(spp) )
-    expect_that( mp  , is_identical_to(spmp) )
-    expect_that( gcp1, is_identical_to(spmp) )
-    expect_that( gcp2, is_identical_to(spmp) )
-    expect_that( gcp3, is_identical_to(spmp) )
-    expect_that( gcp3, is_identical_to(spmp) )
-    expect_that( gcp3, is_identical_to(spmp) )
-
-    
+    rownames(spp@coords) = c("1")
+    expect_that( p, is_identical_to(spp) )
     expect_that( spp , is_identical_to( doubletranslate(spp)))
+    
+    rownames(spmp@coords) = c("1","1","1","1","1")
+    expect_that( mp, is_identical_to(spmp) )
+    expect_that( spmp, is_identical_to( doubletranslate(spmp)))
+    
+    rownames(spmp@coords) = c("1","2","3","4","5")
+    expect_that( gcp1, is_identical_to(spmp) )
+    expect_that( spmp, is_identical_to( doubletranslate(spmp)))
+    
+    rownames(spmp@coords) = c("1","2","3","3","3")
+    expect_that( gcp2, is_identical_to(spmp) )
     expect_that( spmp, is_identical_to( doubletranslate(spmp)))
 
+    rownames(spmp@coords) = c("1","2","3","3","4")
+    expect_that( gcp3, is_identical_to(spmp) )
+    expect_that( spmp, is_identical_to( doubletranslate(spmp)))
+    
+    rownames(spmp@coords) = c("1","1","2","2","2")    
+    expect_that( gcp4, is_identical_to(spmp) )
+    expect_that( spmp, is_identical_to( doubletranslate(spmp)))
+    
+    rownames(spmp@coords) = c("1","1","2","2","3")
+    expect_that( gcp5, is_identical_to(spmp) )
+    expect_that( spmp, is_identical_to( doubletranslate(spmp)))
+
+    
     expect_that( p   , is_identical_to( doubletranslate(p) ))
     expect_that( mp  , is_identical_to( doubletranslate(mp) ))
     expect_that( gcp1, is_identical_to( doubletranslate(gcp1) ))
@@ -52,17 +68,23 @@ test_that("translate lines", {
 
 
     Line1 = Line(cbind( x=1:4,y=1:4 ))
-    Line2 = Line(cbind( x=1:4,y=4:1 ))
+    Line2 = Line(cbind( x=4:1,y=1:4 ))
     
-    Linesl = Lines( list(Line1) )
-    Linesml1 = Lines( list(Line1, Line1) )
-    Linesml2 = Lines( list(Line1, Line2) )
+    Linesl = Lines( list(Line1), ID = "1" )
+    Linesl2 = Lines( list(Line1), ID = "2" )
     
-    spl    = SpatialLines( list(Linesl) )
-    spml1  = SpatialLines( list(Linesml1) )
-    spml2  = SpatialLines( list(Linesml2) )
-    spgcl1 = SpatialLines( list(Linesl,Linesl) )
-    spgcl2 = SpatialLines( list(Linesl,Linesml2,Linesl) )
+    Linesml1 = Lines( list(Line1, Line1), ID = "1" )
+    Linesml2 = Lines( list(Line1, Line2), ID = "1" )
+    
+    #FIXME - weirdness with rownames in the bbox
+    spl    = SpatialLines( list(Linesl) ); rownames(spl@bbox) = c("x","y")
+    spml1  = SpatialLines( list(Linesml1) ); rownames(spml1@bbox) = c("x","y")
+    spml2  = SpatialLines( list(Linesml2) ); rownames(spml2@bbox) = c("x","y")
+    
+    spgcl1 = SpatialLines( list(Linesl,Linesl2) ); rownames(spgcl1@bbox) = c("x","y")
+    Linesml2@ID = "2"
+    Linesl2@ID = "3"
+    spgcl2 = SpatialLines( list(Linesl,Linesml2,Linesl2) ); rownames(spgcl2@bbox) = c("x","y")
 
 
     expect_that( l   , is_identical_to(spl) )
@@ -81,10 +103,9 @@ test_that("translate lines", {
     expect_that( ml1 , is_identical_to( doubletranslate(ml1) ))
     expect_that( ml2 , is_identical_to( doubletranslate(ml2) ))
     expect_that( gcl1, is_identical_to( doubletranslate(gcl1) ))
-    expect_that( gcl2, is_identical_to( doubletranslate(gcl1) ))
+    expect_that( gcl2, is_identical_to( doubletranslate(gcl2) ))
 
 })   
-
 
 
 test_that("translate lines", {
@@ -98,19 +119,22 @@ test_that("translate lines", {
     Line1 = Line(cbind( x=c(1,1,2,2,1),y=c(1,2,2,1,1) ))
     Line2 = Line(cbind( x=c(1,2,2,1,1),y=c(1,1,2,2,1) ))
     
-    Lineslr1 = Lines( list(Line1) )
-    Lineslr2 = Lines( list(Line1) ) 
-
+    Lineslr11 = Lines( list(Line1), ID="1" )
+    Lineslr12 = Lines( list(Line1), ID="2" )
     
-    splr1   = SpatialLines( list(Lineslr1) )
-    splr2   = SpatialLines( list(Lineslr2) )
-    spgclr1 = SpatialLines( list(Linesr1,Linesr1) )
-    spgclr2 = SpatialLines( list(Linesr1,Linesr2) )
-    spgclr3 = SpatialLines( list(Linesr2,Linesr2) )
+    Lineslr21 = Lines( list(Line2), ID="1" ) 
+    Lineslr22 = Lines( list(Line2), ID="2" ) 
+    
+    
+    splr1   = SpatialLines( list(Lineslr11) ); rownames(splr1@bbox) = c("x","y")
+    splr2   = SpatialLines( list(Lineslr21) ); rownames(splr2@bbox) = c("x","y")
+    spgclr1 = SpatialLines( list(Lineslr11,Lineslr12) ); rownames(spgclr1@bbox) = c("x","y")
+    spgclr2 = SpatialLines( list(Lineslr11,Lineslr22) ); rownames(spgclr2@bbox) = c("x","y")
+    spgclr3 = SpatialLines( list(Lineslr21,Lineslr22) ); rownames(spgclr3@bbox) = c("x","y")
     
 
     expect_that( lr1  , is_identical_to(splr1) )
-    expect_that( lr2  , is_identical_to(splr1) )
+    expect_that( lr2  , is_identical_to(splr2) )
     expect_that( gclr1, is_identical_to(spgclr1) )
     expect_that( gclr2, is_identical_to(spgclr2) )
     expect_that( gclr3, is_identical_to(spgclr3) )

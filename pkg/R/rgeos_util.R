@@ -31,7 +31,25 @@ checkP4S = function(proj4string) {
     return( proj4string )
 }
 
+extractIDs = function(obj) {
+    
+    if ( inherits(obj,"SpatialPoints") ) {
+        ids = unique( rownames(obj@coords) )
+    } else if ( inherits(obj,"SpatialLines") ) {
+        ids = sapply(obj@lines, function(x) {x@ID})
+    } else if ( inherits(obj,"SpatialPoints") ) {
+        ids = sapply(obj@polygons, function(x) {x@ID})
+    } else {
+        stop("Unknown object class")
+    }
+    
+    return(ids)
+}
+
 doubletranslate = function(obj) {
-    x = .Call("rgeos_double_translate", .RGEOS_HANDLE, obj, 1, "0", PACKAGE="rgeos")
+    
+    ids = extractIDs(obj)
+    
+    x = .Call("rgeos_double_translate", .RGEOS_HANDLE, obj, ids, 0, PACKAGE="rgeos")
     return(x)
 }

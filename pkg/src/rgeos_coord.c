@@ -3,11 +3,12 @@
 GEOSCoordSeq rgeos_crdMat2CoordSeq(SEXP env, SEXP mat, SEXP dim) {
 
     unsigned int i, n, m;
-    n = (unsigned int) INTEGER_POINTER(dim)[0];
-    m = (unsigned int) INTEGER_POINTER(dim)[1];
     double val, scale = getScale(env);
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
+
+    n = (unsigned int) INTEGER_POINTER(dim)[0];
+    m = (unsigned int) INTEGER_POINTER(dim)[1];
 
     if (m != 2) error("Only 2D geometries permitted");
 
@@ -128,12 +129,15 @@ SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev) {
 }
 
 
-SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, int ntotal, int type) {
+SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, int type) {
 
     int i,j,k=0;
     int m,n,pc=0;
     int curtype;
-    SEXP ans;
+    
+    SEXP ans, ids, dimnames;
+    char idbuf[BUFSIZ];
+    
     GEOSGeom curgeom, subgeom;
     GEOSCoordSeq s;
     double x, y, scale=getScale(env);
@@ -141,6 +145,7 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, int ntotal, int type) {
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
     PROTECT(ans = NEW_NUMERIC(ntotal*2)); pc++;
+    PROTECT(ids = NEW_CHARACTER(ntotal)); pc++;
 
     if (type == GEOS_GEOMETRYCOLLECTION) {
         m = GEOSGetNumGeometries_r(GEOShandle, geom);
@@ -164,6 +169,8 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, int ntotal, int type) {
         
         n = GEOSGetNumGeometries_r(GEOShandle, curgeom);
         if (n == -1) return(R_NilValue);
+        
+        strcpy(idbuf, CHAR(STRING_ELT(idlist, j)));
                 
         for (i=0; i<n; i++) {
             
@@ -185,13 +192,19 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, int ntotal, int type) {
             
             NUMERIC_POINTER(ans)[k]        = makePrecise(x, scale);
             NUMERIC_POINTER(ans)[k+ntotal] = makePrecise(y, scale);
-    
+            
+            SET_STRING_ELT(ids, k, COPY_TO_USER_STRING(idbuf));
+            
             GEOSCoordSeq_destroy_r(GEOShandle,s);
             k++;
         }
     }
     
     PROTECT(ans = rgeos_formatcrdMat(ans,ntotal));pc++;
+    
+    PROTECT(dimnames = getAttrib(ans, R_DimNamesSymbol));pc++;
+    SET_VECTOR_ELT(dimnames, 0, ids);
+    setAttrib(ans, R_DimNamesSymbol, dimnames);
     
     UNPROTECT(pc);
     return(ans);

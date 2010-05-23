@@ -37,7 +37,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
     
         case GEOS_POLYGON:
             strcpy(ibuf, CHAR(STRING_ELT(id, 0)));
-            PROTECT( ans = rgeos_GCPolygons(env, geom, ibuf, thres) ); pc++;
+            PROTECT( ans = rgeos_GCSpatialPolygons(env, geom,p4s, id, thres) ); pc++;
             break;
         
         case GEOS_GEOMETRYCOLLECTION:
@@ -53,6 +53,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
                 
                 gctypes[type] += 1; 
             }
+            
             isPoint = gctypes[GEOS_POINT] || gctypes[GEOS_MULTIPOINT];
             isLine  = gctypes[GEOS_LINESTRING] || gctypes[GEOS_MULTILINESTRING];
             isPoly  = gctypes[GEOS_POLYGON] || gctypes[GEOS_MULTIPOLYGON];
@@ -60,6 +61,10 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
             isGC    = gctypes[GEOS_GEOMETRYCOLLECTION];
             
             //Rprintf("isPoint: %d  isLine: %d  isPoly: %d  isRing: %d  isGC: %d\n",isPoint, isLine, isPoly, isRing, isGC);
+            
+            if ( isGC ) {
+                error("Geometry collections may not contain other geometry collections");
+            }
             
             if ( isPoint && !isLine && !isPoly && !isRing && !isGC ) {
                 PROTECT( ans = rgeos_geospoint2SpatialPoints(env, geom, p4s, id, n) ); pc++;
@@ -103,7 +108,11 @@ SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP t
 
     PROTECT(pls = NEW_LIST(ng)); pc++;
     for (i=0; i<ng; i++) {
-        GC = (GEOSGeometry *) GEOSGetGeometryN_r(GEOShandle, Geom, i);
+        if (ng == 1) {
+            GC = Geom;
+        } else {
+            GC = (GEOSGeometry *) GEOSGetGeometryN_r(GEOShandle, Geom, i);
+        }
         if ((bb = GEOSEnvelope_r(GEOShandle, GC)) == NULL) {
             error("rgeos_GCSpatialPolygons bbox failure");
         }
@@ -111,6 +120,7 @@ SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP t
         strcpy(ibuf, CHAR(STRING_ELT(IDs, i)));
         SET_VECTOR_ELT(pls, i, rgeos_GCPolygons(env, GC, ibuf, thresh));
     }
+    
     if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, envs, ng)) == NULL) {
         error("rgeos_GCSpatialPolygons: collection not created");
     }
@@ -155,8 +165,8 @@ SEXP rgeos_GCPolygons(SEXP env, GEOSGeom Geom, char *ibuf, SEXP thresh) {
         nps = GEOSGetNumInteriorRings_r(GEOShandle, Geom) + 1;
         PROTECT(pls = NEW_LIST(nps)); pc++;
 
-        if ((GC = (GEOSGeometry *) GEOSGetExteriorRing_r(GEOShandle, Geom))
-            == NULL) error("rgeos_GCPolygons: exterior ring failure");
+        if ((GC = (GEOSGeometry *) GEOSGetExteriorRing_r(GEOShandle, Geom)) == NULL) 
+            error("rgeos_GCPolygons: exterior ring failure");
         comm = (int *) R_alloc((size_t) nps, sizeof(int));
 
         SET_VECTOR_ELT(pls, 0, rgeos_LinearRingPolygon(env, GC, FALSE));
@@ -309,7 +319,7 @@ SEXP rgeos_geospoint2SpatialPoints(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, i
     
     if (n < 1) error("rgeos_geospoint2SpatialPoints: invalid number of geometries");
 
-    PROTECT(crdmat = rgeos_geospoint2crdMat(env, geom, n, type)); pc++;
+    PROTECT(crdmat = rgeos_geospoint2crdMat(env, geom, id, n, type)); pc++;
     if (crdmat == R_NilValue) error("rgeos_geospoint2SpatialPoints: geos point to coord matrix conversion failed");
     
     PROTECT(bbox = rgeos_initbbox()); pc++;
@@ -329,13 +339,15 @@ SEXP rgeos_geospoint2SpatialPoints(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, i
 
 
 
-SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, int nlines) {
+SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP idlist, int nlines) {
 
-    SEXP line, line_list, lines, lines_list, ans, crdmat, bbox;
+    SEXP line, line_list, lines, lines_list, ans, crdmat, bbox, id;
     int pc=0;
-    int i,j, n, type, curtype, hasZ,ncoord;
+    int i,j, n, type, curtype, hasZ, ncoord;
     GEOSGeom curgeom, subgeom;
     GEOSCoordSeq s;
+    
+    char idbuf[BUFSIZ];
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
@@ -396,11 +408,15 @@ SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, int
         
         PROTECT( lines = NEW_OBJECT(MAKE_CLASS("Lines")) );
         SET_SLOT(lines, install("Lines"), line_list);
-        // FIXME
-        //SET_SLOT(lines, install("ID"), id);
+        
+        strcpy(idbuf, CHAR( STRING_ELT(idlist, j) ));
+        PROTECT( id = NEW_CHARACTER(1) );
+        SET_STRING_ELT(id, 0, COPY_TO_USER_STRING(idbuf));
+        SET_SLOT(lines, install("ID"), id);
 
         SET_VECTOR_ELT( lines_list, j, lines );
-        UNPROTECT(2);
+        
+        UNPROTECT(3);
     }
     
     PROTECT(bbox = rgeos_formatbbox(bbox)); pc++;

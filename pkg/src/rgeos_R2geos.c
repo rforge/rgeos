@@ -3,9 +3,11 @@
 
 SEXP rgeos_double_translate(SEXP env, SEXP obj, SEXP id, SEXP thres) {
     
-    GEOSGeom geom = rgeos_convert_R2geos( env, obj);
     SEXP ans, p4s;
+    GEOSGeom geom;
+    GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
+    geom = rgeos_convert_R2geos( env, obj);
     p4s = GET_SLOT(obj, install("proj4string"));
     
     ans = rgeos_convert_geos2R(env, geom, p4s, id, thres); 
@@ -36,11 +38,12 @@ GEOSGeom rgeos_convert_R2geos(SEXP env, SEXP obj) {
 // Spatial Points to geometry collection (Multipoints)
 GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj) {
     
-    int pc=0;
-    unsigned int i, n;
-    GEOSGeom *geoms;
+    int pc = 0;
+    //unsigned int i, n;
+    int match, i, j, k, n, nunq, *unique, *unqcnt, *whichid;
+    GEOSGeom *geoms, *subgeoms;
     GEOSGeom pt, GC;
-    SEXP crds, dim;
+    SEXP crds, dim, ids;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
@@ -48,20 +51,72 @@ GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj) {
     dim = getAttrib(crds, install("dim")); 
     n = INTEGER_POINTER(dim)[0];
 
-    geoms = (GEOSGeom *) R_alloc((size_t) n, sizeof(GEOSGeom));
 
-    for (i=0; i<n; i++) {
-        pt = rgeos_xy2Pt(env, NUMERIC_POINTER(crds)[i], NUMERIC_POINTER(crds)[i+n]);
-        geoms[i] = pt;
+    
+    if ( n == 1 ){ 
+        GC = rgeos_xy2Pt(env, NUMERIC_POINTER(crds)[0], NUMERIC_POINTER(crds)[1]);
+    } else if ( n != 1 ) {
+            
+        unique  = (int *) R_alloc((size_t) n, sizeof(int));
+        unqcnt  = (int *) R_alloc((size_t) n, sizeof(int));
+        whichid = (int *) R_alloc((size_t) n, sizeof(int));
+        
+        PROTECT(ids = VECTOR_ELT( getAttrib(crds, R_DimNamesSymbol), 0 ));pc++;
+        
+        unique[0] = 0;
+        unqcnt[0] = 1;
+        whichid[0] = 0;
+        nunq = 1;
+        
+        for (i=1; i<n; i++) {
+            match = 0;
+            for(j=0; j<nunq; j++) {
+                match = !strcmp( CHAR(STRING_ELT(ids, i)), CHAR(STRING_ELT(ids, unique[j])) );
+                if (match) break;
+            }
+            
+            if (!match) {
+                unique[nunq] = i;
+                unqcnt[nunq] = 0;
+                nunq++;
+            }
+            unqcnt[j]++;
+            whichid[i] = j;
+        }
+                
+        geoms = (GEOSGeom *) R_alloc((size_t) nunq, sizeof(GEOSGeom));
+        
+        
+        for ( j=0; j<nunq; j++) {
+
+            subgeoms = (GEOSGeom *) R_alloc((size_t) unqcnt[j], sizeof(GEOSGeom));
+            k=0;
+            for (i=0; i<n; i++) {
+                if (whichid[i] == j) {
+                    subgeoms[k] = rgeos_xy2Pt(env, NUMERIC_POINTER(crds)[i], NUMERIC_POINTER(crds)[i+n]);
+                    k++;
+                }
+            }
+            if (k == 1 ){
+                geoms[j] = subgeoms[0];
+            } else {
+                geoms[j] = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOINT, subgeoms, unqcnt[j]);
+            }
+            if (geoms[j] == NULL) error("rgeos_SpatialPoints2geospoint: collection not created");
+        }
+
+        if (nunq == 1) {
+            GC = geoms[0];
+        } else {
+            GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, nunq);
+        }
+        if (GC == NULL) error("rgeos_SpatialPoints2geospoint: collection not created");
+        
+    } else {
+        error("rgeos_SpatialPoints2geospoint: invalid dim");
     }
     
-    if ( n == 1 ) {
-        GC = geoms[0];
-    } else {
-        GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOINT, geoms, n);
-        if (GC == NULL) error("rgeos_SpatialPoints2geospoint: collection not created");
-    }
-
+    UNPROTECT(pc);
     return(GC);
 }
 
