@@ -37,7 +37,7 @@ extractIDs = function(obj) {
         ids = unique( rownames(obj@coords) )
     } else if ( inherits(obj,"SpatialLines") ) {
         ids = sapply(obj@lines, function(x) {x@ID})
-    } else if ( inherits(obj,"SpatialPoints") ) {
+    } else if ( inherits(obj,"SpatialPolygons") ) {
         ids = sapply(obj@polygons, function(x) {x@ID})
     } else {
         stop("Unknown object class")

@@ -1,4 +1,7 @@
-RGEOSEnvelope = function(g1) {}
+RGEOSEnvelope = function(obj, id = "envelope") {
+    x = .Call("rgeos_envelope", .RGEOS_HANDLE, obj, id, 0, PACKAGE="rgeos")
+    return(x) 
+}
 
 RGEOSConvexHull = function(g1) {}
 
