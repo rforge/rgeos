@@ -165,7 +165,6 @@ GEOSGeom rgeos_Lines2GC(SEXP env, SEXP obj) {
     PROTECT(lns = GET_SLOT(obj, install("Lines"))); pc++;
     nlns = length(lns);
 
-
     geoms = (GEOSGeom *) R_alloc((size_t) nlns, sizeof(GEOSGeom));
 
     for (i=0; i<nlns; i++) {
@@ -174,10 +173,12 @@ GEOSGeom rgeos_Lines2GC(SEXP env, SEXP obj) {
         ls = rgeos_crdMat2LineString(env, crdMat, dim);
         geoms[i] = ls;
     }
-    if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTILINESTRING,
-        geoms, nlns)) == NULL) {
-        error("Lines2GC: collection not created");
+    if (nlns == 1) {
+        GC = geoms[0];
+    } else {
+        GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTILINESTRING, geoms, nlns);
     }
+    if (GC == NULL) error("Lines2GC: collection not created");
 
     UNPROTECT(pc);
     return(GC);

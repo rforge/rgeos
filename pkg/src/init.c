@@ -36,6 +36,9 @@ static R_CallMethodDef CallEntries[] = {
     //WKT Functions
     {"rgeos_readWKT", (DL_FUNC) &rgeos_readWKT,5}, 
     {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp, 4}, 
+    //Topology Functions
+    
+    {"rgeos_envelope", (DL_FUNC) &rgeos_envelope, 4},
     
     {"rgeos_SpatialPolygonsUnion", (DL_FUNC) &rgeos_SpatialPolygonsUnion, 5},
     {"rgeos_GCSpatialPolygons", (DL_FUNC) &rgeos_GCSpatialPolygons, 5},
@@ -49,7 +52,7 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_DistNpts1pt", (DL_FUNC) &rgeos_DistNpts1pt, 5},
     {"rgeos_Dist1LR1pt", (DL_FUNC) &rgeos_Dist1LR1pt, 5},
     {"rgeos_CoordSeq2crdMat", (DL_FUNC) &rgeos_CoordSeq2crdMat, 4},
-    {"rgeos_Geom2bbox", (DL_FUNC) &rgeos_Geom2bbox, 2},
+    {"rgeos_geom2bbox", (DL_FUNC) &rgeos_geom2bbox, 2},
     {"rgeos_GCPolygons", (DL_FUNC) &rgeos_GCPolygons, 4},
     {"rgeos_LinearRingPolygon", (DL_FUNC) &rgeos_LinearRingPolygon, 3},
     {"rgeos_Polygons_intersection", (DL_FUNC) &rgeos_Polygons_intersection, 3},

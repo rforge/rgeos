@@ -141,7 +141,7 @@ SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP t
     for (i=0; i<ng; i++) INTEGER_POINTER(plotOrder)[i] = po[i];
     SET_SLOT(ans, install("plotOrder"), plotOrder);
 
-    PROTECT(bbox = rgeos_Geom2bbox(env, GC)); pc++;
+    PROTECT(bbox = rgeos_geom2bbox(env, GC)); pc++;
     SET_SLOT(ans, install("bbox"), bbox);
 
     GEOSGeom_destroy_r(GEOShandle, bb);
@@ -318,14 +318,12 @@ SEXP rgeos_geospoint2SpatialPoints(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, i
         error("rgeos_geospoint2SpatialPoints: invalid geometry type");
     
     if (n < 1) error("rgeos_geospoint2SpatialPoints: invalid number of geometries");
-
+    
+    PROTECT(bbox = rgeos_geom2bbox(env, geom)); pc++;
+    
     PROTECT(crdmat = rgeos_geospoint2crdMat(env, geom, id, n, type)); pc++;
     if (crdmat == R_NilValue) error("rgeos_geospoint2SpatialPoints: geos point to coord matrix conversion failed");
     
-    PROTECT(bbox = rgeos_initbbox()); pc++;
-    rgeos_updatebbox_crdmat(bbox, crdmat, n);
-    PROTECT(bbox = rgeos_formatbbox(bbox)); pc++;
-
     PROTECT(ans = NEW_OBJECT(MAKE_CLASS("SpatialPoints"))); pc++;    
     SET_SLOT(ans, install("coords"), crdmat);
     SET_SLOT(ans, install("bbox"), bbox);
@@ -359,9 +357,9 @@ SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP idlist,
         error("rgeos_geosline2SpatialLines: invalid type");
     }
     if (nlines < 1) error("rgeos_geosline2SpatialLines: invalid number of geometries");
-
+    
+    PROTECT(bbox = rgeos_geom2bbox(env, geom)); pc++;
     PROTECT(lines_list = NEW_LIST(nlines)); pc++;
-    PROTECT(bbox = rgeos_initbbox()); pc++;
     
     curgeom = geom;
     curtype = type;
@@ -396,7 +394,7 @@ SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP idlist,
                 
             PROTECT( crdmat = rgeos_CoordSeq2crdMat(env, s, hasZ, FALSE));
             if (crdmat == R_NilValue) error("rgeos_geosline2SpatialLines: CoordSeq to crdMat conversion failed");
-            rgeos_updatebbox_crdmat(bbox, crdmat, ncoord);
+            //rgeos_updatebbox_crdmat(bbox, crdmat, ncoord);
 
             PROTECT(line = NEW_OBJECT(MAKE_CLASS("Line")));   
             SET_SLOT(line, install("coords"), crdmat);
@@ -418,9 +416,7 @@ SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP idlist,
         
         UNPROTECT(3);
     }
-    
-    PROTECT(bbox = rgeos_formatbbox(bbox)); pc++;
-    
+        
     PROTECT(ans = NEW_OBJECT(MAKE_CLASS("SpatialLines"))); pc++;    
     SET_SLOT(ans, install("lines"), lines_list);
     SET_SLOT(ans, install("bbox"), bbox);
