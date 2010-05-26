@@ -36,8 +36,9 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
             break;
     
         case GEOS_POLYGON:
+        case GEOS_MULTIPOLYGON:
             strcpy(ibuf, CHAR(STRING_ELT(id, 0)));
-            PROTECT( ans = rgeos_GCSpatialPolygons(env, geom,p4s, id, thres) ); pc++;
+            PROTECT( ans = rgeos_geospolygon2SpatialPolygons(env, geom,p4s, id, 1, thres) ); pc++;
             break;
         
         case GEOS_GEOMETRYCOLLECTION:
@@ -70,8 +71,8 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
                 PROTECT( ans = rgeos_geospoint2SpatialPoints(env, geom, p4s, id, n) ); pc++;
             } else if ( !isPoint && isLine && !isPoly && !isRing && !isGC ) {
                 PROTECT( ans = rgeos_geosline2SpatialLines(env, geom, p4s, id, ng) ); pc++;
-            //} else if ( !isPoint && !isLine && isPoly && !isRing && !isGC ) {
-            //    PROTECT( ans = rgeos_GCPolygons(env, geom, ibuf, thres) ); pc++;
+            } else if ( !isPoint && !isLine && isPoly && !isRing && !isGC ) {
+                PROTECT( ans = rgeos_geospolygon2SpatialPolygons(env, geom, p4s,id, ng, thres) ); pc++;
             } else if ( !isPoint && !isLine && !isPoly && isRing && !isGC ) {
                 PROTECT( ans = rgeos_geosline2SpatialLines(env, geom, p4s, id, ng) ); pc++;    
             } else {
@@ -80,8 +81,8 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
             
             break;
             
-        case GEOS_MULTIPOLYGON:
-            error("Sorry I don't know how to handle this type yet");
+        default:
+            error("Unknown type");
             //PROTECT( ans = R_NilValue ); pc++;
     }
 
@@ -91,60 +92,56 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
 }
 
 
-SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh) {
+SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP IDs, int ng, SEXP thresh) {
     
-    SEXP ans, pls, bbox, plotOrder;
-    int pc=0, ng, i;
-    GEOSGeom GC, bb;
+    SEXP ans, poly, pls, bbox, plotOrder;
+    int pc=0, i, type;
+    GEOSGeom GC;
     int *po;
     double *areas;
-    GEOSGeom *envs;
     char ibuf[BUFSIZ];
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
-    ng = GEOSGetNumGeometries_r(GEOShandle, Geom);
-    envs = (GEOSGeom *) R_alloc((size_t) ng, sizeof(GEOSGeom));
-
+    PROTECT(bbox = rgeos_geom2bbox(env, geom)); pc++;
+    
+    type = GEOSGeomTypeId_r(GEOShandle, geom);
+    
+    if (ng < 1) error("rgeos_geospolygon2SpatialPolygons: invalid number of geometries");
+    
     PROTECT(pls = NEW_LIST(ng)); pc++;
+    areas = (double *) R_alloc((size_t) ng, sizeof(double));
+    po = (int *) R_alloc((size_t) ng, sizeof(int));
+    
+    GC = geom;
     for (i=0; i<ng; i++) {
-        if (ng == 1) {
-            GC = Geom;
-        } else {
-            GC = (GEOSGeometry *) GEOSGetGeometryN_r(GEOShandle, Geom, i);
+        if (type == GEOS_GEOMETRYCOLLECTION) {
+            GC = (GEOSGeometry *) GEOSGetGeometryN_r(GEOShandle, geom, i);
         }
-        if ((bb = GEOSEnvelope_r(GEOShandle, GC)) == NULL) {
-            error("rgeos_GCSpatialPolygons bbox failure");
-        }
-        envs[i] = bb;
+        if (GC == NULL) error("rgeos_geospolygon2SpatialPolygons: unable to get subgeometry");
+        
         strcpy(ibuf, CHAR(STRING_ELT(IDs, i)));
-        SET_VECTOR_ELT(pls, i, rgeos_GCPolygons(env, GC, ibuf, thresh));
+        PROTECT( poly = rgeos_GCPolygons(env, GC, ibuf, thresh) );
+        
+        areas[i] = NUMERIC_POINTER(GET_SLOT(poly, install("area")))[0];
+        SET_VECTOR_ELT(pls, i, poly);
+        
+        po[i] = i + R_OFFSET;
+        
+        UNPROTECT(1); 
     }
     
-    if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, envs, ng)) == NULL) {
-        error("rgeos_GCSpatialPolygons: collection not created");
-    }
-
-    areas = (double *) R_alloc((size_t) ng, sizeof(double));
-    for (i=0; i<ng; i++) 
-        areas[i] = NUMERIC_POINTER(GET_SLOT(VECTOR_ELT(pls, i), install("area")))[0]; 
-    po = (int *) R_alloc((size_t) ng, sizeof(int));
-    for (i=0; i<ng; i++) po[i] = i + R_OFFSET;
     revsort(areas, po, ng);
-
+    
+    PROTECT(plotOrder = NEW_INTEGER(ng)); pc++;
+    for (i=0; i<ng; i++) INTEGER_POINTER(plotOrder)[i] = po[i];
+    
 
     PROTECT(ans = NEW_OBJECT(MAKE_CLASS("SpatialPolygons"))); pc++;
     SET_SLOT(ans, install("polygons"), pls);
     SET_SLOT(ans, install("proj4string"), p4s);
-
-    PROTECT(plotOrder = NEW_INTEGER(ng)); pc++;
-    for (i=0; i<ng; i++) INTEGER_POINTER(plotOrder)[i] = po[i];
     SET_SLOT(ans, install("plotOrder"), plotOrder);
-
-    PROTECT(bbox = rgeos_geom2bbox(env, GC)); pc++;
     SET_SLOT(ans, install("bbox"), bbox);
-
-    GEOSGeom_destroy_r(GEOShandle, bb);
 
     UNPROTECT(pc);
     return(ans);
@@ -153,7 +150,7 @@ SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP t
 
 SEXP rgeos_GCPolygons(SEXP env, GEOSGeom Geom, char *ibuf, SEXP thresh) {
     SEXP ans, pls, comment, Area, plotOrder, labpt, iID;
-    int pc=0, ng, i, j, k, kk, nps=0, nirs;
+    int pc=0, ng, i, j, k, kk, nps=0, nirs, type;
     int *comm, *po, *idareas, *keep;
     GEOSGeom GC, lr;
     double *areas, *dareas, area;
@@ -161,12 +158,16 @@ SEXP rgeos_GCPolygons(SEXP env, GEOSGeom Geom, char *ibuf, SEXP thresh) {
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
-    if (GEOSGeomTypeId_r(GEOShandle, Geom) == GEOS_POLYGON) {
+    type = GEOSGeomTypeId_r(GEOShandle, Geom);
+    
+    if (type == GEOS_POLYGON) {
+        
         nps = GEOSGetNumInteriorRings_r(GEOShandle, Geom) + 1;
         PROTECT(pls = NEW_LIST(nps)); pc++;
 
-        if ((GC = (GEOSGeometry *) GEOSGetExteriorRing_r(GEOShandle, Geom)) == NULL) 
-            error("rgeos_GCPolygons: exterior ring failure");
+        GC = (GEOSGeometry *) GEOSGetExteriorRing_r(GEOShandle, Geom);
+        if (GC == NULL) error("rgeos_GCPolygons: exterior ring failure");
+        
         comm = (int *) R_alloc((size_t) nps, sizeof(int));
 
         SET_VECTOR_ELT(pls, 0, rgeos_LinearRingPolygon(env, GC, FALSE));
@@ -174,14 +175,14 @@ SEXP rgeos_GCPolygons(SEXP env, GEOSGeom Geom, char *ibuf, SEXP thresh) {
         comm[0] = 0;
 
         for (i=1; i<nps; i++) {
-            if ((lr = (GEOSGeometry *) GEOSGetInteriorRingN_r(GEOShandle,
-                 Geom, (int) (i-1))) == NULL)
-                    error("rgeos_GCPolygons: interior ring failure");
+            lr = (GEOSGeometry *) GEOSGetInteriorRingN_r(GEOShandle, Geom, (int) (i-1));
+            if (lr == NULL) error("rgeos_GCPolygons: interior ring failure");
+            
             comm[i] = 1;
             SET_VECTOR_ELT(pls, i, rgeos_LinearRingPolygon(env, lr, TRUE));
         }
 
-    } else if (GEOSGeomTypeId_r(GEOShandle, Geom) == GEOS_MULTIPOLYGON) {
+    } else if (type == GEOS_MULTIPOLYGON) {
 
         ng = GEOSGetNumGeometries_r(GEOShandle, Geom);
 

@@ -55,7 +55,8 @@ SEXP rgeos_formatcrdMat( SEXP crdMat, int n );
 SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres);
 SEXP rgeos_geospoint2SpatialPoints(SEXP env, GEOSGeom mpt, SEXP p4s, SEXP id, int n);
 SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, int ng);
-SEXP rgeos_GCSpatialPolygons(SEXP env, GEOSGeom Geom, SEXP p4s, SEXP IDs, SEXP thresh);
+SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP IDs, int ng, SEXP thresh);
+
 
 SEXP rgeos_GCPolygons(SEXP env, GEOSGeom Geom, char *buf, SEXP thresh);
 SEXP rgeos_LinearRingPolygon(SEXP env, GEOSGeom lr, int hole);
@@ -68,7 +69,7 @@ GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj);
 GEOSGeom rgeos_SpatialLines2geosline(SEXP env, SEXP obj);
 GEOSGeom rgeos_Lines2GC(SEXP env, SEXP obj);
 
-GEOSGeom rgeos_SpatialPolygonsGC(SEXP env, SEXP obj);
+GEOSGeom rgeos_SpatialPolygons2geospolygon(SEXP env, SEXP obj);
 GEOSGeom rgeos_Polygons2GC(SEXP env, SEXP obj);
 GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj);
 GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec);
@@ -81,6 +82,7 @@ SEXP rgeos_wkt2sp(SEXP env,SEXP obj,SEXP id,SEXP thres);
 
 // Topology Functions - rgeos_topology.c
 SEXP rgeos_envelope(SEXP env, SEXP obj, SEXP id, SEXP thres);
+SEXP rgeos_convexhull(SEXP env, SEXP obj, SEXP id, SEXP thres);
 
 
 // Needs to be classified

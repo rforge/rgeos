@@ -18,14 +18,14 @@ SEXP rgeos_SpatialPolygonsSimplify(SEXP env, SEXP obj, SEXP tolerance, SEXP thre
         SET_STRING_ELT(IDs, i, STRING_ELT(GET_SLOT(VECTOR_ELT(pls, i), install("ID")), 0));
     }
 
-    in = rgeos_SpatialPolygonsGC(env, obj);
+    in = rgeos_SpatialPolygons2geospolygon(env, obj);
 
     if ((out = (GEOSGeometry *) GEOSTopologyPreserveSimplify_r(GEOShandle, in, tol)) == NULL) {
             GEOSGeom_destroy_r(GEOShandle, in);
             return(R_NilValue);
     }
 
-    PROTECT(ans = rgeos_GCSpatialPolygons(env, out, p4s, IDs, thresh)); pc++;
+    PROTECT(ans = rgeos_geospolygon2SpatialPolygons(env, out, p4s, IDs, thresh)); pc++;
     GEOSGeom_destroy(in);
 
     UNPROTECT(pc);
@@ -130,7 +130,7 @@ SEXP rgeos_SpatialPolygonsUnion(SEXP env, SEXP obj, SEXP grps, SEXP grpIDs,
             error("rgeos_SpatialPolygonsUnion: collection not created");
     }
 
-    PROTECT(ans = rgeos_GCSpatialPolygons(env, GC, p4s, grpIDs, thresh)); pc++;
+    PROTECT(ans = rgeos_geospolygon2SpatialPolygons(env, GC, p4s, grpIDs, thresh)); pc++;
 
     UNPROTECT(pc);
     return(ans);

@@ -27,7 +27,7 @@ GEOSGeom rgeos_convert_R2geos(SEXP env, SEXP obj) {
     } else if ( !strcmp(classbuf,"SpatialLines") ) {
         ans = rgeos_SpatialLines2geosline( env, obj);
     } else if ( !strcmp(classbuf,"SpatialPolygons") ) {
-        ans = rgeos_SpatialPolygonsGC( env, obj);
+        ans = rgeos_SpatialPolygons2geospolygon( env, obj);
     } else {
         error("rgeos_convert_R2geos: invalid R class, unable to convert");
     }
@@ -185,7 +185,38 @@ GEOSGeom rgeos_Lines2GC(SEXP env, SEXP obj) {
 
 }
 
+
 // Spatial polygons to geometry collection (multipolygon)
+GEOSGeom rgeos_SpatialPolygons2geospolygon(SEXP env, SEXP obj) {
+
+    SEXP pls;
+    int npls, i, pc=0;
+    GEOSGeom *geoms;
+    GEOSGeom GC;
+
+    GEOSContextHandle_t GEOShandle = getContextHandle(env);
+
+    PROTECT(pls = GET_SLOT(obj, install("polygons"))); pc++;
+    npls = length(pls);
+
+    geoms = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
+
+    for (i=0; i<npls; i++)
+        geoms[i] = rgeos_Polygons2GC(env, VECTOR_ELT(pls, i));
+    
+    if (npls == 1) {
+        GC = geoms[0];
+    } else {
+        GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, npls);
+    } 
+    if (GC == NULL) error("rgeos_SpatialPolygons2geospolygon: collection not created");
+
+
+    UNPROTECT(pc);
+    return(GC);
+}
+
+
 GEOSGeom rgeos_Polygons2GC(SEXP env, SEXP obj) {
 
     SEXP pls, crdMat, dim, comm;
@@ -213,54 +244,70 @@ GEOSGeom rgeos_Polygons2GC(SEXP env, SEXP obj) {
         if (npls == 1) {
             GC = geoms[0];
         } else {
-            if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, npls)) == NULL) {
-                error("Polygons2GC: collection not created");
-            }
+            GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, npls);
         }
+        
+        if (GC == NULL) error("Polygons2GC: collection not created");
+        
     } else {
 
         int nErings = length(comm);
         geoms = (GEOSGeom *) R_alloc((size_t) nErings, sizeof(GEOSGeom));
+        
         for (i=0; i<nErings; i++) {
-            Pol = rgeos_Polygons_i_2Polygon(env, pls, VECTOR_ELT(comm, i));
-            geoms[i] = Pol;
+            geoms[i] = rgeos_Polygons_i_2Polygon(env, pls, VECTOR_ELT(comm, i));
         }
-        if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON,
-            geoms, nErings)) == NULL) {
-            error("Polygons2GC: collection not created");
-        }
+        
+        GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, nErings);
+        if (GC == NULL) error("Polygons2GC: collection not created");
     }
 
     UNPROTECT(pc);
     return(GC);
-
 }
 
 
-GEOSGeom rgeos_SpatialPolygonsGC(SEXP env, SEXP obj) {
 
-    SEXP pls;
-    int npls, i, pc=0;
-    GEOSGeom *geoms;
-    GEOSGeom GC;
+GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec) {
+
+    GEOSGeom res, pol, hole;
+    GEOSGeom *holes;
+    SEXP mat, dim;
+
+    int n = length(vec);
+    int i, j;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
-    PROTECT(pls = GET_SLOT(obj, install("polygons"))); pc++;
-    npls = length(pls);
+    i = INTEGER_POINTER(vec)[0]-R_OFFSET;
 
-    geoms = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
-
-    for (i=0; i<npls; i++)
-        geoms[i] = rgeos_Polygons2GC(env, VECTOR_ELT(pls, i));
-
-    if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, npls)) == NULL) {
-        error("rgeos_SpatialPolygonsGC: collection not created");
+    mat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
+    dim = getAttrib(mat, R_DimSymbol);
+    pol = rgeos_crdMat2LinearRing(env, mat, dim);
+    if (n == 1) {
+        if ((res = GEOSGeom_createPolygon_r(GEOShandle, pol, NULL, (unsigned int) 0)) == NULL) {
+            GEOSGeom_destroy_r(GEOShandle, pol);
+            error("rgeos_Polygons_i_2Polygon: Polygon not created");
+        }
+    } else {
+        holes = (GEOSGeom *) R_alloc((size_t) (n-1), sizeof(GEOSGeom));
+        for (j=1; j<n; j++) {
+            i = INTEGER_POINTER(vec)[j]-R_OFFSET;
+            mat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
+            dim = getAttrib(mat, R_DimSymbol);
+            hole = rgeos_crdMat2LinearRing(env, mat, dim);
+            holes[(j-1)] = hole;
+        }
+        if ((res = GEOSGeom_createPolygon_r(GEOShandle, pol, holes,
+            (unsigned int) (n-1))) == NULL) {
+            GEOSGeom_destroy_r(GEOShandle, pol);
+            error("rgeos_Polygons_i_2Polygon: Polygon not created");
+        }
     }
-
-    UNPROTECT(pc);
-    return(GC);
+    return(res);
 }
+
+
 
 // Spatial polygons to fish soup geometry collection (multipoint) 
 GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj) {
@@ -302,43 +349,4 @@ GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj) {
 
     UNPROTECT(pc);
     return(GC);
-}
-
-GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec) {
-
-    GEOSGeom res, pol, hole;
-    GEOSGeom *holes;
-    SEXP mat, dim;
-
-    int n = length(vec);
-    int i, j;
-
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    i = INTEGER_POINTER(vec)[0]-R_OFFSET;
-
-    mat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
-    dim = getAttrib(mat, R_DimSymbol);
-    pol = rgeos_crdMat2LinearRing(env, mat, dim);
-    if (n == 1) {
-        if ((res = GEOSGeom_createPolygon_r(GEOShandle, pol, NULL, (unsigned int) 0)) == NULL) {
-            GEOSGeom_destroy_r(GEOShandle, pol);
-            error("rgeos_Polygons_i_2Polygon: Polygon not created");
-        }
-    } else {
-        holes = (GEOSGeom *) R_alloc((size_t) (n-1), sizeof(GEOSGeom));
-        for (j=1; j<n; j++) {
-            i = INTEGER_POINTER(vec)[j]-R_OFFSET;
-            mat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
-            dim = getAttrib(mat, R_DimSymbol);
-            hole = rgeos_crdMat2LinearRing(env, mat, dim);
-            holes[(j-1)] = hole;
-        }
-        if ((res = GEOSGeom_createPolygon_r(GEOShandle, pol, holes,
-            (unsigned int) (n-1))) == NULL) {
-            GEOSGeom_destroy_r(GEOShandle, pol);
-            error("rgeos_Polygons_i_2Polygon: Polygon not created");
-        }
-    }
-    return(res);
 }

@@ -1,9 +1,12 @@
-RGEOSEnvelope = function(obj, id = "envelope") {
-    x = .Call("rgeos_envelope", .RGEOS_HANDLE, obj, id, 0, PACKAGE="rgeos")
+RGEOSEnvelope = function(spgeom, id = "envelope") {
+    x = .Call("rgeos_envelope", .RGEOS_HANDLE, spgeom, id, 0, PACKAGE="rgeos")
     return(x) 
 }
 
-RGEOSConvexHull = function(g1) {}
+RGEOSConvexHull = function(spgeom, id="convexhull") {
+    x = .Call("rgeos_convexhull", .RGEOS_HANDLE, spgeom, id, 0, PACKAGE="rgeos")
+    return(x)
+}
 
 RGEOSBoundary = function(g1) {}
 
