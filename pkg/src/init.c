@@ -15,7 +15,7 @@ static const R_CMethodDef CEntries[] = {
     {"rgeos_crdMat2LinearRing", (DL_FUNC) &rgeos_crdMat2LinearRing, 3},
     {"rgeos_crdMat2Polygon", (DL_FUNC) &rgeos_crdMat2Polygon, 3},
     {"rgeos_SPoints2MP", (DL_FUNC) &rgeos_SPoints2MP, 2},
-    {"rgeos_SpatialPolygonsGC", (DL_FUNC) &rgeos_SpatialPolygonsGC, 2},
+    {"rgeos_SpatialPolygons2geospolygon", (DL_FUNC) &rgeos_SpatialPolygons2geospolygon, 2},
     {"rgeos_Polygons2GC", (DL_FUNC) &rgeos_Polygons2GC, 2},
     {"rgeos_Liness2GC", (DL_FUNC) &rgeos_Lines2GC, 2},
     {"rgeos_Polygons_i_2Polygon", (DL_FUNC) &rgeos_Polygons_i_2Polygon, 3},
@@ -39,9 +39,10 @@ static R_CallMethodDef CallEntries[] = {
     //Topology Functions
     
     {"rgeos_envelope", (DL_FUNC) &rgeos_envelope, 4},
+    {"rgeos_convexhull", (DL_FUNC) &rgeos_convexhull, 4},
+    
     
     {"rgeos_SpatialPolygonsUnion", (DL_FUNC) &rgeos_SpatialPolygonsUnion, 5},
-    {"rgeos_GCSpatialPolygons", (DL_FUNC) &rgeos_GCSpatialPolygons, 5},
     {"rgeos_SpatialPolygonsSimplify", (DL_FUNC) &rgeos_SpatialPolygonsSimplify, 4},
     {"rgeos_PolygonsContain", (DL_FUNC) &rgeos_PolygonsContain, 2},
     {"rgeos_lineLength", (DL_FUNC) &rgeos_lineLength, 3},
