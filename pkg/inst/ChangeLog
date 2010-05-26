@@ -1,3 +1,204 @@
+2010-05-26 06:06  crundel
+
+	* src/init.c:
+
+2010-05-26 06:06  crundel
+
+	* R/rgeos_topology.R, inst/tests/test-translate.R, src/rgeos.h,
+	  src/rgeos_R2geos.c, src/rgeos_geos2R.c, src/rgeos_sp.c,
+	  src/rgeos_topology.c: Small fixes to translation functions,
+	  everything should be working
+	  
+	  Updated test-translate.R with polygon unit tests
+	  
+	  Added RGEOSConvexHull (untested)
+
+2010-05-24 04:40  crundel
+
+	* R/rgeos_topology.R, R/rgeos_util.R, src/rgeos_topology.c: Added
+	  rgeos_envelope and RGEOSEnvelope functions
+
+2010-05-24 04:25  crundel
+
+	* src/init.c, src/rgeos.h, src/rgeos_R2geos.c, src/rgeos_bbox.c,
+	  src/rgeos_geos2R.c: Unified bounding box functions, geom2bbox
+	  should work for all geometry types now
+
+2010-05-23 08:03  crundel
+
+	* NAMESPACE, R/rgeos_util.R, R/rgeos_wkt.R, inst/tests,
+	  inst/tests/test-jts-xml.R, inst/tests/test-translate.R,
+	  src/rgeos.h, src/rgeos_R2geos.c, src/rgeos_coord.c,
+	  src/rgeos_geos2R.c: Added proper ID handling to translation
+	  functions and readWKT. Currently point ids are stored as row
+	  names which is a design decision that should be revisited later
+	  (current implementation works, but probably doesn't integrate
+	  well with existing sp tools)
+	  
+	  Added fixes to test-translate.R, mostly related to IDs
+	  
+	  Removed SP2WKT (which never worked) and WKT2SP in favor of
+	  readWKT - revisit naming convention?
+
+2010-05-21 22:00  crundel
+
+	* NAMESPACE:
+
+2010-05-21 22:00  crundel
+
+	* R/rgeos_util.R, R/rgeos_wkt.R, inst/tests/test-translate.R,
+	  src/init.c, src/rgeos.h, src/rgeos_R2geos.c, src/rgeos_geos2R.c,
+	  src/rgeos_sp.c, tests/test-all.R: Added rgeos_convert_R2geos -
+	  generic function to translate R sp objects to geos geometries
+	  
+	  Moved rgeos_Polygons_i_2Polygon to rgeos_R2geos.c
+	  
+	  Added rgeos_double_translate which translates R->geos->R for
+	  testing purposes
+	  
+	  Added test-translate.R with unit tests for translations -
+	  currently tests Points, Lines, and Rings
+	  
+	  readWKT fix - if the result is only one object return it and not
+	  a list of objects
+
+2010-05-21 00:59  crundel
+
+	* src/rgeos_coord.c: Broke the geospoint2crdMat in the last commit,
+	  fixes POINT and MULTIPOINT cases
+
+2010-05-20 22:46  crundel
+
+	* src/rgeos_coord.c, src/rgeos_geos2R.c: Cleaned up / clarified
+	  point and line handling code
+
+2010-05-20 21:25  crundel
+
+	* src/rgeos_geos2R.c: Added handling of geometry collections of
+	  Lines and Multilines and Linear Rings
+
+2010-05-20 20:40  rsbivand
+
+	* src/rgeos_sp.c: temp FIXME in Line Intersection
+
+2010-05-19 04:37  crundel
+
+	* src/init.c, src/rgeos.h, src/rgeos_coord.c, src/rgeos_geos2R.c,
+	  src/rgeos_sp.c: Updated handling conversion of geos points to R
+	  to handle geometry collections of points and multipoints
+
+2010-05-17 21:51  crundel
+
+	* src/rgeos_geos2R.c: Fix to rgeos_multiline2SpatialLines,
+	  SpatialLines class was being built incorrectly, Lines class is
+	  now added to a list before being attached
+
+2010-05-17 02:33  crundel
+
+	* R/rgeos_util.R, R/rgeos_wkt.R, src/init.c, src/rgeos.h,
+	  src/rgeos_bbox.c, src/rgeos_geos2R.c, src/rgeos_wkt.c: Added
+	  rgeos_multiline2SpatialLines function to covert LINESTRING and
+	  MULTILINESTRING to SpatialLines
+	  
+	  Added rgeos_convert_geos2R function which is geometry type
+	  agnostic and calls other conversion functions based on geometry
+	  type
+	  
+	  Fixed rgeos_crdMat2bbox function to make updates to an existing
+	  bbox, added rgeos_initbbox and rgeos_formatbbox helper functions
+	  
+	  Added checkP4S for basic proj4string checking and initialization,
+	  should now be handled in R and an initialized CRS class passed to
+	  conversion functions
+	  
+	  Other small code cleanups
+
+2010-05-15 05:41  crundel
+
+	* src/init.c, src/rgeos_R2geos.c: More merge fixes
+
+2010-05-15 05:39  crundel
+
+	* src/rgeos.h: Broke rgeos.h somehow while merging.
+
+2010-05-15 05:28  crundel
+
+	* ., NAMESPACE, R, R/AAA.R, R/rgeos_wkt.R, inst/tests,
+	  inst/tests/test-jts-xml.R, inst/tests/testxml,
+	  inst/tests/testxml/general,
+	  inst/tests/testxml/general/TestBoundary.xml,
+	  inst/tests/testxml/general/TestCentroid.xml,
+	  inst/tests/testxml/general/TestConvexHull-big.xml,
+	  inst/tests/testxml/general/TestConvexHull.xml,
+	  inst/tests/testxml/general/TestFunctionAA.xml,
+	  inst/tests/testxml/general/TestFunctionAAPrec.xml,
+	  inst/tests/testxml/general/TestFunctionLA.xml,
+	  inst/tests/testxml/general/TestFunctionLAPrec.xml,
+	  inst/tests/testxml/general/TestFunctionLL.xml,
+	  inst/tests/testxml/general/TestFunctionLLPrec.xml,
+	  inst/tests/testxml/general/TestFunctionPA.xml,
+	  inst/tests/testxml/general/TestFunctionPL.xml,
+	  inst/tests/testxml/general/TestFunctionPLPrec.xml,
+	  inst/tests/testxml/general/TestFunctionPP.xml,
+	  inst/tests/testxml/general/TestInteriorPoint.xml,
+	  inst/tests/testxml/general/TestRectanglePredicate.xml,
+	  inst/tests/testxml/general/TestRelateAA.xml,
+	  inst/tests/testxml/general/TestRelateAC.xml,
+	  inst/tests/testxml/general/TestRelateLA.xml,
+	  inst/tests/testxml/general/TestRelateLC.xml,
+	  inst/tests/testxml/general/TestRelateLL.xml,
+	  inst/tests/testxml/general/TestRelatePA.xml,
+	  inst/tests/testxml/general/TestRelatePL.xml,
+	  inst/tests/testxml/general/TestRelatePP.xml,
+	  inst/tests/testxml/general/TestSimple.xml,
+	  inst/tests/testxml/general/TestValid.xml,
+	  inst/tests/testxml/general/TestValid2-big.xml,
+	  inst/tests/testxml/general/TestValid2.xml,
+	  inst/tests/testxml/general/TestWithinDistance.xml,
+	  inst/tests/testxml/robust,
+	  inst/tests/testxml/robust/ExternalRobustness.xml,
+	  inst/tests/testxml/robust/TestRobustOverlayFixed.xml,
+	  inst/tests/testxml/robust/TestRobustOverlayFloat.xml,
+	  inst/tests/testxml/robust/TestRobustRelate.xml,
+	  inst/tests/testxml/validate,
+	  inst/tests/testxml/validate/TestRelateAA-big.xml,
+	  inst/tests/testxml/validate/TestRelateAA.xml,
+	  inst/tests/testxml/validate/TestRelateAC.xml,
+	  inst/tests/testxml/validate/TestRelateLA.xml,
+	  inst/tests/testxml/validate/TestRelateLC.xml,
+	  inst/tests/testxml/validate/TestRelateLL.xml,
+	  inst/tests/testxml/validate/TestRelatePA.xml,
+	  inst/tests/testxml/validate/TestRelatePL.xml,
+	  inst/tests/testxml/validate/TestRelatePP.xml,
+	  inst/tests/testxml/vivid, src, src/gpc_geos.c, src/init.c,
+	  src/rgeos.h, src/rgeos_R2geos.c, src/rgeos_bbox.c,
+	  src/rgeos_coord.c, src/rgeos_geos2R.c, src/rgeos_length.c,
+	  src/rgeos_sp.c, src/rgeos_wkt.c, tests, tests/.Rhistory,
+	  tests/test-all.R: Fixed issue where CoordSeq were not being
+	  destroyed
+	  
+	  Added some initial work on UnitTests using testthat package,
+	  testxml folder contains xml test files from JTS
+	  
+	  General cleaning and reorganization of C code.
+	  
+	  Added functions to convert point and multipoint geos geometries
+	  
+	  Added readWKT functions that are geometry agnostic
+
+2010-05-13 20:10  crundel
+
+	* R/rgeos_misc.R, R/rgeos_predicate_binary.R,
+	  R/rgeos_predicate_unary.R, R/rgeos_topology.R,
+	  R/rgeos_topology_relation.R: Created new files with basic rgeos
+	  functions organized by task, each file contains empty function
+	  definitions.
+
+2010-05-06 16:19  rsbivand
+
+	* ChangeLog, inst/ChangeLog: use points not polygons for b-box
+	  intersection envelope in poly2nb
+
 2010-05-06 16:19  rsbivand
 
 	* R/rgeos.R, src/init.c, src/rgeos.h, src/rgeos_R2geos.c,
