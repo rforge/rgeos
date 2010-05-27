@@ -83,7 +83,12 @@ SEXP rgeos_wkt2sp(SEXP env,SEXP obj,SEXP id,SEXP thres);
 // Topology Functions - rgeos_topology.c
 SEXP rgeos_envelope(SEXP env, SEXP obj, SEXP id, SEXP thres);
 SEXP rgeos_convexhull(SEXP env, SEXP obj, SEXP id, SEXP thres);
+SEXP rgeos_boundary(SEXP env, SEXP obj, SEXP id, SEXP thres); 
+SEXP rgeos_getcentroid(SEXP env, SEXP obj, SEXP id, SEXP thres);
+SEXP rgeos_pointonsurface(SEXP env, SEXP obj, SEXP id, SEXP thres);
 
+// Buffer Functions - rgeos_buffer.c
+SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP width, SEXP quadsegs);
 
 // Needs to be classified
 

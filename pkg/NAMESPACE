@@ -35,6 +35,11 @@ export( RGEOSEnvelope, RGEOSConvexHull, RGEOSBoundary, RGEOSGetCentroid, RGEOSSi
 # GEOS topology relation functions
 export( RGEOSRelate, RGEOSDifference, RGEOSSymDifference, RGEOSIntersection, RGEOSUnion, RGEOSUnionCascaded) 
 
+# GEOS buffer functions
+export( RGEOSBuffer, RGEOSBufferWithStyle, RGEOSSingleSidedBuffer)
+
+# GEOS linearref functions
+export( RGEOSProject, RGEOSInterpolate, RGEOSProjectNormalized, RGEOSInterpolateNormalized)
 
 
 # gpclib shadows

@@ -36,11 +36,16 @@ static R_CallMethodDef CallEntries[] = {
     //WKT Functions
     {"rgeos_readWKT", (DL_FUNC) &rgeos_readWKT,5}, 
     {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp, 4}, 
-    //Topology Functions
     
+    //Topology Functions
     {"rgeos_envelope", (DL_FUNC) &rgeos_envelope, 4},
     {"rgeos_convexhull", (DL_FUNC) &rgeos_convexhull, 4},
-    
+    {"rgeos_boundary", (DL_FUNC) &rgeos_boundary, 4},
+    {"rgeos_getcentroid", (DL_FUNC) &rgeos_getcentroid, 4},
+    {"rgeos_pointonsurface", (DL_FUNC) &rgeos_pointonsurface, 4},
+
+    //Buffer Functions
+    {"rgeos_buffer", (DL_FUNC) &rgeos_buffer, 6},
     
     {"rgeos_SpatialPolygonsUnion", (DL_FUNC) &rgeos_SpatialPolygonsUnion, 5},
     {"rgeos_SpatialPolygonsSimplify", (DL_FUNC) &rgeos_SpatialPolygonsSimplify, 4},

@@ -185,7 +185,24 @@ double rint_vc(double val) {
     }
 }
 
-
+void printCoordSeq(SEXP env, GEOSCoordSeq s) {
+    int i,n;
+    double x,y;
+    
+    GEOSContextHandle_t GEOShandle = getContextHandle(env);
+    
+    GEOSCoordSeq_getSize_r(GEOShandle, s, &n);
+    
+    for (i=0; i<n; i++) {
+        
+        GEOSCoordSeq_getX_r(GEOShandle, s, i, &x);
+        GEOSCoordSeq_getY_r(GEOShandle, s, i, &y);
+        
+        Rprintf("%f %f\n",x,y);
+    }
+    
+    
+}
 
 
 

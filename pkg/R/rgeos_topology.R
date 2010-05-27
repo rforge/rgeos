@@ -8,9 +8,20 @@ RGEOSConvexHull = function(spgeom, id="convexhull") {
     return(x)
 }
 
-RGEOSBoundary = function(g1) {}
+RGEOSBoundary = function(spgeom, id="boundary") {
+    x = .Call("rgeos_boundary", .RGEOS_HANDLE, spgeom, id, 0, PACKAGE="rgeos")
+    return(x)
+}
 
-RGEOSGetCentroid = function(g) {}
+RGEOSGetCentroid = function(spgeom, id="centroid") {
+    x = .Call("rgeos_getcentroid", .RGEOS_HANDLE, spgeom, id, 0, PACKAGE="rgeos")
+    return(x)
+}
+
+RGEOSPointOnSurface = function(spgeom, id="1") {
+    x = .Call("rgeos_pointonsurface", .RGEOS_HANDLE, spgeom, id, 0, PACKAGE="rgeos")
+    return(x)
+}
 
 RGEOSSimplify = function(g1, tolerance) {}
 
@@ -20,7 +31,6 @@ RGEOSPolygonize = function( geoms, ngeoms) {}
 
 RGEOSPolygonizer_getCutEdges = function(geoms, ngeoms) {}
 
-RGEOSPointOnSurface = function(g1) {}
 
 RGEOSLineMerge = function(g) {}
 
