@@ -137,7 +137,7 @@ GEOSGeom rgeos_SpatialLines2geosline(SEXP env, SEXP obj) {
 
     for (i=0; i<nlines; i++) {
         Lines = VECTOR_ELT(lines, i);
-        geoms[i] = rgeos_Lines2GC(env, Lines);
+        geoms[i] = rgeos_Lines2geosline(env, Lines);
     }
     
     // If there is only one line collection return multiline not GC
@@ -153,13 +153,14 @@ GEOSGeom rgeos_SpatialLines2geosline(SEXP env, SEXP obj) {
 }
 
 // Lines class to geometry collection (Multilinestring)
-GEOSGeom rgeos_Lines2GC(SEXP env, SEXP obj) {
+GEOSGeom rgeos_Lines2geosline(SEXP env, SEXP obj) {
 
     SEXP lns, crdMat, dim;
     GEOSGeom *geoms;
     GEOSGeom ls, GC;
-    int nlns, i, pc=0;
-
+    int nlns, i, n, pc=0;
+    double x1,y1,x2,y2, scale = getScale(env);
+    
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
     PROTECT(lns = GET_SLOT(obj, install("Lines"))); pc++;
@@ -170,7 +171,19 @@ GEOSGeom rgeos_Lines2GC(SEXP env, SEXP obj) {
     for (i=0; i<nlns; i++) {
         crdMat = GET_SLOT(VECTOR_ELT(lns, i), install("coords"));
         dim = getAttrib(crdMat, R_DimSymbol);
-        ls = rgeos_crdMat2LineString(env, crdMat, dim);
+        
+        n = INTEGER_POINTER(dim)[0];
+        
+        x1 = makePrecise( NUMERIC_POINTER(crdMat)[0], scale);
+        y1 = makePrecise( NUMERIC_POINTER(crdMat)[n], scale);
+        x2 = makePrecise( NUMERIC_POINTER(crdMat)[n-1], scale);
+        y2 = makePrecise( NUMERIC_POINTER(crdMat)[2*n-1], scale);
+        if (x1 == x2 && y1 == y2) { //start and end point equal => linear ring
+            ls = rgeos_crdMat2LinearRing(env, crdMat, dim);
+        } else {
+            ls = rgeos_crdMat2LineString(env, crdMat, dim);
+        }
+        
         geoms[i] = ls;
     }
     if (nlns == 1) {
@@ -178,7 +191,7 @@ GEOSGeom rgeos_Lines2GC(SEXP env, SEXP obj) {
     } else {
         GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTILINESTRING, geoms, nlns);
     }
-    if (GC == NULL) error("Lines2GC: collection not created");
+    if (GC == NULL) error("Lines2geosline: collection not created");
 
     UNPROTECT(pc);
     return(GC);
@@ -202,7 +215,7 @@ GEOSGeom rgeos_SpatialPolygons2geospolygon(SEXP env, SEXP obj) {
     geoms = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
 
     for (i=0; i<npls; i++)
-        geoms[i] = rgeos_Polygons2GC(env, VECTOR_ELT(pls, i));
+        geoms[i] = rgeos_Polygons2geospolygon(env, VECTOR_ELT(pls, i));
     
     if (npls == 1) {
         GC = geoms[0];
@@ -217,7 +230,7 @@ GEOSGeom rgeos_SpatialPolygons2geospolygon(SEXP env, SEXP obj) {
 }
 
 
-GEOSGeom rgeos_Polygons2GC(SEXP env, SEXP obj) {
+GEOSGeom rgeos_Polygons2geospolygon(SEXP env, SEXP obj) {
 
     SEXP pls, crdMat, dim, comm;
     GEOSGeom *geoms;
@@ -257,8 +270,11 @@ GEOSGeom rgeos_Polygons2GC(SEXP env, SEXP obj) {
         for (i=0; i<nErings; i++) {
             geoms[i] = rgeos_Polygons_i_2Polygon(env, pls, VECTOR_ELT(comm, i));
         }
-        
-        GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, nErings);
+        if (nErings == 1) {
+            GC = geoms[0];
+        } else {
+            GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, nErings);
+        }
         if (GC == NULL) error("Polygons2GC: collection not created");
     }
 
@@ -342,8 +358,7 @@ GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj) {
         }
     }
 
-    if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOINT, 
-        geoms, nn)) == NULL) {
+    if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOINT, geoms, nn)) == NULL) {
         error("rgeos_Polygons2MP: collection not created");
     }
 

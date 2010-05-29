@@ -13,8 +13,6 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
-    
-
     type = GEOSGeomTypeId_r(GEOShandle, geom);
     ng = GEOSGetNumGeometries_r(GEOShandle, geom);
     if (ng == -1) error("rgeos_convert_geos2R: invalid number of subgeometries"); 

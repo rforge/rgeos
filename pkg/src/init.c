@@ -16,8 +16,8 @@ static const R_CMethodDef CEntries[] = {
     {"rgeos_crdMat2Polygon", (DL_FUNC) &rgeos_crdMat2Polygon, 3},
     {"rgeos_SPoints2MP", (DL_FUNC) &rgeos_SPoints2MP, 2},
     {"rgeos_SpatialPolygons2geospolygon", (DL_FUNC) &rgeos_SpatialPolygons2geospolygon, 2},
-    {"rgeos_Polygons2GC", (DL_FUNC) &rgeos_Polygons2GC, 2},
-    {"rgeos_Liness2GC", (DL_FUNC) &rgeos_Lines2GC, 2},
+    {"rgeos_Polygons2geospolygon", (DL_FUNC) &rgeos_Polygons2geospolygon, 2},
+    {"rgeos_Lines2geosline", (DL_FUNC) &rgeos_Lines2geosline, 2},
     {"rgeos_Polygons_i_2Polygon", (DL_FUNC) &rgeos_Polygons_i_2Polygon, 3},
     {"rgeos_csArea", (DL_FUNC) &rgeos_csArea, 3},
     {"rgeos_plsbufUnion", (DL_FUNC) &rgeos_plsbufUnion, 3},
@@ -35,7 +35,7 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_double_translate", (DL_FUNC) &rgeos_double_translate, 4},
     //WKT Functions
     {"rgeos_readWKT", (DL_FUNC) &rgeos_readWKT,5}, 
-    {"rgeos_wkt2sp", (DL_FUNC) &rgeos_wkt2sp, 4}, 
+    {"rgeos_writeWKT", (DL_FUNC) &rgeos_writeWKT, 3}, 
     
     //Topology Functions
     {"rgeos_envelope", (DL_FUNC) &rgeos_envelope, 4},
@@ -45,7 +45,7 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_pointonsurface", (DL_FUNC) &rgeos_pointonsurface, 4},
 
     //Buffer Functions
-    {"rgeos_buffer", (DL_FUNC) &rgeos_buffer, 6},
+    {"rgeos_buffer", (DL_FUNC) &rgeos_buffer, 10},
     
     {"rgeos_SpatialPolygonsUnion", (DL_FUNC) &rgeos_SpatialPolygonsUnion, 5},
     {"rgeos_SpatialPolygonsSimplify", (DL_FUNC) &rgeos_SpatialPolygonsSimplify, 4},

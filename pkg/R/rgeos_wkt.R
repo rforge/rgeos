@@ -10,6 +10,48 @@ isWKT = function( s ) {
 }
 
 
+# TODO - could be done more efficiently with regexs
+cleanWKT = function( text ) {
+    
+    text = str_replace(str_trim(text),"\n","")
+
+    openPos  = c( gregexpr("\\(", text)[[1]], nchar(text)+1)
+    closePos = c( gregexpr("\\)", text)[[1]], nchar(text)+1)
+
+    i = 1
+    j = 1
+    splitPos = c()
+    count = 0
+    while ( i < length(openPos) | j < length(closePos) ) {
+        if (openPos[i] < closePos[j]) {
+            count = count+1
+            i = i+1
+        } else {
+            count = count-1
+            j = j+1
+        }
+    
+        if (count < 0) stop("invalid WKT text, unbalanced parenthesis")
+        
+        if (count == 0) splitPos = c(splitPos, closePos[j-1])
+    }
+    
+    if (count != 0 ) stop("invalid WKT text, unbalanced parenthesis")
+    
+    startPos = c(1, splitPos[-length(splitPos)]+1)
+    
+    rep = str_trim( substring(text,startPos,splitPos) )
+    
+    validWKTs = sapply(rep,isWKT)
+    if ( !all(validWKTs) ) {
+        warning(paste("cleanWKT: following WKT strings are invalid, ignoring.\n",
+                      paste( rep[validWKTs],collapse="\n" ) ))
+    }
+    
+    return( rep[validWKTs] )
+}
+
+
 readWKT = function( text, id = NULL, p4s = NULL, threshold=0) {
     
     wkts = cleanWKT(text)
@@ -53,43 +95,11 @@ readWKT = function( text, id = NULL, p4s = NULL, threshold=0) {
 }
 
 
-# TODO - could be done more efficiently with regexs
-cleanWKT = function( text ) {
-    
-    text = str_replace(str_trim(text),"\n","")
+writeWKT = function( spgeom, byid = FALSE) {
 
-    openPos  = c( gregexpr("\\(", text)[[1]], nchar(text)+1)
-    closePos = c( gregexpr("\\)", text)[[1]], nchar(text)+1)
-
-    i = 1
-    j = 1
-    splitPos = c()
-    count = 0
-    while ( i < length(openPos) | j < length(closePos) ) {
-        if (openPos[i] < closePos[j]) {
-            count = count+1
-            i = i+1
-        } else {
-            count = count-1
-            j = j+1
-        }
+    byid = as.logical(byid)
     
-        if (count < 0) stop("invalid WKT text, unbalanced parenthesis")
-        
-        if (count == 0) splitPos = c(splitPos, closePos[j-1])
-    }
+    res <- .Call("rgeos_writeWKT", .RGEOS_HANDLE, spgeom, byid)
     
-    if (count != 0 ) stop("invalid WKT text, unbalanced parenthesis")
-    
-    startPos = c(1, splitPos[-length(splitPos)]+1)
-    
-    rep = str_trim( substring(text,startPos,splitPos) )
-    
-    validWKTs = sapply(rep,isWKT)
-    if ( !all(validWKTs) ) {
-        warning(paste("cleanWKT: following WKT strings are invalid, ignoring.\n",
-                      paste( rep[validWKTs],collapse="\n" ) ))
-    }
-    
-    return( rep[validWKTs] )
+    return(res) 
 }

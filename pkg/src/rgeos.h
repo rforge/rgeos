@@ -67,17 +67,17 @@ GEOSGeom rgeos_convert_R2geos(SEXP env, SEXP obj);
 
 GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj);
 GEOSGeom rgeos_SpatialLines2geosline(SEXP env, SEXP obj);
-GEOSGeom rgeos_Lines2GC(SEXP env, SEXP obj);
+GEOSGeom rgeos_Lines2geosline(SEXP env, SEXP obj);
 
 GEOSGeom rgeos_SpatialPolygons2geospolygon(SEXP env, SEXP obj);
-GEOSGeom rgeos_Polygons2GC(SEXP env, SEXP obj);
+GEOSGeom rgeos_Polygons2geospolygon(SEXP env, SEXP obj);
 GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj);
 GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec);
 
 
 // WKT Functions - rgeos_wkt.c
 SEXP rgeos_readWKT(SEXP env, SEXP obj, SEXP p4s, SEXP id, SEXP thres);
-SEXP rgeos_wkt2sp(SEXP env,SEXP obj,SEXP id,SEXP thres);
+SEXP rgeos_writeWKT(SEXP env, SEXP obj, SEXP byid);
 
 
 // Topology Functions - rgeos_topology.c
@@ -88,8 +88,8 @@ SEXP rgeos_getcentroid(SEXP env, SEXP obj, SEXP id, SEXP thres);
 SEXP rgeos_pointonsurface(SEXP env, SEXP obj, SEXP id, SEXP thres);
 
 // Buffer Functions - rgeos_buffer.c
-SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP width, SEXP quadsegs);
-
+SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP thres, SEXP width, SEXP quadsegs, 
+                  SEXP capStyle, SEXP joinStyle, SEXP mitreLimit);
 // Needs to be classified
 
 
