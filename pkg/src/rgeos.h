@@ -92,6 +92,11 @@ SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP thres, SEXP width
                   SEXP capStyle, SEXP joinStyle, SEXP mitreLimit);
 
 
+// Miscelaneous functions - rgeos_misc.c
+SEXP rgeos_area(SEXP env, SEXP obj, SEXP byid);
+SEXP rgeos_length(SEXP env, SEXP obj, SEXP byid);
+
+
 // GPC functions
 GEOSGeom GPCptPolygon(SEXP env, SEXP obj);
 GEOSGeom GPCpt2LinearRing(SEXP env, SEXP obj);
