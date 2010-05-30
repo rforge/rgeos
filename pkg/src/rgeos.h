@@ -58,7 +58,6 @@ SEXP rgeos_geospoint2SpatialPoints(SEXP env, GEOSGeom mpt, SEXP p4s, SEXP id, in
 SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, int ng);
 SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP IDs, int ng, SEXP thresh);
 
-
 SEXP rgeos_GCPolygons(SEXP env, GEOSGeom Geom, char *buf, SEXP thresh);
 SEXP rgeos_LinearRingPolygon(SEXP env, GEOSGeom lr, int hole);
 
