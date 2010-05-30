@@ -20,10 +20,32 @@ RGEOSLength = function(spgeom, byid=FALSE) {
 }
 
 
-RGEOSDistance = function(g1, g2) {}
+RGEOSDistance = function(spgeom1, spgeom2, byid=FALSE) {
+    byid = as.logical(byid)
+    if (is.na(byid)) stop("Invalid value for byid")
 
-RGEOSisWithinDistance = function(g1,g2,dist) {
-    return( RGEOSDistance(g1,g2) <= dist )
+    x <- .Call("rgeos_distance", .RGEOS_HANDLE, spgeom1, spgeom2, byid, PACKAGE="rgeos")
+    
+    if(byid) {
+        id1 <- extractIDs(spgeom1)
+        id2 <- extractIDs(spgeom2)
+
+        if ( length(id1) != 1 && length(id2) == 1 )
+            names(x) <- id1        
+        if ( length(id1) == 1 && length(id2) != 1 )
+            names(x) <- id2
+        if ( length(id1) != 1 && length(id2) != 1 ) {
+            colnames(x) <- id1
+            rownames(x) <- id2
+        }
+        
+    }
+    return(x)
+}
+
+
+RGEOSisWithinDistance = function(spgeom1, spgeom2, dist, byid=FALSE) {
+    return( RGEOSDistance(spgeom1,spgeom2,byid) <= dist )
 }
 
 RGEOSHausdorffDistance = function(g1, g2) {}

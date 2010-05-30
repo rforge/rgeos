@@ -50,6 +50,7 @@ static R_CallMethodDef CallEntries[] = {
     //Misc functions
     {"rgeos_area", (DL_FUNC) &rgeos_area, 3},
     {"rgeos_length", (DL_FUNC) &rgeos_length, 3},
+    {"rgeos_distance", (DL_FUNC) &rgeos_distance, 4},
     
     {"rgeos_SpatialPolygonsUnion", (DL_FUNC) &rgeos_SpatialPolygonsUnion, 5},
     {"rgeos_SpatialPolygonsSimplify", (DL_FUNC) &rgeos_SpatialPolygonsSimplify, 4},

@@ -95,6 +95,7 @@ SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP thres, SEXP width
 // Miscelaneous functions - rgeos_misc.c
 SEXP rgeos_area(SEXP env, SEXP obj, SEXP byid);
 SEXP rgeos_length(SEXP env, SEXP obj, SEXP byid);
+SEXP rgeos_distance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
 
 
 // GPC functions
