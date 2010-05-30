@@ -1,5 +1,6 @@
 #include "rgeos.h"
 
+
 SEXP GC_Contains(SEXP env, GEOSGeom GC) {
 
     SEXP ans, dim;
@@ -67,7 +68,7 @@ SEXP GC_Contains(SEXP env, GEOSGeom GC) {
 SEXP rgeos_PolygonsContain(SEXP env, SEXP obj) {
 
     GEOSGeom GC;
-    GC = rgeos_Polygons2GC(env, obj);
+    GC = rgeos_Polygons2geospolygon(env, obj);
 
     return(GC_Contains(env, GC));
 

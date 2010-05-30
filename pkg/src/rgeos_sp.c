@@ -25,7 +25,7 @@ SEXP rgeos_SpatialPolygonsSimplify(SEXP env, SEXP obj, SEXP tolerance, SEXP thre
             return(R_NilValue);
     }
 
-    PROTECT(ans = rgeos_geospolygon2SpatialPolygons(env, out, p4s, IDs, thresh)); pc++;
+    PROTECT(ans = rgeos_geospolygon2SpatialPolygons(env, out, p4s, IDs, 1, thresh)); pc++;
     GEOSGeom_destroy(in);
 
     UNPROTECT(pc);
@@ -40,8 +40,8 @@ SEXP rgeos_Lines_intersection(SEXP env, SEXP obj1, SEXP obj2) {
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
-    in1 = rgeos_Lines2GC(env, obj1);
-    in2 = rgeos_Lines2GC(env, obj2);
+    in1 = rgeos_Lines2geosline(env, obj1);
+    in2 = rgeos_Lines2geosline(env, obj2);
 
     if ((intersects = (int) GEOSIntersects_r(GEOShandle, in1, in2)) == 2) {
         error("rgeos_Lines_intersection: GEOSIntersects failure");
@@ -83,8 +83,8 @@ SEXP rgeos_Polygons_intersection(SEXP env, SEXP obj1, SEXP obj2) {
     SET_STRING_ELT(ID1, 0, STRING_ELT(GET_SLOT(obj1, install("ID")), 0));
     SET_STRING_ELT(ID2, 0, STRING_ELT(GET_SLOT(obj2, install("ID")), 0));
 
-    in1 = rgeos_Polygons2GC(env, obj1);
-    in2 = rgeos_Polygons2GC(env, obj2);
+    in1 = rgeos_Polygons2geospolygon(env, obj1);
+    in2 = rgeos_Polygons2geospolygon(env, obj2);
 
     if ((intersects = (int) GEOSIntersects_r(GEOShandle, in1, in2)) == 2) {
         error("rgeos_Polygons_intersection: GEOSIntersects failure");
@@ -125,12 +125,11 @@ SEXP rgeos_SpatialPolygonsUnion(SEXP env, SEXP obj, SEXP grps, SEXP grpIDs,
         geoms[i] = rgeos_plsbufUnion(env, ipls, VECTOR_ELT(grps, i));
     }
     
-    if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION,
-        geoms, ngrps)) == NULL) {
+    if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, ngrps)) == NULL) {
             error("rgeos_SpatialPolygonsUnion: collection not created");
     }
 
-    PROTECT(ans = rgeos_geospolygon2SpatialPolygons(env, GC, p4s, grpIDs, thresh)); pc++;
+    PROTECT(ans = rgeos_geospolygon2SpatialPolygons(env, GC, p4s, grpIDs, ngrps, thresh)); pc++;
 
     UNPROTECT(pc);
     return(ans);
@@ -152,7 +151,7 @@ GEOSGeom rgeos_plsbufUnion(SEXP env, SEXP ipls, SEXP igrp) {
     for (i=0; i<npls; i++) {
         ii = INTEGER_POINTER(igrp)[i] - R_OFFSET;
         pl = VECTOR_ELT(ipls, ii);
-        GC = rgeos_Polygons2GC(env, pl);
+        GC = rgeos_Polygons2geospolygon(env, pl);
         geoms[i] = GC;
     }
 

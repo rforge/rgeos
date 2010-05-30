@@ -42,7 +42,7 @@ SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points) {
                 error("rgeos_poly2nb: MP GC[%d] not created", i);
             }
         } else {
-              if ((GC = rgeos_Polygons2GC(env, pl)) == NULL) {
+              if ((GC = rgeos_Polygons2geospolygon(env, pl)) == NULL) {
                 error("rgeos_poly2nb: GC[%d] not created", i);
             }
         }
