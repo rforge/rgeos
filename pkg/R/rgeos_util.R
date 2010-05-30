@@ -2,7 +2,7 @@ getScale <- function() {
     return( mget("scale",.RGEOS_HANDLE)$scale )
 }
 
-setScale <- function(scale) {
+setScale <- function(scale=100000000) {
     
     maxPreciseValue <- 9007199254740992.0
     
