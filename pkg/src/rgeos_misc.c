@@ -79,6 +79,20 @@ SEXP rgeos_length(SEXP env, SEXP obj, SEXP byid) {
 
 SEXP rgeos_distance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
 
+    SEXP ans;
+    ans = rgeos_calcdistance(env, spgeom1, spgeom2, byid, 0);
+    return(ans);
+}
+
+SEXP rgeos_hausdorffdistance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
+
+    SEXP ans;
+    ans = rgeos_calcdistance(env, spgeom1, spgeom2, byid, 1);
+    return(ans);
+}
+
+SEXP rgeos_calcdistance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, int hausdorff) {
+
     SEXP ans, dims;
     GEOSGeom geom1, curgeom1;
     GEOSGeom geom2, curgeom2;
@@ -87,6 +101,13 @@ SEXP rgeos_distance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
     int i,j, m, n, pc=0;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
+    
+    int (*distfunc)(GEOSContextHandle_t,const GEOSGeom,const GEOSGeom, double *);
+    if (hausdorff) {
+        distfunc = GEOSHausdorffDistance_r;
+    } else {
+        distfunc = GEOSDistance_r;
+    }
 
     geom1 = rgeos_convert_R2geos(env, spgeom1);
     geom2 = rgeos_convert_R2geos(env, spgeom2);
@@ -116,9 +137,10 @@ SEXP rgeos_distance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
                     error("rgeos_distance: unable to get subgeometries from geometry 2");
             }
             
-            if (!GEOSDistance_r(GEOShandle, curgeom1, curgeom2, &dist))
-                error("rgeos_distance: unable to calculate area");
             
+            if (!distfunc(GEOShandle, curgeom1, curgeom2, &dist))
+                error("rgeos_distance: unable to calculate area");
+
             NUMERIC_POINTER(ans)[n*i+j] = dist;
         }
     }
