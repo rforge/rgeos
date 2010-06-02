@@ -102,6 +102,32 @@ SEXP rgeos_linemerge(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
 SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid, int funcid);
 
 
+// Binary Predicate Functions - rgeos_predicate_binary.c
+
+enum geosBinPredFunc {
+    GEOS_RELATEPATTERN_FUNC,
+    GEOS_DISJOINT_FUNC,
+    GEOS_TOUCHES_FUNC,
+    GEOS_INTERSECTS_FUNC,
+    GEOS_CROSSES_FUNC,
+    GEOS_WITHIN_FUNC,
+    GEOS_CONTAINS_FUNC,
+    GEOS_OVERLAPS_FUNC,
+    GEOS_EQUALS_FUNC
+};
+
+SEXP rgeos_relatepattern(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+SEXP rgeos_disjoint(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+SEXP rgeos_touches(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+SEXP rgeos_intersects(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+SEXP rgeos_crosses(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+SEXP rgeos_within(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+SEXP rgeos_contains(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+SEXP rgeos_overlaps(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+SEXP rgeos_equals(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, int funcid);
+
+
 // Buffer Functions - rgeos_buffer.c
 SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP thres, SEXP width, SEXP quadsegs, 
                   SEXP capStyle, SEXP joinStyle, SEXP mitreLimit);

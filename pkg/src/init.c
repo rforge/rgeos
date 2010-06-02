@@ -45,6 +45,17 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_pointonsurface", (DL_FUNC) &rgeos_pointonsurface, 5},
     {"rgeos_linemerge", (DL_FUNC) &rgeos_linemerge, 5},
 
+    //Binary Predicate Functions
+    {"rgeos_relatepattern", (DL_FUNC) &rgeos_relatepattern, 4},
+    {"rgeos_disjoint", (DL_FUNC) &rgeos_disjoint, 4},
+    {"rgeos_touches", (DL_FUNC) &rgeos_touches, 4},
+    {"rgeos_intersects", (DL_FUNC) &rgeos_intersects, 4},
+    {"rgeos_crosses", (DL_FUNC) &rgeos_crosses, 4},
+    {"rgeos_within", (DL_FUNC) &rgeos_within, 4},
+    {"rgeos_contains", (DL_FUNC) &rgeos_contains, 4},
+    {"rgeos_overlaps", (DL_FUNC) &rgeos_overlaps, 4},
+    {"rgeos_equals", (DL_FUNC) &rgeos_equals, 4},
+
     //Buffer Functions
     {"rgeos_buffer", (DL_FUNC) &rgeos_buffer, 10},
     
