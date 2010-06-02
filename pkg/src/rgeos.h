@@ -51,6 +51,8 @@ GEOSGeom rgeos_crdMat2Polygon(SEXP env, SEXP mat, SEXP dim);
 SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev);
 SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, int type);
 
+SEXP rgeos_formatcrdMat( SEXP crdMat, int n );
+
 
 // Translate functions GEOS to R - rgeos_geos2R.c
 SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres);
@@ -81,11 +83,24 @@ SEXP rgeos_writeWKT(SEXP env, SEXP obj, SEXP byid);
 
 
 // Topology Functions - rgeos_topology.c
-SEXP rgeos_envelope(SEXP env, SEXP obj, SEXP id, SEXP thres);
-SEXP rgeos_convexhull(SEXP env, SEXP obj, SEXP id, SEXP thres);
-SEXP rgeos_boundary(SEXP env, SEXP obj, SEXP id, SEXP thres); 
-SEXP rgeos_getcentroid(SEXP env, SEXP obj, SEXP id, SEXP thres);
-SEXP rgeos_pointonsurface(SEXP env, SEXP obj, SEXP id, SEXP thres);
+
+enum geosTopologyFunc {
+    GEOS_ENVELOPE_FUNC,
+    GEOS_CONVEXHULL_FUNC,
+    GEOS_BOUNDARY_FUNC,
+    GEOS_GETCENTROID_FUNC,
+    GEOS_POINTONSURFACE_FUNC,
+    GEOS_LINEMERGE_FUNC
+};
+
+SEXP rgeos_envelope(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
+SEXP rgeos_convexhull(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
+SEXP rgeos_boundary(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid); 
+SEXP rgeos_getcentroid(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
+SEXP rgeos_pointonsurface(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
+SEXP rgeos_linemerge(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
+SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid, int funcid);
+
 
 // Buffer Functions - rgeos_buffer.c
 SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP thres, SEXP width, SEXP quadsegs, 
@@ -93,11 +108,24 @@ SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP thres, SEXP width
 
 
 // Miscelaneous functions - rgeos_misc.c
+
+enum geosMiscFunc {
+    GEOS_AREA_FUNC,
+    GEOS_LENGTH_FUNC
+};
+
 SEXP rgeos_area(SEXP env, SEXP obj, SEXP byid);
 SEXP rgeos_length(SEXP env, SEXP obj, SEXP byid);
+SEXP rgeos_miscfunc(SEXP env, SEXP obj, SEXP byid, int funcid);
+
+enum geosDistanceFunc {
+      GEOS_EUCLIDEAN_FUNC,
+      GEOS_HAUSDORFF_FUNC
+};
+
 SEXP rgeos_distance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
 SEXP rgeos_hausdorffdistance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
-SEXP rgeos_calcdistance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, int hausdorff);
+SEXP rgeos_distancefunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, int funcid);
 
 // GPC functions
 GEOSGeom GPCptPolygon(SEXP env, SEXP obj);

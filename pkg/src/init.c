@@ -38,11 +38,12 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_writeWKT", (DL_FUNC) &rgeos_writeWKT, 3}, 
     
     //Topology Functions
-    {"rgeos_envelope", (DL_FUNC) &rgeos_envelope, 4},
-    {"rgeos_convexhull", (DL_FUNC) &rgeos_convexhull, 4},
-    {"rgeos_boundary", (DL_FUNC) &rgeos_boundary, 4},
-    {"rgeos_getcentroid", (DL_FUNC) &rgeos_getcentroid, 4},
-    {"rgeos_pointonsurface", (DL_FUNC) &rgeos_pointonsurface, 4},
+    {"rgeos_envelope", (DL_FUNC) &rgeos_envelope, 5},
+    {"rgeos_convexhull", (DL_FUNC) &rgeos_convexhull, 5},
+    {"rgeos_boundary", (DL_FUNC) &rgeos_boundary, 5},
+    {"rgeos_getcentroid", (DL_FUNC) &rgeos_getcentroid, 5},
+    {"rgeos_pointonsurface", (DL_FUNC) &rgeos_pointonsurface, 5},
+    {"rgeos_linemerge", (DL_FUNC) &rgeos_linemerge, 5},
 
     //Buffer Functions
     {"rgeos_buffer", (DL_FUNC) &rgeos_buffer, 10},

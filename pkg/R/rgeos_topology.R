@@ -1,27 +1,56 @@
-RGEOSEnvelope = function(spgeom, id = "envelope") {
-    x = .Call("rgeos_envelope", .RGEOS_HANDLE, spgeom, id, 0, PACKAGE="rgeos")
-    return(x) 
+
+TopologyFunc = function(spgeom, id, byid, func) {
+    
+    byid = as.logical(byid)
+    if (is.na(byid)) 
+        stop("Invalid value for byid")
+    
+    curids = extractIDs(spgeom)
+    if (is.null(id)) {
+        if (byid)   id = curids
+        else        id = "1"
+    }
+    id = as.character(id)
+    
+    if ( length(id) != length(unique(id)) )
+        stop("Non-unique values for id ")
+    
+    if ( !(!byid && length(id) == 1) && !(byid && length(id) == length(curids)) )
+        stop("Invalid number of values in id" ) 
+    
+    return( .Call(func, .RGEOS_HANDLE, spgeom, id, 0, byid, PACKAGE="rgeos") )
 }
 
-RGEOSConvexHull = function(spgeom, id="convexhull") {
-    x = .Call("rgeos_convexhull", .RGEOS_HANDLE, spgeom, id, 0, PACKAGE="rgeos")
-    return(x)
+RGEOSEnvelope = function(spgeom, id = NULL, byid=FALSE) {
+
+    return( TopologyFunc(spgeom,id,byid,"rgeos_envelope") ) 
 }
 
-RGEOSBoundary = function(spgeom, id="boundary") {
-    x = .Call("rgeos_boundary", .RGEOS_HANDLE, spgeom, id, 0, PACKAGE="rgeos")
-    return(x)
+RGEOSConvexHull = function(spgeom, id = NULL, byid=FALSE) {
+    
+    return( TopologyFunc(spgeom,id,byid,"rgeos_convexhull") ) 
 }
 
-RGEOSGetCentroid = function(spgeom, id="centroid") {
-    x = .Call("rgeos_getcentroid", .RGEOS_HANDLE, spgeom, id, 0, PACKAGE="rgeos")
-    return(x)
+RGEOSBoundary = function(spgeom, id = NULL, byid=FALSE) {
+     
+     return( TopologyFunc(spgeom,id,byid,"rgeos_boundary") ) 
 }
 
-RGEOSPointOnSurface = function(spgeom, id="1") {
-    x = .Call("rgeos_pointonsurface", .RGEOS_HANDLE, spgeom, id, 0, PACKAGE="rgeos")
-    return(x)
+RGEOSGetCentroid = function(spgeom, id = NULL, byid=FALSE) {
+
+    return( TopologyFunc(spgeom,id,byid,"rgeos_getcentroid") ) 
 }
+
+RGEOSPointOnSurface = function(spgeom, id = NULL, byid=FALSE) {
+
+    return( TopologyFunc(spgeom,id,byid,"rgeos_pointonsurface") ) 
+}
+
+RGEOSLineMerge = function(spgeom, id = NULL, byid=FALSE) {
+
+    return( TopologyFunc(spgeom,id,byid,"rgeos_linemerge") ) 
+}
+
 
 RGEOSSimplify = function(g1, tolerance) {}
 
@@ -32,6 +61,6 @@ RGEOSPolygonize = function( geoms, ngeoms) {}
 RGEOSPolygonizer_getCutEdges = function(geoms, ngeoms) {}
 
 
-RGEOSLineMerge = function(g) {}
+
 
 

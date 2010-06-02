@@ -40,7 +40,6 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
             break;
         
         case GEOS_GEOMETRYCOLLECTION:
-            
             for (i=0; i<ng; i++) {
                 if ((subgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, i)) == NULL)
                     error("rgeos_convert_geos2R: unable to retrieve subgeometry");
@@ -310,7 +309,7 @@ SEXP rgeos_geospoint2SpatialPoints(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, i
     GEOSGeom subgeom;
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
-    
+        
     type = GEOSGeomTypeId_r(GEOShandle, geom);
     
     if ( type != GEOS_POINT && type != GEOS_MULTIPOINT && type != GEOS_GEOMETRYCOLLECTION )
@@ -327,7 +326,6 @@ SEXP rgeos_geospoint2SpatialPoints(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, i
     SET_SLOT(ans, install("coords"), crdmat);
     SET_SLOT(ans, install("bbox"), bbox);
     SET_SLOT(ans, install("proj4string"), p4s);
-
 
     UNPROTECT(pc);
     return(ans);
@@ -386,14 +384,16 @@ SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP idlist,
     
             hasZ = (int) GEOSHasZ_r(GEOShandle, subgeom);
             s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, subgeom);
-            if (s == NULL) error("rgeos_geosline2SpatialLines: unable to generate coordinate sequence");
+            if (s == NULL) 
+                error("rgeos_geosline2SpatialLines: unable to generate coordinate sequence");
         
             if (GEOSCoordSeq_getSize_r(GEOShandle, s, &ncoord) == 0)
                 error("rgeos_geosline2SpatialLines: unable to determine length of coordinate sequence");
                 
             PROTECT( crdmat = rgeos_CoordSeq2crdMat(env, s, hasZ, FALSE));
-            if (crdmat == R_NilValue) error("rgeos_geosline2SpatialLines: CoordSeq to crdMat conversion failed");
-            //rgeos_updatebbox_crdmat(bbox, crdmat, ncoord);
+            if (crdmat == R_NilValue) 
+                error("rgeos_geosline2SpatialLines: CoordSeq to crdMat conversion failed");
+
 
             PROTECT(line = NEW_OBJECT(MAKE_CLASS("Line")));   
             SET_SLOT(line, install("coords"), crdmat);

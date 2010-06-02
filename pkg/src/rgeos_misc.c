@@ -4,37 +4,7 @@
 SEXP rgeos_area(SEXP env, SEXP obj, SEXP byid) {
 
     SEXP ans;
-    GEOSGeom geom, curgeom;
-    double area;
-    int i, n, pc=0;
-
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    geom = rgeos_convert_R2geos(env, obj);
-
-    if (LOGICAL_POINTER(byid)[0])
-        n = GEOSGetNumGeometries_r(GEOShandle, geom);
-    else
-        n = 1;
-    
-    PROTECT(ans = NEW_NUMERIC(n)); pc++;
-
-    curgeom = geom;
-    for(i=0; i<n; i++) {
-        if ( n > 1) {
-            curgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, i);
-            if (curgeom == NULL) error("rgeos_area: unable to get subgeometries");
-        }
-        
-        if (!GEOSArea_r(GEOShandle, curgeom, &area))
-            error("rgeos_area: unable to calculate area");
-            
-        NUMERIC_POINTER(ans)[i] = area;
-    }
-
-    GEOSGeom_destroy_r(GEOShandle, geom);
-
-    UNPROTECT(pc);
+    ans = rgeos_miscfunc(env, obj, byid, GEOS_AREA_FUNC);
     return(ans);
 }
 
@@ -42,18 +12,39 @@ SEXP rgeos_area(SEXP env, SEXP obj, SEXP byid) {
 SEXP rgeos_length(SEXP env, SEXP obj, SEXP byid) {
 
     SEXP ans;
+    ans = rgeos_miscfunc(env, obj, byid, GEOS_LENGTH_FUNC);
+    return(ans);
+}
+
+
+SEXP rgeos_miscfunc(SEXP env, SEXP obj, SEXP byid, int funcid) {
+
+    SEXP ans;
     GEOSGeom geom, curgeom;
-    double len;
-    int i, n, pc=0;
+    double val;
+    int i, n, type, pc=0;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
-    geom = rgeos_convert_R2geos(env, obj);
+    int (*miscfunc)(GEOSContextHandle_t,const GEOSGeom, double *);
+    
+    switch(funcid) {
+        case GEOS_AREA_FUNC:
+            miscfunc = GEOSArea_r;
+            break;
+        case GEOS_LENGTH_FUNC:
+            miscfunc = GEOSLength_r;
+            break;
+        default:
+            error("rgeos_miscfunc: invalid function");
+    }
 
-    if (LOGICAL_POINTER(byid)[0])
+    geom = rgeos_convert_R2geos(env, obj);
+    type = GEOSGeomTypeId_r(GEOShandle, geom);
+    
+    n = 1;
+    if (LOGICAL_POINTER(byid)[0] && type == GEOS_GEOMETRYCOLLECTION)
         n = GEOSGetNumGeometries_r(GEOShandle, geom);
-    else
-        n = 1;
     
     PROTECT(ans = NEW_NUMERIC(n)); pc++;
 
@@ -61,13 +52,13 @@ SEXP rgeos_length(SEXP env, SEXP obj, SEXP byid) {
     for(i=0; i<n; i++) {
         if ( n > 1) {
             curgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, i);
-            if (curgeom == NULL) error("rgeos_length: unable to get subgeometries");
+            if (curgeom == NULL) error("rgeos_miscfunc: unable to get subgeometries");
         }
         
-        if (!GEOSLength_r(GEOShandle, curgeom, &len))
-            error("rgeos_length: unable to calculate area");
+        if (!miscfunc(GEOShandle, curgeom, &val))
+            error("rgeos_miscfunc: unable to calculate");
             
-        NUMERIC_POINTER(ans)[i] = len;
+        NUMERIC_POINTER(ans)[i] = val;
     }
 
     GEOSGeom_destroy_r(GEOShandle, geom);
@@ -77,21 +68,22 @@ SEXP rgeos_length(SEXP env, SEXP obj, SEXP byid) {
 }
 
 
+
 SEXP rgeos_distance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
 
     SEXP ans;
-    ans = rgeos_calcdistance(env, spgeom1, spgeom2, byid, 0);
+    ans = rgeos_distancefunc(env, spgeom1, spgeom2, byid, GEOS_EUCLIDEAN_FUNC);
     return(ans);
 }
 
 SEXP rgeos_hausdorffdistance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
 
     SEXP ans;
-    ans = rgeos_calcdistance(env, spgeom1, spgeom2, byid, 1);
+    ans = rgeos_distancefunc(env, spgeom1, spgeom2, byid, GEOS_HAUSDORFF_FUNC);
     return(ans);
 }
 
-SEXP rgeos_calcdistance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, int hausdorff) {
+SEXP rgeos_distancefunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, int funcid) {
 
     SEXP ans, dims;
     GEOSGeom geom1, curgeom1;
@@ -99,25 +91,38 @@ SEXP rgeos_calcdistance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, int hau
     
     double dist;
     int i,j, m, n, pc=0;
+    int type1, type2;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
     int (*distfunc)(GEOSContextHandle_t,const GEOSGeom,const GEOSGeom, double *);
-    if (hausdorff) {
-        distfunc = GEOSHausdorffDistance_r;
-    } else {
-        distfunc = GEOSDistance_r;
+    
+    switch(funcid) {
+        case GEOS_EUCLIDEAN_FUNC:
+            distfunc = GEOSDistance_r;
+            break;
+        case GEOS_HAUSDORFF_FUNC:
+            distfunc = GEOSHausdorffDistance_r;
+            break;
+        default:
+            error("rgeos_distancefunc: invalid distance function");
     }
 
-    geom1 = rgeos_convert_R2geos(env, spgeom1);
-    geom2 = rgeos_convert_R2geos(env, spgeom2);
 
+    geom1 = rgeos_convert_R2geos(env, spgeom1);
+    type1 = GEOSGeomTypeId_r(GEOShandle, geom1);
+    
+    geom2 = rgeos_convert_R2geos(env, spgeom2);
+    type2 = GEOSGeomTypeId_r(GEOShandle, geom2);
+    
+    m = 1;
+    n = 1;
     if (LOGICAL_POINTER(byid)[0]) {
-        m = GEOSGetNumGeometries_r(GEOShandle, geom1);
-        n = GEOSGetNumGeometries_r(GEOShandle, geom2);
-    } else {
-        m = 1;
-        n = 1;
+        if (type1 == GEOS_GEOMETRYCOLLECTION)
+            m = GEOSGetNumGeometries_r(GEOShandle, geom1);
+        
+        if (type2 == GEOS_GEOMETRYCOLLECTION)
+            n = GEOSGetNumGeometries_r(GEOShandle, geom2);
     }
     
     PROTECT(ans = NEW_NUMERIC(m*n)); pc++;
@@ -134,12 +139,12 @@ SEXP rgeos_calcdistance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, int hau
             if ( n > 1) {
                 curgeom2 = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom2, j);
                 if (curgeom2 == NULL) 
-                    error("rgeos_distance: unable to get subgeometries from geometry 2");
+                    error("rgeos_distancefunc: unable to get subgeometries from geometry 2");
             }
             
             
             if (!distfunc(GEOShandle, curgeom1, curgeom2, &dist))
-                error("rgeos_distance: unable to calculate area");
+                error("rgeos_distancefunc: unable to calculate area");
 
             NUMERIC_POINTER(ans)[n*i+j] = dist;
         }

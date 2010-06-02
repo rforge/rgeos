@@ -152,9 +152,7 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, in
     } else {
         m = 1;
     }
-    
     if (m == -1) return(R_NilValue);
-    
     
     curgeom = geom;
     curtype = type;
@@ -171,8 +169,10 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, in
         if (n == -1) return(R_NilValue);
         
         strcpy(idbuf, CHAR(STRING_ELT(idlist, j)));
-                
+        
+        
         for (i=0; i<n; i++) {
+            
             
             if (curtype == GEOS_MULTIPOINT) {
                 subgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, curgeom, i);
@@ -180,7 +180,8 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, in
             } else {
                 subgeom = curgeom; // if curtype is a point we dont need to get subgeom
             }
-           
+            
+            
             s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, subgeom);
             if (s == NULL) return(R_NilValue);
         
@@ -199,6 +200,7 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, in
             k++;
         }
     }
+    
     
     PROTECT(ans = rgeos_formatcrdMat(ans,ntotal));pc++;
     
