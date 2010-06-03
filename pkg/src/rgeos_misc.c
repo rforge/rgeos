@@ -3,21 +3,17 @@
 
 SEXP rgeos_area(SEXP env, SEXP obj, SEXP byid) {
 
-    SEXP ans;
-    ans = rgeos_miscfunc(env, obj, byid, GEOS_AREA_FUNC);
-    return(ans);
+    return( rgeos_miscfunc(env, obj, byid, &GEOSArea_r) );
 }
 
 
 SEXP rgeos_length(SEXP env, SEXP obj, SEXP byid) {
 
-    SEXP ans;
-    ans = rgeos_miscfunc(env, obj, byid, GEOS_LENGTH_FUNC);
-    return(ans);
+    return( rgeos_miscfunc(env, obj, byid, &GEOSLength_r) );
 }
 
 
-SEXP rgeos_miscfunc(SEXP env, SEXP obj, SEXP byid, int funcid) {
+SEXP rgeos_miscfunc(SEXP env, SEXP obj, SEXP byid, int (*miscfunc)(GEOSContextHandle_t, const GEOSGeom, double *) ) {
 
     SEXP ans;
     GEOSGeom geom, curgeom;
@@ -25,19 +21,6 @@ SEXP rgeos_miscfunc(SEXP env, SEXP obj, SEXP byid, int funcid) {
     int i, n, type, pc=0;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    int (*miscfunc)(GEOSContextHandle_t,const GEOSGeom, double *);
-    
-    switch(funcid) {
-        case GEOS_AREA_FUNC:
-            miscfunc = GEOSArea_r;
-            break;
-        case GEOS_LENGTH_FUNC:
-            miscfunc = GEOSLength_r;
-            break;
-        default:
-            error("rgeos_miscfunc: invalid function");
-    }
 
     geom = rgeos_convert_R2geos(env, obj);
     type = GEOSGeomTypeId_r(GEOShandle, geom);
@@ -71,19 +54,16 @@ SEXP rgeos_miscfunc(SEXP env, SEXP obj, SEXP byid, int funcid) {
 
 SEXP rgeos_distance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
 
-    SEXP ans;
-    ans = rgeos_distancefunc(env, spgeom1, spgeom2, byid, GEOS_EUCLIDEAN_FUNC);
-    return(ans);
+    return( rgeos_distancefunc(env, spgeom1, spgeom2, byid, &GEOSDistance_r) );
 }
 
 SEXP rgeos_hausdorffdistance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
 
-    SEXP ans;
-    ans = rgeos_distancefunc(env, spgeom1, spgeom2, byid, GEOS_HAUSDORFF_FUNC);
-    return(ans);
+    return( rgeos_distancefunc(env, spgeom1, spgeom2, byid, &GEOSHausdorffDistance_r) );
 }
 
-SEXP rgeos_distancefunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, int funcid) {
+SEXP rgeos_distancefunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, 
+                        int (*distfunc)(GEOSContextHandle_t,const GEOSGeom,const GEOSGeom, double *)) {
 
     SEXP ans, dims;
     GEOSGeom geom1, curgeom1;
@@ -94,20 +74,6 @@ SEXP rgeos_distancefunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, int fun
     int type1, type2;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
-    
-    int (*distfunc)(GEOSContextHandle_t,const GEOSGeom,const GEOSGeom, double *);
-    
-    switch(funcid) {
-        case GEOS_EUCLIDEAN_FUNC:
-            distfunc = GEOSDistance_r;
-            break;
-        case GEOS_HAUSDORFF_FUNC:
-            distfunc = GEOSHausdorffDistance_r;
-            break;
-        default:
-            error("rgeos_distancefunc: invalid distance function");
-    }
-
 
     geom1 = rgeos_convert_R2geos(env, spgeom1);
     type1 = GEOSGeomTypeId_r(GEOShandle, geom1);

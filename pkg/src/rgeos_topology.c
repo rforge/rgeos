@@ -2,49 +2,38 @@
 
 
 SEXP rgeos_envelope(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid) {
-        
-    SEXP ans;
-    ans = rgeos_topologyfunc(env, obj, id, thres, byid, GEOS_ENVELOPE_FUNC);
-    return(ans);
+
+    return( rgeos_topologyfunc(env, obj, id, thres, byid, &GEOSEnvelope_r) );
 }
 
 SEXP rgeos_convexhull(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid) {
 
-    SEXP ans;
-    ans = rgeos_topologyfunc(env, obj, id, thres, byid, GEOS_CONVEXHULL_FUNC);
-    return(ans);
+    return( rgeos_topologyfunc(env, obj, id, thres, byid, &GEOSConvexHull_r) );
 }
 
 SEXP rgeos_boundary(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid) {
 
-    SEXP ans;
-    ans = rgeos_topologyfunc(env, obj, id, thres, byid, GEOS_BOUNDARY_FUNC);
-    return(ans);
+    return( rgeos_topologyfunc(env, obj, id, thres, byid, &GEOSBoundary_r) );
 }
     
 SEXP rgeos_getcentroid(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid) {
 
-    SEXP ans;
-    ans = rgeos_topologyfunc(env, obj, id, thres, byid, GEOS_GETCENTROID_FUNC);
-    return(ans);
+    return( rgeos_topologyfunc(env, obj, id, thres, byid, &GEOSGetCentroid_r) );
 }
 
 SEXP rgeos_pointonsurface(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid) {
 
-    SEXP ans;
-    ans = rgeos_topologyfunc(env, obj, id, thres, byid, GEOS_POINTONSURFACE_FUNC);
-    return(ans);
+    return( rgeos_topologyfunc(env, obj, id, thres, byid, &GEOSPointOnSurface_r) );
 }
 
 
 SEXP rgeos_linemerge(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid) {
 
-    SEXP ans;
-    ans = rgeos_topologyfunc(env, obj, id, thres, byid, GEOS_LINEMERGE_FUNC);
-    return(ans);
+    return( rgeos_topologyfunc(env, obj, id, thres, byid, &GEOSLineMerge_r) );
 }
 
-SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid, int funcid) {
+SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid, 
+                        GEOSGeom (*topofunc)(GEOSContextHandle_t, const GEOSGeom) ) {
 
     SEXP ans, p4s;
     GEOSGeom geom, curgeom;
@@ -53,31 +42,6 @@ SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid, int 
     int i, n, type;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    GEOSGeom (*topofunc)(GEOSContextHandle_t,const GEOSGeom);
-    
-    switch(funcid) {
-        case GEOS_ENVELOPE_FUNC:
-            topofunc = GEOSEnvelope_r; 
-            break;
-        case GEOS_CONVEXHULL_FUNC:
-            topofunc = GEOSConvexHull_r; 
-            break;
-        case GEOS_BOUNDARY_FUNC:
-            topofunc = GEOSBoundary_r; 
-            break;
-        case GEOS_GETCENTROID_FUNC:
-            topofunc = GEOSGetCentroid_r; 
-            break;        
-        case GEOS_POINTONSURFACE_FUNC:
-            topofunc = GEOSPointOnSurface_r; 
-            break;
-        case GEOS_LINEMERGE_FUNC:
-            topofunc = GEOSLineMerge_r; 
-            break;
-        default:
-            error("rgeos_topologyfunc: unknown topology function");
-    }
 
     p4s = GET_SLOT(obj, install("proj4string"));
     geom = rgeos_convert_R2geos(env, obj);

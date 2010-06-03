@@ -1,43 +1,44 @@
 #include "rgeos.h"
 
 SEXP rgeos_relatepattern(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
-    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, GEOS_RELATEPATTERN_FUNC) );
+    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, &GEOSRelatePattern_r) );
 }
 
 SEXP rgeos_disjoint(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
-    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, GEOS_DISJOINT_FUNC) );
+    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, &GEOSDisjoint_r) );
 }
 
 SEXP rgeos_touches(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
-    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, GEOS_TOUCHES_FUNC) );
+    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, &GEOSTouches_r) );
 }
 
 SEXP rgeos_intersects(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
-    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, GEOS_INTERSECTS_FUNC) );
+    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, &GEOSIntersects_r) );
 }
 
 SEXP rgeos_crosses(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
-    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, GEOS_CROSSES_FUNC) );
+    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, &GEOSCrosses_r) );
 }
 
 SEXP rgeos_within(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
-    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, GEOS_WITHIN_FUNC) );
+    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, &GEOSWithin_r) );
 }
 
 SEXP rgeos_contains(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
-    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, GEOS_CONTAINS_FUNC) );
+    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, &GEOSContains_r) );
 }
 
 SEXP rgeos_overlaps(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
-    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, GEOS_OVERLAPS_FUNC) );
+    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, &GEOSOverlaps_r) );
 }
 
 SEXP rgeos_equals(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
-    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, GEOS_EQUALS_FUNC) );
+    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, &GEOSEquals_r) );
 }
 
 
-SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, int funcid) {
+SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, 
+                       char (*binpredfunc)(GEOSContextHandle_t, const GEOSGeom, const GEOSGeom)) {
 
     SEXP ans, dims;
     GEOSGeom geom1, curgeom1;
@@ -49,9 +50,8 @@ SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, int func
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
-    char (*binpredfunc)(GEOSContextHandle_t,const GEOSGeom,const GEOSGeom);
     
-    switch(funcid) {
+    /*switch(funcid) {
         //case GEOS_RELATEPATTERN_FUNC:
         //    binpredfunc = GEOSRelatePattern_r;
         //    break;
@@ -81,7 +81,7 @@ SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, int func
             break;
         default:
             error("rgeos_binpredfunc: invalid distance function");
-    }
+    }*/
 
 
     geom1 = rgeos_convert_R2geos(env, spgeom1);
