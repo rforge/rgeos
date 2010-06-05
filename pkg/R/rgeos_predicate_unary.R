@@ -1,11 +1,36 @@
-RGEOSisEmpty = function(g1) {}
+RGEOSUnaryPredFunc = function(spgeom, byid, func) {
+    byid = as.logical(byid)
+    if (is.na(byid)) stop("Invalid value for byid, must be logical")
 
-RGEOSisValid = function(g1) {}
+    x <- .Call(func, .RGEOS_HANDLE, spgeom, byid, PACKAGE="rgeos")
+    
+    if(byid) {
+        id <- extractIDs(spgeom)
+        names(x) <- id
+    }
+    return(x)
+}
 
-RGEOSisValidReason = function(g1) {}
+RGEOSisEmpty = function(spgeom, byid = FALSE) { 
+    return( RGEOSUnaryPredFunc(spgeom, byid,"rgeos_isempty") )
+}
 
-RGEOSisSimple = function(g1) {}
+RGEOSisValid  = function(spgeom, byid = FALSE) { 
+    return( RGEOSUnaryPredFunc(spgeom, byid,"rgeos_isvalid") )
+}
 
-RGEOSisRing = function(g1) {}
+RGEOSisSimple  = function(spgeom, byid = FALSE) { 
+    return( RGEOSUnaryPredFunc(spgeom, byid,"rgeos_issimple") )
+}
 
-RGEOSHasZ = function(g1) {}
+RGEOSisRing  = function(spgeom, byid = FALSE) { 
+    return( RGEOSUnaryPredFunc(spgeom, byid,"rgeos_isring") )
+}
+
+RGEOSHasZ  = function(spgeom, byid = FALSE) { 
+    return( RGEOSUnaryPredFunc(spgeom, byid,"rgeos_hasz") )
+}
+
+RGEOSisValidReason  = function(spgeom, byid = FALSE) { 
+    return( RGEOSUnaryPredFunc(spgeom, byid,"rgeos_isvalidreason") )
+}

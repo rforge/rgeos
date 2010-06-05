@@ -1,6 +1,6 @@
 RGEOSMiscFunc = function(spgeom, byid, func) {
     byid = as.logical(byid)
-    if (is.na(byid)) stop("Invalid value for byid")
+    if (is.na(byid)) stop("Invalid value for byid, must be logical")
     
     x <- .Call("rgeos_area", .RGEOS_HANDLE, spgeom, byid, PACKAGE="rgeos")
     if(byid) names(x) <- extractIDs(spgeom)
@@ -22,7 +22,7 @@ RGEOSLength = function(spgeom, byid=FALSE) {
 RGEOSDistanceFunc = function(spgeom1, spgeom2, byid, func) {
     byid = as.logical(byid)
     if (is.na(byid)) 
-        stop("Invalid value for byid")
+        stop("Invalid value for byid, must be logical")
     
     if (is.null(spgeom2))
         spgeom2 = spgeom1

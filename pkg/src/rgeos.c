@@ -15,7 +15,7 @@ SEXP rgeos_GEOSversion(void) {
 
 static void __errorHandler(const char *fmt, ...) {
 
-    char buf[BUFSIZE], *p;
+    char buf[BUFSIZ], *p;
     va_list(ap);
     va_start(ap, fmt);
     vsprintf(buf, fmt, ap);
@@ -31,7 +31,7 @@ static void __errorHandler(const char *fmt, ...) {
 
 static void __warningHandler(const char *fmt, ...) {
 
-    char buf[BUFSIZE], *p;
+    char buf[BUFSIZ], *p;
     va_list(ap);
     va_start(ap, fmt);
     vsprintf(buf, fmt, ap);

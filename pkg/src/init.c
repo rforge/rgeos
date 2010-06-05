@@ -46,7 +46,6 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_linemerge", (DL_FUNC) &rgeos_linemerge, 5},
 
     //Binary Predicate Functions
-    {"rgeos_relatepattern", (DL_FUNC) &rgeos_relatepattern, 4},
     {"rgeos_disjoint", (DL_FUNC) &rgeos_disjoint, 4},
     {"rgeos_touches", (DL_FUNC) &rgeos_touches, 4},
     {"rgeos_intersects", (DL_FUNC) &rgeos_intersects, 4},
@@ -56,6 +55,15 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_overlaps", (DL_FUNC) &rgeos_overlaps, 4},
     {"rgeos_equals", (DL_FUNC) &rgeos_equals, 4},
 
+    //Unary Predicate Functions
+    {"rgeos_isvalid", (DL_FUNC) &rgeos_isvalid, 3},
+    {"rgeos_issimple", (DL_FUNC) &rgeos_issimple, 3},
+    {"rgeos_isring", (DL_FUNC) &rgeos_isring, 3},
+    {"rgeos_hasz", (DL_FUNC) &rgeos_hasz, 3},
+    {"rgeos_isempty", (DL_FUNC) &rgeos_isempty, 3},
+    {"rgeos_isvalidreason", (DL_FUNC) &rgeos_isvalidreason, 3},
+    
+    
     //Buffer Functions
     {"rgeos_buffer", (DL_FUNC) &rgeos_buffer, 10},
     

@@ -84,7 +84,6 @@ SEXP rgeos_writeWKT(SEXP env, SEXP obj, SEXP byid);
 
 // Topology Functions - rgeos_topology.c
 
-
 SEXP rgeos_envelope(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
 SEXP rgeos_convexhull(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
 SEXP rgeos_boundary(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid); 
@@ -97,8 +96,6 @@ SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid,
 
 // Binary Predicate Functions - rgeos_predicate_binary.c
 
-
-SEXP rgeos_relatepattern(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
 SEXP rgeos_disjoint(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
 SEXP rgeos_touches(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
 SEXP rgeos_intersects(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
@@ -110,6 +107,17 @@ SEXP rgeos_equals(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
 SEXP rgeos_binpredfunc( SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, 
                         char (*binpredfunc)(GEOSContextHandle_t, const GEOSGeom, const GEOSGeom));
 
+
+// Unary Predicate Functions - rgeos_predicate_unary.c
+
+SEXP rgeos_isvalid(SEXP env, SEXP spgeom, SEXP byid);
+SEXP rgeos_isvalidreason(SEXP env, SEXP spgeom, SEXP byid);
+SEXP rgeos_issimple(SEXP env, SEXP spgeom, SEXP byid);
+SEXP rgeos_isring(SEXP env, SEXP spgeom, SEXP byid);
+SEXP rgeos_hasz(SEXP env, SEXP spgeom, SEXP byid);
+SEXP rgeos_isempty(SEXP env, SEXP spgeom, SEXP byid);
+SEXP rgeos_unarypredfunc(SEXP env, SEXP spgeom, SEXP byid,
+                         char (*unarypredfunc)(GEOSContextHandle_t, const GEOSGeom));
 
 // Buffer Functions - rgeos_buffer.c
 SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP thres, SEXP width, SEXP quadsegs, 

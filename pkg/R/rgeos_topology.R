@@ -3,7 +3,7 @@ TopologyFunc = function(spgeom, id, byid, func) {
     
     byid = as.logical(byid)
     if (is.na(byid)) 
-        stop("Invalid value for byid")
+        stop("Invalid value for byid, must be logical")
     
     curids = extractIDs(spgeom)
     if (is.null(id)) {

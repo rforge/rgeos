@@ -1,4 +1,8 @@
 RGEOSRelate = function(g1, g2) {}
+
+RGEOSRelatePattern = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+}
+
  
 RGEOSDifference = function(g1, g2) {}
 
