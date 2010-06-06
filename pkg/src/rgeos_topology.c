@@ -57,12 +57,12 @@ SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid,
     for(i=0; i<n; i++) {
         if ( n > 1) {
             curgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, i);
-            if (curgeom == NULL) error("rgeos_area: unable to get subgeometries");
+            if (curgeom == NULL) error("rgeos_topologyfunc: unable to get subgeometries");
         }
         
         resgeoms[i] = topofunc(GEOShandle, curgeom);
         if (resgeoms[i] == NULL)
-            error("rgeos_envelope: unable to calculate area");
+            error("rgeos_topologyfunc: unable to calculate area");
 
     }
     
