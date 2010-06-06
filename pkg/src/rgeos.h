@@ -104,8 +104,11 @@ SEXP rgeos_within(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
 SEXP rgeos_contains(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
 SEXP rgeos_overlaps(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
 SEXP rgeos_equals(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+SEXP rgeos_relate(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
 SEXP rgeos_binpredfunc( SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, 
                         char (*binpredfunc)(GEOSContextHandle_t, const GEOSGeom, const GEOSGeom));
+
+SEXP rgeos_equalsexact(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP tol, SEXP byid);
 
 
 // Unary Predicate Functions - rgeos_predicate_unary.c

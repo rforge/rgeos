@@ -54,7 +54,9 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_contains", (DL_FUNC) &rgeos_contains, 4},
     {"rgeos_overlaps", (DL_FUNC) &rgeos_overlaps, 4},
     {"rgeos_equals", (DL_FUNC) &rgeos_equals, 4},
-
+    {"rgeos_relate", (DL_FUNC) &rgeos_relate, 4},
+    {"rgeos_equalsexact", (DL_FUNC) &rgeos_equalsexact, 5},
+    
     //Unary Predicate Functions
     {"rgeos_isvalid", (DL_FUNC) &rgeos_isvalid, 3},
     {"rgeos_issimple", (DL_FUNC) &rgeos_issimple, 3},
@@ -62,7 +64,6 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_hasz", (DL_FUNC) &rgeos_hasz, 3},
     {"rgeos_isempty", (DL_FUNC) &rgeos_isempty, 3},
     {"rgeos_isvalidreason", (DL_FUNC) &rgeos_isvalidreason, 3},
-    
     
     //Buffer Functions
     {"rgeos_buffer", (DL_FUNC) &rgeos_buffer, 10},

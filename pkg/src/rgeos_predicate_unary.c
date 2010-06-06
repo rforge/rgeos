@@ -97,7 +97,7 @@ SEXP rgeos_isvalidreason(SEXP env, SEXP spgeom, SEXP byid) {
         }
 
         buf = (char *) GEOSisValidReason_r(GEOShandle, curgeom);
-        if (buf[0] == 2)
+        if (buf == NULL)
             error("rgeos_isvalidreason: test failed");
 
         SET_STRING_ELT(ans, i, COPY_TO_USER_STRING(buf));
