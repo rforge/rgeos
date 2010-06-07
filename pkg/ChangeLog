@@ -1,3 +1,146 @@
+2010-06-07 08:28  rsbivand
+
+	* DESCRIPTION, NAMESPACE, src/gpc_geos.c, src/init.c,
+	  src/rgeos_coord.c, src/rgeos_sp.c: tidying up to run CMD check
+
+2010-06-07 05:01  crundel
+
+	* src/rgeos_topology_binary.c:
+
+2010-06-07 04:28  crundel
+
+	* src/rgeos_R2geos.c: Handles Spatial DataFrame classes, currently
+	  just ignores the data frame
+
+2010-06-07 02:51  crundel
+
+	* R/rgeos_topology_binary.R, R/rgeos_topology_relation.R: Renamed
+	  rgeos_topology_relation to rgeos_topology_binary
+
+2010-06-06 05:48  crundel
+
+	* src/rgeos_topology.c: Fixed error message typos (referred to
+	  wrong parent function)
+
+2010-06-06 05:37  crundel
+
+	* R/rgeos_predicate_binary.R, R/rgeos_topology_relation.R,
+	  src/init.c, src/rgeos.h, src/rgeos_predicate_binary.c,
+	  src/rgeos_predicate_unary.c: Fixed issue with argument number
+	  mismatch in binary predicate function.
+	  
+	  Binary predicate functions take into account when the result is
+	  symmetric and perform only the necessary calculations.
+	  
+	  RGEOSRelate and RGEOSRelatePattern moved to rgeos_binary_
+	  predicate
+
+2010-06-05 21:33  crundel
+
+	* R/rgeos_misc.R, R/rgeos_predicate_binary.R,
+	  R/rgeos_predicate_unary.R, R/rgeos_topology.R,
+	  R/rgeos_topology_relation.R, src/init.c, src/rgeos.c,
+	  src/rgeos.h, src/rgeos_predicate_binary.c,
+	  src/rgeos_predicate_unary.c: Fixed issues with binary predicate
+	  issue (temporarily remove rgeos_relatepattern)
+	  
+	  Added Unary Predicate Functions
+
+2010-06-03 22:46  crundel
+
+	* src/rgeos.h, src/rgeos_misc.c, src/rgeos_predicate_binary.c,
+	  src/rgeos_topology.c: Removed the enum for each function and just
+	  passing a function pointer directly now.
+
+2010-06-02 03:44  crundel
+
+	* R/rgeos_misc.R, R/rgeos_predicate_binary.R, src/init.c,
+	  src/rgeos.h, src/rgeos_predicate_binary.c: Added binary predicate
+	  functions: RGEOSDisjoint, RGEOSTouches, RGEOSIntersects,
+	  RGEOSCrosses, RGEOSWithin, RGEOSContains, RGEOSOverlaps,
+	  RGEOSEquals
+	  
+	  Generalized functions in rgeos_misc
+
+2010-06-02 00:35  crundel
+
+	* R/rgeos_topology.R, src/init.c, src/rgeos.h, src/rgeos_coord.c,
+	  src/rgeos_geos2R.c, src/rgeos_misc.c, src/rgeos_topology.c: Added
+	  RGEOSLineMerge
+	  
+	  Generalized function calls in topology and misc, functions with
+	  the same type of parameters and differ only in the GEOS function
+	  used are processed by the same function.
+	  
+	  Small bug fixes in coord and geos2R
+
+2010-05-31 03:05  crundel
+
+	* R/rgeos_misc.R, src/init.c, src/rgeos.h, src/rgeos_misc.c: Added
+	  RGEOSHausdorffDistance, combined underlying C code with
+	  rgeosdistance since everything is the same except for the geos
+	  function call. FIXME - currently uses function pointers which are
+	  causing gcc warnings, but code appears to work.
+
+2010-05-30 21:53  crundel
+
+	* R/rgeos_misc.R, src/init.c, src/rgeos.h, src/rgeos_misc.c: Added
+	  RGEOSDistance and RGEOSisWithinDistance in rgeos_misc
+
+2010-05-30 21:14  crundel
+
+	* R/rgeos_misc.R, src/init.c, src/rgeos.h, src/rgeos_misc.c: Added
+	  RGEOSArea and RGEOSLength in rgeos_misc
+
+2010-05-30 20:40  crundel
+
+	* src/rgeos.h: More cleaning of rgeos.h
+
+2010-05-30 20:38  crundel
+
+	* src/rgeos_contains.c, src/rgeos_distance.c, src/rgeos_length.c:
+	  Removed rgeos_contains.c, rgeos_distance.c, rgeos_length.c
+	  functionality will be covered by rgeos_misc.c
+
+2010-05-30 20:37  crundel
+
+	* src/init.c, src/rgeos.h: Removed rgeos_contains.c,
+	  rgeos_distance.c, rgeos_length.c functionality will be covered by
+	  rgeos_misc.c
+	  
+	  Cleaned up init.c and rgeos.h
+
+2010-05-30 20:15  crundel
+
+	* R/rgeos_buffer.R, src/rgeos_buffer.c: Added RGEOSBuffer
+
+2010-05-30 20:11  crundel
+
+	* R/rgeos_util.R: Added default value for setScale
+
+2010-05-30 20:10  crundel
+
+	* src/rgeos_poly2nb.c, src/rgeos_sp.c, src/rgeos_validate.c:
+	  Updated function names
+
+2010-05-29 09:38  crundel
+
+	* NAMESPACE, R/rgeos_wkt.R, src/init.c, src/rgeos.h,
+	  src/rgeos_R2geos.c, src/rgeos_geos2R.c, src/rgeos_wkt.c: Added
+	  writeWKT, small fixes to translate functions
+
+2010-05-27 19:47  crundel
+
+	* NAMESPACE, R/rgeos_buffer.R, R/rgeos_linearref.R,
+	  R/rgeos_topology.R, src/init.c, src/rgeos.c, src/rgeos.h,
+	  src/rgeos_buffer.c, src/rgeos_predicate_unary.c,
+	  src/rgeos_topology.c: Added RGEOSBoundary, RGEOSGetCentroid,
+	  RGEOSPointOnSurface, RGEOSBuffer which mostly work
+
+2010-05-26 17:59  rsbivand
+
+	* ChangeLog, inst/ChangeLog: changelogs
+
 2010-05-26 06:06  crundel
 
 	* src/init.c:
