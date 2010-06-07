@@ -22,11 +22,12 @@ GEOSGeom rgeos_convert_R2geos(SEXP env, SEXP obj) {
     
     strcpy(classbuf, CHAR( STRING_ELT(GET_CLASS(obj), 0) ));
     
-    if ( !strcmp( classbuf,"SpatialPoints") ) {
+    //TODO - handle DataFrame classes gracefully
+    if ( !strcmp( classbuf,"SpatialPoints") || !strcmp(classbuf,"SpatialPointsDataFrame") ) {
         ans = rgeos_SpatialPoints2geospoint( env, obj);
-    } else if ( !strcmp(classbuf,"SpatialLines") ) {
+    } else if ( !strcmp(classbuf,"SpatialLines") || !strcmp(classbuf,"SpatialLinesDataFrame") ) {
         ans = rgeos_SpatialLines2geosline( env, obj);
-    } else if ( !strcmp(classbuf,"SpatialPolygons") ) {
+    } else if ( !strcmp(classbuf,"SpatialPolygons") || !strcmp(classbuf,"SpatialPolygonsDataFrame") ) {
         ans = rgeos_SpatialPolygons2geospolygon( env, obj);
     } else {
         error("rgeos_convert_R2geos: invalid R class, unable to convert");
