@@ -145,7 +145,9 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, in
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
     PROTECT(ans = NEW_NUMERIC(ntotal*2)); pc++;
-    PROTECT(ids = NEW_CHARACTER(ntotal)); pc++;
+    if (idlist != R_NilValue) {/* FIXME RSB */
+        PROTECT(ids = NEW_CHARACTER(ntotal)); pc++;
+    }
 
     if (type == GEOS_GEOMETRYCOLLECTION) {
         m = GEOSGetNumGeometries_r(GEOShandle, geom);
@@ -168,7 +170,8 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, in
         n = GEOSGetNumGeometries_r(GEOShandle, curgeom);
         if (n == -1) return(R_NilValue);
         
-        strcpy(idbuf, CHAR(STRING_ELT(idlist, j)));
+        if (idlist != R_NilValue) /* FIXME RSB */
+            strcpy(idbuf, CHAR(STRING_ELT(idlist, j)));
         
         
         for (i=0; i<n; i++) {
@@ -194,7 +197,8 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, in
             NUMERIC_POINTER(ans)[k]        = makePrecise(x, scale);
             NUMERIC_POINTER(ans)[k+ntotal] = makePrecise(y, scale);
             
-            SET_STRING_ELT(ids, k, COPY_TO_USER_STRING(idbuf));
+            if (idlist != R_NilValue) /* FIXME RSB */
+                SET_STRING_ELT(ids, k, COPY_TO_USER_STRING(idbuf));
             
             GEOSCoordSeq_destroy_r(GEOShandle,s);
             k++;
@@ -204,9 +208,11 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, in
     
     PROTECT(ans = rgeos_formatcrdMat(ans,ntotal));pc++;
     
-    PROTECT(dimnames = getAttrib(ans, R_DimNamesSymbol));pc++;
-    SET_VECTOR_ELT(dimnames, 0, ids);
-    setAttrib(ans, R_DimNamesSymbol, dimnames);
+    if (idlist != R_NilValue) { /* FIXME RSB */
+        PROTECT(dimnames = getAttrib(ans, R_DimNamesSymbol));pc++;
+        SET_VECTOR_ELT(dimnames, 0, ids);
+        setAttrib(ans, R_DimNamesSymbol, dimnames);
+    }
     
     UNPROTECT(pc);
     return(ans);

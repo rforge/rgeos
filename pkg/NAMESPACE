@@ -33,7 +33,8 @@ export( RGEOSEnvelope, RGEOSConvexHull, RGEOSBoundary, RGEOSGetCentroid, RGEOSSi
 		RGEOSPointOnSurface, RGEOSLineMerge)
 		
 # GEOS topology relation functions
-export( RGEOSRelate, RGEOSDifference, RGEOSSymDifference, RGEOSIntersection, RGEOSUnion, RGEOSUnionCascaded) 
+export( RGEOSRelate, RGEOSDifference, RGEOSSymDifference, RGEOSIntersection, RGEOSUnion#, RGEOSUnionCascaded RSB FIXME
+) 
 
 # GEOS buffer functions
 export( RGEOSBuffer, RGEOSSingleSidedBuffer)

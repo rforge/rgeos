@@ -35,8 +35,8 @@ SEXP rgeos_SpatialPolygonsSimplify(SEXP env, SEXP obj, SEXP tolerance, SEXP thre
 SEXP rgeos_Lines_intersection(SEXP env, SEXP obj1, SEXP obj2) {
 
     GEOSGeom in1, in2, out;
-    int pc=0, i, intersects, n;
-    SEXP ans,p4s;
+    int pc=0, i, intersects, n, type;
+    SEXP ans/*,p4s*/;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
@@ -58,10 +58,14 @@ SEXP rgeos_Lines_intersection(SEXP env, SEXP obj1, SEXP obj2) {
     // FIXME
     n = GEOSGetNumGeometries_r(GEOShandle, out);
     if (n == -1) error("rgeos_Lines_intersection: invalid number of subgeometries"); 
+    type = GEOSGeomTypeId_r(GEOShandle, out);
 
-    PROTECT(p4s = GET_SLOT(obj1, install("proj4string"))); pc++;
+/*    PROTECT(p4s = GET_SLOT(obj1, install("proj4string"))); pc++;
+Lines objects have no proj4string slot FIXME RSB */
     
-    PROTECT(ans = rgeos_geospoint2SpatialPoints(env, out, p4s, R_NilValue, n)); pc++;
+/*    PROTECT(ans = rgeos_geospoint2SpatialPoints(env, out, p4s, R_NilValue, n)); pc++;*/
+// return matrix
+    PROTECT(ans = rgeos_geospoint2crdMat(env, out, R_NilValue, n, type)); pc++;
     UNPROTECT(pc);
     return(ans);
 

@@ -16,11 +16,10 @@ SEXP IntersectGpcGEOS(SEXP env, SEXP A, SEXP B) {
         GEOSGeom_destroy_r(GEOShandle, GCB);
         error("IntersectGpcGEOS: intersection not created");
     }
-
     GEOSGeom_destroy_r(GEOShandle, GCA);
     GEOSGeom_destroy_r(GEOShandle, GCB);
     PROTECT(res = GCGCPPts(env, GCC)); pc++;
-    GEOSGeom_destroy_r(GEOShandle, GCC);
+//    GEOSGeom_destroy_r(GEOShandle, GCC); now crashing on memory not mapped
     UNPROTECT(pc);
     return(res);
 
@@ -46,7 +45,7 @@ SEXP UnionGpcGEOS(SEXP env, SEXP A, SEXP B) {
     GEOSGeom_destroy_r(GEOShandle, GCA);
     GEOSGeom_destroy_r(GEOShandle, GCB);
     PROTECT(res = GCGCPPts(env, GCC)); pc++;
-    GEOSGeom_destroy_r(GEOShandle, GCC);
+//    GEOSGeom_destroy_r(GEOShandle, GCC); now crashing on memory not mapped
     UNPROTECT(pc);
     return(res);
 
@@ -72,7 +71,7 @@ SEXP SymDiffGpcGEOS(SEXP env, SEXP A, SEXP B) {
     GEOSGeom_destroy_r(GEOShandle, GCA);
     GEOSGeom_destroy_r(GEOShandle, GCB);
     PROTECT(res = GCGCPPts(env, GCC)); pc++;
-    GEOSGeom_destroy_r(GEOShandle, GCC);
+//    GEOSGeom_destroy_r(GEOShandle, GCC); now crashing on memory not mapped
     UNPROTECT(pc);
     return(res);
 
@@ -99,7 +98,7 @@ SEXP DiffGpcGEOS(SEXP env, SEXP A, SEXP B) {
     GEOSGeom_destroy_r(GEOShandle, GCA);
     GEOSGeom_destroy_r(GEOShandle, GCB);
     PROTECT(res = GCGCPPts(env, GCC)); pc++;
-    GEOSGeom_destroy_r(GEOShandle, GCC);
+//    GEOSGeom_destroy_r(GEOShandle, GCC); now crashing on memory not mapped
     UNPROTECT(pc);
     return(res);
 
@@ -363,7 +362,6 @@ SEXP GCGCPPts(SEXP env, GEOSGeom Geom) {
             }
         }
     }
-
     SP_PREFIX(comm2comment)(buf, comm, n);
     PROTECT(comment = NEW_CHARACTER(1)); pc++;
     SET_STRING_ELT(comment, 0, COPY_TO_USER_STRING(buf));

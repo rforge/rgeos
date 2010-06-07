@@ -20,9 +20,9 @@ static const R_CMethodDef CEntries[] = {
     {"rgeos_Lines2geosline", (DL_FUNC) &rgeos_Lines2geosline, 2},
     {"rgeos_Polygons_i_2Polygon", (DL_FUNC) &rgeos_Polygons_i_2Polygon, 3},
     {"rgeos_csArea", (DL_FUNC) &rgeos_csArea, 3},
-    {"rgeos_plsbufUnion", (DL_FUNC) &rgeos_plsbufUnion, 3},
-    {NULL, NULL, 0}
-    */
+    {"rgeos_plsbufUnion", (DL_FUNC) &rgeos_plsbufUnion, 3}, RSB FIXME   */
+    {NULL, NULL, 0} 
+/* if R_CMethodDef not NULL in R_registerRoutines, must retain this line */
 };
 
 
@@ -97,7 +97,7 @@ R_init_rgeos(DllInfo *dll) {
 
 //    SEXP INIT;
 
-    R_registerRoutines(dll, CEntries, CallEntries, NULL, NULL);
+    R_registerRoutines(dll, CEntries, CallEntries, NULL, NULL); // RSB FIXME
     R_useDynamicSymbols(dll, FALSE);
 
 //    INIT = rgeos_Init();
