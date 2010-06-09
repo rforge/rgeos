@@ -90,6 +90,7 @@ SEXP rgeos_boundary(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
 SEXP rgeos_getcentroid(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
 SEXP rgeos_pointonsurface(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
 SEXP rgeos_linemerge(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
+SEXP rgeos_unioncascaded(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid );
 SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid, 
                         GEOSGeom (*topofunc)(GEOSContextHandle_t, const GEOSGeom) );
 

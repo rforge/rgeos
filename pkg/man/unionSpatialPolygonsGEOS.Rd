@@ -26,7 +26,7 @@ nc1 <- readShapePoly(system.file("shapes/sids.shp", package="maptools")[1],
 slot(nc1, "polygons") <- lapply(slot(nc1, "polygons"), checkPolygonsGEOS)
 lps <- coordinates(nc1)
 ID <- cut(lps[,1], quantile(lps[,1]), include.lowest=TRUE)
-reg4 <- unionSpatialPolygonsGEOS(nc1, ID)
+reg4 <- RGEOSUnionCascaded(nc1, ID)
 sapply(slot(reg4, "polygons"), function(i) slot(i, "ID"))
 par(mfrow=c(2,1))
 plot(nc1)
@@ -41,8 +41,7 @@ spix <- as(grd, "SpatialPixelsDataFrame")
 spol <- as(spix, "SpatialPolygonsDataFrame")
 slot(spol, "polygons") <- lapply(slot(spol, "polygons"), checkPolygonsGEOS)
 image(grd, axes=TRUE)
-spol1 <- unionSpatialPolygonsGEOS(as(spol, "SpatialPolygons"),
-  as.character(spol$xvs))
+spol1 <- RGEOSUnionCascaded(as(spol, "SpatialPolygons"), as.character(spol$xvs))
 plot(spol1, add=TRUE)
 gtx <- GridTopology(c(50,50), c(100,100), c(2,2))
 grdx <- SpatialGridDataFrame(gtx, data.frame(xvs))
@@ -50,7 +49,7 @@ spixx <- as(grdx, "SpatialPixelsDataFrame")
 spolx <- as(spixx, "SpatialPolygonsDataFrame")
 slot(spolx, "polygons") <- lapply(slot(spolx, "polygons"), checkPolygonsGEOS)
 image(grdx, axes=TRUE)
-spol1x <- unionSpatialPolygonsGEOS(as(spolx, "SpatialPolygons"),
+spol1x <- RGEOSUnionCascaded(as(spolx, "SpatialPolygons"),
   as.character(spol$xvs))
 plot(spol1x, add=TRUE)
 }

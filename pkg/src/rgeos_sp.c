@@ -133,6 +133,8 @@ SEXP rgeos_SpatialPolygonsUnion(SEXP env, SEXP obj, SEXP grps, SEXP grpIDs,
             error("rgeos_SpatialPolygonsUnion: collection not created");
     }
 
+    Rprintf("HERE\n");
+
     PROTECT(ans = rgeos_geospolygon2SpatialPolygons(env, GC, p4s, grpIDs, ngrps, thresh)); pc++;
 
     UNPROTECT(pc);

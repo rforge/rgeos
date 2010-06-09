@@ -33,6 +33,7 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_finish", (DL_FUNC) &rgeos_finish, 1},
     {"rgeos_GEOSversion", (DL_FUNC) &rgeos_GEOSversion, 0},
     {"rgeos_double_translate", (DL_FUNC) &rgeos_double_translate, 4},
+    
     //WKT Functions
     {"rgeos_readWKT", (DL_FUNC) &rgeos_readWKT,5}, 
     {"rgeos_writeWKT", (DL_FUNC) &rgeos_writeWKT, 3}, 
@@ -44,6 +45,7 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_getcentroid", (DL_FUNC) &rgeos_getcentroid, 5},
     {"rgeos_pointonsurface", (DL_FUNC) &rgeos_pointonsurface, 5},
     {"rgeos_linemerge", (DL_FUNC) &rgeos_linemerge, 5},
+    {"rgeos_unioncascaded", (DL_FUNC) &rgeos_unioncascaded, 5},
 
     //Binary Predicate Functions
     {"rgeos_disjoint", (DL_FUNC) &rgeos_disjoint, 4},

@@ -22,33 +22,38 @@ TopologyFunc = function(spgeom, id, byid, func) {
 }
 
 RGEOSEnvelope = function(spgeom, id = NULL, byid=FALSE) {
-
     return( TopologyFunc(spgeom,id,byid,"rgeos_envelope") ) 
 }
 
 RGEOSConvexHull = function(spgeom, id = NULL, byid=FALSE) {
-    
     return( TopologyFunc(spgeom,id,byid,"rgeos_convexhull") ) 
 }
 
 RGEOSBoundary = function(spgeom, id = NULL, byid=FALSE) {
-     
      return( TopologyFunc(spgeom,id,byid,"rgeos_boundary") ) 
 }
 
 RGEOSGetCentroid = function(spgeom, id = NULL, byid=FALSE) {
-
     return( TopologyFunc(spgeom,id,byid,"rgeos_getcentroid") ) 
 }
 
 RGEOSPointOnSurface = function(spgeom, id = NULL, byid=FALSE) {
-
     return( TopologyFunc(spgeom,id,byid,"rgeos_pointonsurface") ) 
 }
 
 RGEOSLineMerge = function(spgeom, id = NULL, byid=FALSE) {
-
     return( TopologyFunc(spgeom,id,byid,"rgeos_linemerge") ) 
+}
+
+RGEOSUnionCascaded = function(spgeom, id = NULL) {
+    
+    if (!inherits(spgeom,"SpatialPolygons"))
+        stop("Invalid geometry, may only be applied to polygons")
+
+    if (is.null(id))
+        id = rep("1",length(row.names(spgeom)))
+
+    return( TopologyFunc(groupID(spgeom,id),unique(id),TRUE,"rgeos_unioncascaded") ) 
 }
 
 
