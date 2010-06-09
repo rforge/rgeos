@@ -3,9 +3,6 @@ useDynLib(rgeos)
 import(methods)
 import(sp)
 
-export(getScale,setScale,doubletranslate)
-
-export(isWKT, cleanWKT, readWKT, writeWKT)
 
 export(thinnedSpatialPolyGEOS, checkPolygonsGEOS, unionSpatialPolygonsGEOS)
 
@@ -14,6 +11,12 @@ export(SpatialLinesIntersections, LinesIntersections, PolygonsIntersections)
 export(poly_findInBoxGEOS)
 
 export(DiffGpcGEOS, SymDiffGpcGEOS, UnionGpcGEOS, UnionGpcGEOS, IntersectGpcGEOS, checkHolesGPC)
+
+# Utility Functions
+export(getScale,setScale,doubletranslate,groupID)
+
+# WKT Functions
+export(isWKT, cleanWKT, readWKT, writeWKT)
 
 
 # GEOS unary predicate functions
