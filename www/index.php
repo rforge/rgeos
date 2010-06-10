@@ -23,29 +23,17 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 <body>
 
-<!-- R-Forge Logo -->
-<table border="0" width="100%" cellspacing="0" cellpadding="0">
-<tr><td>
-<a href="/"><img src="<?php echo $themeroot; ?>/images/logo.png" border="0" alt="R-Forge Logo" /> </a> </td> </tr>
-</table>
+<h1>rgeos</h1>
+<p>
+The rgeos package is an R wrapper for the GEOS library. GEOS is a powerful open source geometry engine written in C++ that implements spatial functions and operators from the OpenGIS Simple Features for SQL specification. rgeos will make these tools available within R and will integrate with existing spatial data tools through the sp package.
+</p>
 
+<h1>Development</h1>
+<p>
+This project is currently under active development and should be considered to be in a pre-alpha state. 
+</p>
 
-<!-- get project title  -->
-<!-- own website starts here, the following may be changed as you like -->
-
-<?php if ($handle=fopen('http://'.$domain.'/export/projtitl.php?group_name='.$group_name,'r')){
-$contents = '';
-while (!feof($handle)) {
-	$contents .= fread($handle, 8192);
-}
-fclose($handle);
-echo $contents; } ?>
-
-<!-- end of project description -->
-
-<p> No content added. </p>
-
-<p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
+<p> The <strong>project summary page</strong> can be found <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
 
 </body>
 </html>
