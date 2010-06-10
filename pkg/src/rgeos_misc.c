@@ -72,6 +72,7 @@ SEXP rgeos_distancefunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid,
     double dist;
     int i,j, m, n, pc=0;
     int type1, type2;
+	int sym_ans;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
@@ -83,36 +84,62 @@ SEXP rgeos_distancefunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid,
     
     m = 1;
     n = 1;
-    if (LOGICAL_POINTER(byid)[0]) {
-        if (type1 == GEOS_GEOMETRYCOLLECTION)
-            m = GEOSGetNumGeometries_r(GEOShandle, geom1);
-        
-        if (type2 == GEOS_GEOMETRYCOLLECTION)
-            n = GEOSGetNumGeometries_r(GEOShandle, geom2);
+    if (spgeom2 == R_NilValue) {
+        sym_ans = TRUE;
+        geom1 = rgeos_convert_R2geos(env, spgeom1);
+        type1 = GEOSGeomTypeId_r(GEOShandle, geom1);
+
+        geom2 = geom1;
+
+        if (LOGICAL_POINTER(byid)[0] && type1 == GEOS_GEOMETRYCOLLECTION) {
+                m = GEOSGetNumGeometries_r(GEOShandle, geom1);
+                n = m;
+        }
+    } else {
+        geom1 = rgeos_convert_R2geos(env, spgeom1);
+        type1 = GEOSGeomTypeId_r(GEOShandle, geom1);
+
+        geom2 = rgeos_convert_R2geos(env, spgeom2);
+        type2 = GEOSGeomTypeId_r(GEOShandle, geom2);
+
+        if (LOGICAL_POINTER(byid)[0] && type1 == GEOS_GEOMETRYCOLLECTION)
+                m = GEOSGetNumGeometries_r(GEOShandle, geom1);
+
+        if (LOGICAL_POINTER(byid)[1] && type2 == GEOS_GEOMETRYCOLLECTION)
+                n = GEOSGetNumGeometries_r(GEOShandle, geom2);
     }
-    
+
+    if (m == -1) error("rgeos_distancefunc: invalid number of subgeometries in geometry 1");
+    if (n == -1) error("rgeos_distancefunc: invalid number of subgeometries in geometry 2");
+
     PROTECT(ans = NEW_NUMERIC(m*n)); pc++;
 
     curgeom1 = geom1;
     curgeom2 = geom2;
     for(i=0; i<m; i++) {
+        
         if ( m > 1) {
             curgeom1 = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom1, i);
             if (curgeom1 == NULL) 
-                error("rgeos_distance: unable to get subgeometries from geometry 1");
+                error("rgeos_binpredfunc: unable to get subgeometries from geometry 1");
         }
         for(j=0; j<n; j++) {
+            if(sym_ans && j > i)
+                break;
+            
             if ( n > 1) {
                 curgeom2 = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom2, j);
                 if (curgeom2 == NULL) 
-                    error("rgeos_distancefunc: unable to get subgeometries from geometry 2");
+                    error("rgeos_binpredfunc: unable to get subgeometries from geometry 2");
             }
             
-            
+			
             if (!distfunc(GEOShandle, curgeom1, curgeom2, &dist))
                 error("rgeos_distancefunc: unable to calculate area");
 
             NUMERIC_POINTER(ans)[n*i+j] = dist;
+			if (sym_ans)
+			    NUMERIC_POINTER(ans)[n*j+i] = dist;
         }
     }
     
@@ -124,7 +151,8 @@ SEXP rgeos_distancefunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid,
     }
     
     GEOSGeom_destroy_r(GEOShandle, geom1);
-    GEOSGeom_destroy_r(GEOShandle, geom2);
+    if (!sym_ans)
+        GEOSGeom_destroy_r(GEOShandle, geom2);
     
     UNPROTECT(pc);
     return(ans);

@@ -61,8 +61,8 @@ SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid,
         geom2 = geom1;
 
         if (LOGICAL_POINTER(byid)[0] && type1 == GEOS_GEOMETRYCOLLECTION) {
-                m = GEOSGetNumGeometries_r(GEOShandle, geom1);
-                n = m;
+            m = GEOSGetNumGeometries_r(GEOShandle, geom1);
+            n = m;
         }
     } else {
         geom1 = rgeos_convert_R2geos(env, spgeom1);
@@ -71,13 +71,11 @@ SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid,
         geom2 = rgeos_convert_R2geos(env, spgeom2);
         type2 = GEOSGeomTypeId_r(GEOShandle, geom2);
 
-        if (LOGICAL_POINTER(byid)[0]) {
-            if (type1 == GEOS_GEOMETRYCOLLECTION)
-                m = GEOSGetNumGeometries_r(GEOShandle, geom1);
+        if (LOGICAL_POINTER(byid)[0] && type1 == GEOS_GEOMETRYCOLLECTION)
+            m = GEOSGetNumGeometries_r(GEOShandle, geom1);
 
-            if (type2 == GEOS_GEOMETRYCOLLECTION)
-                n = GEOSGetNumGeometries_r(GEOShandle, geom2);
-        }
+        if (LOGICAL_POINTER(byid)[1] && type2 == GEOS_GEOMETRYCOLLECTION)
+            n = GEOSGetNumGeometries_r(GEOShandle, geom2);
     }
     
     
@@ -180,13 +178,11 @@ SEXP rgeos_equalsexact(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP tol, SEXP byid
         geom2 = rgeos_convert_R2geos(env, spgeom2);
         type2 = GEOSGeomTypeId_r(GEOShandle, geom2);
 
-        if (LOGICAL_POINTER(byid)[0]) {
-            if (type1 == GEOS_GEOMETRYCOLLECTION)
+        if (LOGICAL_POINTER(byid)[0] && type1 == GEOS_GEOMETRYCOLLECTION)
                 m = GEOSGetNumGeometries_r(GEOShandle, geom1);
 
-            if (type2 == GEOS_GEOMETRYCOLLECTION)
+        if (LOGICAL_POINTER(byid)[1] && type2 == GEOS_GEOMETRYCOLLECTION)
                 n = GEOSGetNumGeometries_r(GEOShandle, geom2);
-        }
     }
     
     if (m == -1) error("rgeos_equalsexact: invalid number of subgeometries in geometry 1");
