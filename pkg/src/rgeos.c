@@ -3,12 +3,8 @@
 
 SEXP rgeos_GEOSversion(void) {
 
-    SEXP ans;
-
-    PROTECT(ans=NEW_CHARACTER(1));
+    SEXP ans = NEW_CHARACTER(1);
     SET_STRING_ELT(ans, 0, COPY_TO_USER_STRING(GEOSversion()));
-
-    UNPROTECT(1);
 
     return(ans);
 }
@@ -26,7 +22,6 @@ static void __errorHandler(const char *fmt, ...) {
     error(buf);
 
     return;
-  
 }
 
 static void __warningHandler(const char *fmt, ...) {
@@ -46,28 +41,20 @@ static void __warningHandler(const char *fmt, ...) {
 
 GEOSContextHandle_t getContextHandle(SEXP env) {
 
-    GEOSContextHandle_t r;
-    SEXP ptr;
-
-    ptr = findVarInFrame(env, install("GEOSptr"));
-    r = R_ExternalPtrAddr(ptr);
+    SEXP ptr = findVarInFrame(env, install("GEOSptr"));
+    GEOSContextHandle_t r = R_ExternalPtrAddr(ptr);
 
     return(r);
-
 }
 
 SEXP rgeos_Init(void) {
 
-    GEOSContextHandle_t r;
-    SEXP sxpHandle;
+    GEOSContextHandle_t r = initGEOS_r((GEOSMessageHandler) __warningHandler, (GEOSMessageHandler) __errorHandler);
 
-    r = initGEOS_r((GEOSMessageHandler) __warningHandler, (GEOSMessageHandler) __errorHandler);
-
-    sxpHandle = R_MakeExternalPtr((void *) r, mkChar("GEOSContextHandle"), R_NilValue);
+    SEXP sxpHandle = R_MakeExternalPtr((void *) r, mkChar("GEOSContextHandle"), R_NilValue);
     R_RegisterCFinalizerEx(sxpHandle, rgeos_finish_handle, TRUE);
  
     return(sxpHandle);
-
 }
 
 static void rgeos_finish_handle(SEXP ptr) {
@@ -79,38 +66,30 @@ static void rgeos_finish_handle(SEXP ptr) {
 
 SEXP rgeos_finish(SEXP env) {
 
-    GEOSContextHandle_t r;
-    SEXP sxpHandle;
-
-    r = getContextHandle(env);
-
+    GEOSContextHandle_t r = getContextHandle(env);
     finishGEOS_r(r);
 
-    sxpHandle = findVarInFrame(env, install("GEOSptr"));
-
+    SEXP sxpHandle = findVarInFrame(env, install("GEOSptr"));
     rgeos_finish_handle(sxpHandle);
 
     return(R_NilValue);
-
 }
 
 
 
 double getScale(SEXP env) {
 
-    double r;
-   
-    r =  NUMERIC_POINTER( findVarInFrame(env, install("scale")) )[0];
-
-    return(r);
+    return( NUMERIC_POINTER( findVarInFrame(env, install("scale")) )[0] );
 }
 
 double rgeos_round(double val) {
-    return java_math_round(val);
+    
+    return( java_math_round(val) );
 }
 
 
 double makePrecise(double val, double scale) {
+    
     return( rgeos_round(val*scale)/scale );
 }
 
@@ -120,19 +99,19 @@ double sym_round(double val) {
     double f = fabs(modf(val, &n));
     if (val >= 0) {
         if (f < 0.5) {
-            return floor(val);
+            return( floor(val) );
         } else if (f > 0.5) {
-            return ceil(val);
+            return( ceil(val) );
         } else {
-            return (n + 1.0);
+            return( n + 1.0 );
         }
     } else {
         if (f < 0.5) {
-            return ceil(val);
+            return( ceil(val) );
         } else if (f > 0.5) {
-            return floor(val);
+            return( floor(val) );
         } else {
-            return (n - 1.0);
+            return( n - 1.0 );
         }
     }
 }
@@ -145,19 +124,19 @@ double java_math_round(double val) {
 
     if (val >= 0) {
         if (f < 0.5) {
-            return floor(val);
+            return( floor(val) );
         } else if (f > 0.5) {
-            return ceil(val);
+            return( ceil(val) );
         } else {
-            return (n + 1.0);
+            return( n + 1.0 );
         }
     } else {
         if (f < 0.5) {
-            return ceil(val);
+            return( ceil(val) );
         } else if (f > 0.5) {
-            return floor(val);
+            return( floor(val) );
         } else {
-            return n;
+            return( n );
         }
     }
 } 
@@ -168,41 +147,19 @@ double rint_vc(double val) {
     double f=fabs(modf(val,&n));
     if (val>=0) {
         if (f<0.5) {
-            return floor(val);
+            return( floor(val) );
         } else if (f>0.5) {
-            return ceil(val);
+            return( ceil(val) );
         } else {
-            return(floor(n/2)==n/2)?n:n+1.0;
+            return( (floor(n/2)==n/2)?n:n+1.0 );
         }
     } else {
         if (f<0.5) {
-            return ceil(val);
+            return( ceil(val) );
         } else if (f>0.5) {
-            return floor(val);
+            return( floor(val) );
         } else {
-            return(floor(n/2)==n/2)?n:n-1.0;
+            return(( floor(n/2)==n/2)?n:n-1.0 );
         }
     }
 }
-
-void printCoordSeq(SEXP env, GEOSCoordSeq s) {
-    int i,n;
-    double x,y;
-    
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-    
-    GEOSCoordSeq_getSize_r(GEOShandle, s, &n);
-    
-    for (i=0; i<n; i++) {
-        
-        GEOSCoordSeq_getX_r(GEOShandle, s, i, &x);
-        GEOSCoordSeq_getY_r(GEOShandle, s, i, &y);
-        
-        Rprintf("%f %f\n",x,y);
-    }
-    
-    
-}
-
-
-

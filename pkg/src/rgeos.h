@@ -32,7 +32,6 @@ double rgeos_round(double val);
 // http://cran.r-project.org/doc/manuals/R-exts.html#Inlining-C-functions
 
 SEXP rgeos_double_translate(SEXP env, SEXP obj, SEXP id, SEXP thres);
-void printCoordSeq(SEXP env, GEOSCoordSeq s);
 
 
 // Bounding Box functions - rgeos_bbox.c
