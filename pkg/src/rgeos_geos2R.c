@@ -259,25 +259,29 @@ SEXP rgeos_GCPolygons(SEXP env, GEOSGeom Geom, char *ibuf, SEXP thresh) {
 
 
 SEXP rgeos_LinearRingPolygon(SEXP env, GEOSGeom lr, int hole) {
-    SEXP SPans, ans, nn, Hole, ringDir;
-    double area;
-    int pc=0, rev=FALSE;
-    GEOSCoordSeq s;
-    unsigned int n;
-
+    
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
+    GEOSGeom p = GEOSGeom_createPolygon_r(GEOShandle,lr,NULL,0);
+    if (p == NULL) error("rgeos_LinearRingPolygon: unable to create polygon");
+    
+    double area;
+    if (!GEOSArea_r(GEOShandle, p, &area)) {
+        error("rgeos_LinearRingPolygon: area calculation failure");
+    }
+
+    GEOSCoordSeq s;
     if ((s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq_r(GEOShandle, lr)) == NULL)
         error("rgeos_LinearRingPolygon: CoordSeq failure");
 
-    rgeos_csArea(env, s, &area);
-    
+    int pc=0;
+    SEXP Hole, ringDir;
     PROTECT(ringDir = NEW_INTEGER(1)); pc++;
     PROTECT(Hole = NEW_LOGICAL(1)); pc++;
-    
     LOGICAL_POINTER(Hole)[0] = hole;
     INTEGER_POINTER(ringDir)[0] = (area > 0.0) ? -1 : 1;
     
+    int rev=FALSE;
     if (LOGICAL_POINTER(Hole)[0] && INTEGER_POINTER(ringDir)[0] == 1) {
         rev = TRUE;
         INTEGER_POINTER(ringDir)[0] = -1;
@@ -287,18 +291,20 @@ SEXP rgeos_LinearRingPolygon(SEXP env, GEOSGeom lr, int hole) {
         INTEGER_POINTER(ringDir)[0] = 1;
     }
     
+    unsigned int n;
     if (GEOSCoordSeq_getSize_r(GEOShandle, s, &n) == 0)
         error("rgeos_LinearRingPolygon: CoordSeq failure");
-
+    
+    SEXP nn;
     PROTECT(nn = NEW_INTEGER(1)); pc++;
     INTEGER_POINTER(nn)[0] = n;
 
-    PROTECT(ans = rgeos_CoordSeq2crdMat(env, s, FALSE, rev)); pc++;
-
-    PROTECT(SPans = SP_PREFIX(Polygon_c)(ans, nn, Hole)); pc++;
-
+    SEXP crd, ans;
+    PROTECT(crd = rgeos_CoordSeq2crdMat(env, s, FALSE, rev)); pc++;
+    PROTECT(ans = SP_PREFIX(Polygon_c)(crd, nn, Hole)); pc++;
+    
     UNPROTECT(pc);
-    return(SPans);
+    return(ans);
 }
 
 SEXP rgeos_geospoint2SpatialPoints(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, int n) {
