@@ -3,25 +3,21 @@
 SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP thres, SEXP width, SEXP quadsegs, 
                   SEXP capStyle, SEXP joinStyle, SEXP mitreLimit) {
     
-    SEXP ans, p4s;
-    GEOSGeom geom, curgeom, res;
-    GEOSGeom *geoms;
-    int i, n;
-    
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
-    geom = rgeos_convert_R2geos(env, obj);
-    p4s = GET_SLOT(obj, install("proj4string"));
+    GEOSGeom geom = rgeos_convert_R2geos(env, obj);
+    SEXP p4s = GET_SLOT(obj, install("proj4string"));
     
+    int n;
     if (LOGICAL_POINTER(byid)[0])
         n = GEOSGetNumGeometries_r(GEOShandle, geom);
     else
         n = 1;
     
-    geoms = (GEOSGeom *) R_alloc((size_t) n, sizeof(GEOSGeom));
+    GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) n, sizeof(GEOSGeom));
     
-    curgeom = geom;
-    for(i=0; i<n; i++) {
+    GEOSGeom curgeom = geom;
+    for(int i=0; i<n; i++) {
         if ( n > 1) {
             curgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, i);
             if (curgeom == NULL) error("rgeos_writeWKT: unable to get subgeometries");
@@ -35,6 +31,7 @@ SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP thres, SEXP width
                                          NUMERIC_POINTER(mitreLimit)[0]);
     }
     
+    GEOSGeom res;
     if (n == 1) {
         res = geoms[0];
     } else {
@@ -42,10 +39,9 @@ SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP thres, SEXP width
     }
 
 
-    ans = rgeos_convert_geos2R(env, res, p4s, id, thres);
+    SEXP ans = rgeos_convert_geos2R(env, res, p4s, id, thres);
 
     GEOSGeom_destroy_r(GEOShandle, geom);
-    //GEOSGeom_destroy_r(GEOShandle, res);
     return(ans);
 }
 
