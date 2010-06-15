@@ -1,3 +1,59 @@
+2010-06-15 17:09  rsbivand
+
+	* R/AAA.R: keyword on load
+
+2010-06-14 05:30  crundel
+
+	* src/rgeos_bbox.c, src/rgeos_buffer.c, src/rgeos_coord.c,
+	  src/rgeos_misc.c, src/rgeos_wkt.c: Cleaned c code formatting
+
+2010-06-12 20:38  crundel
+
+	* src/rgeos_area.c, src/rgeos_geos2R.c: Cleaned code in
+	  rgeos_LinearRingPolygon removed dependence on rgeos_csArea. Uses
+	  GEOSArea_r now. Should be slightly faster.
+	  
+	  Removed rgeos_area.c (rgeos_csArea only referenced in
+	  rgeos_LinearRingPolygon)
+
+2010-06-12 19:48  crundel
+
+	* src/rgeos.c, src/rgeos.h: Cleaned code in rgeos.c
+
+2010-06-10 00:50  crundel
+
+	* R/rgeos_misc.R, R/rgeos_predicate_binary.R, src/rgeos_misc.c,
+	  src/rgeos_predicate_binary.c: Modified Binary predicate functions
+	  and distance functions to allow byid to be of length 2 to
+	  indicate if one geometry should be processed by id and the other
+	  not.
+
+2010-06-09 23:25  crundel
+
+	* NAMESPACE: Forgot to add groupID to NAMESPACE
+
+2010-06-09 23:22  crundel
+
+	* NAMESPACE, R/rgeos_topology.R, R/rgeos_util.R,
+	  man/unionSpatialPolygonsGEOS.Rd, src/init.c, src/rgeos.h,
+	  src/rgeos_sp.c, src/rgeos_topology.c: Added RGEOSUnionCascaded,
+	  replicates unionSpatialPolygonsGEOS functionality but is
+	  currently slower.
+	  
+	  Added groupID utility function which restructures a SP object
+	  based on newly assigned IDs, subobjects with the same ID are
+	  grouped together. General solution to the need to flatten
+	  SpatialPolygons for use with RGEOSUnionCascaded, but may be too
+	  slow for practical use.
+
+2010-06-07 09:02  rsbivand
+
+	* inst/ChangeLog: update changelog
+
+2010-06-07 08:54  rsbivand
+
+	* ChangeLog: update changelog
+
 2010-06-07 08:28  rsbivand
 
 	* DESCRIPTION, NAMESPACE, src/gpc_geos.c, src/init.c,
