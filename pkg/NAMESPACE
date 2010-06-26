@@ -13,7 +13,8 @@ export(poly_findInBoxGEOS)
 export(DiffGpcGEOS, SymDiffGpcGEOS, UnionGpcGEOS, UnionGpcGEOS, IntersectGpcGEOS, checkHolesGPC)
 
 # sp extension classes
-exportClasses(SpatialRings, SpatialRingsDataFrame)
+exportClasses(Ring,SpatialRings, SpatialRingsDataFrame)
+export(Ring,SpatialRings,SpatialRingsDataFrame)
 
 # Utility Functions
 export(getScale,setScale,doubletranslate,groupID)
