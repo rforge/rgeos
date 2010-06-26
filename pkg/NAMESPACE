@@ -12,11 +12,14 @@ export(poly_findInBoxGEOS)
 
 export(DiffGpcGEOS, SymDiffGpcGEOS, UnionGpcGEOS, UnionGpcGEOS, IntersectGpcGEOS, checkHolesGPC)
 
+# sp extension classes
+exportClasses(SpatialRings, SpatialRingsDataFrame)
+
 # Utility Functions
 export(getScale,setScale,doubletranslate,groupID)
 
 # WKT Functions
-export(isWKT, cleanWKT, readWKT, writeWKT)
+export(readWKT, writeWKT)
 
 
 # GEOS unary predicate functions
