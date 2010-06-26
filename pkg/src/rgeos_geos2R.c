@@ -22,6 +22,9 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
             break;
     
         case GEOS_LINEARRING:
+            PROTECT( ans = rgeos_geosring2SpatialRings(env, geom, p4s, id, ng)); pc++;
+            break;
+            
         case GEOS_LINESTRING:
         case GEOS_MULTILINESTRING:
             PROTECT( ans = rgeos_geosline2SpatialLines(env, geom, p4s, id, 1) ); pc++;
@@ -64,12 +67,12 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
             
             if ( isPoint && !isLine && !isPoly && !isRing && !isGC ) {
                 PROTECT( ans = rgeos_geospoint2SpatialPoints(env, geom, p4s, id, n) ); pc++;
-            } else if ( !isPoint && isLine && !isPoly && !isRing && !isGC ) {
+            } else if ( isLine && !isPoint && !isPoly && !isRing && !isGC ) {
                 PROTECT( ans = rgeos_geosline2SpatialLines(env, geom, p4s, id, ng) ); pc++;
-            } else if ( !isPoint && !isLine && isPoly && !isRing && !isGC ) {
+            } else if ( isPoly && !isPoint && !isLine && !isRing && !isGC ) {
                 PROTECT( ans = rgeos_geospolygon2SpatialPolygons(env, geom, p4s,id, ng, thres) ); pc++;
-            } else if ( !isPoint && !isLine && !isPoly && isRing && !isGC ) {
-                PROTECT( ans = rgeos_geosline2SpatialLines(env, geom, p4s, id, ng) ); pc++;    
+            } else if ( isRing && !isPoint && !isLine && !isPoly && !isGC ) {
+                PROTECT( ans = rgeos_geosring2SpatialRings(env, geom, p4s, id, ng) ); pc++;    
             } else {
                 error("Geometry Collection Invalid - heterogenous collections cannot be processed");
             }
@@ -410,6 +413,70 @@ SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP idlist,
     SEXP ans;    
     PROTECT(ans = NEW_OBJECT(MAKE_CLASS("SpatialLines"))); pc++;    
     SET_SLOT(ans, install("lines"), lines_list);
+    SET_SLOT(ans, install("bbox"), bbox);
+    SET_SLOT(ans, install("proj4string"), p4s);
+
+    UNPROTECT(pc);
+    return(ans);
+}
+
+
+SEXP rgeos_geosring2SpatialRings(SEXP env, GEOSGeom geom, SEXP p4s, SEXP idlist, int nrings) {
+    
+    GEOSContextHandle_t GEOShandle = getContextHandle(env);
+    
+    int type = GEOSGeomTypeId_r(GEOShandle, geom);
+    if (type != GEOS_LINEARRING && type != GEOS_GEOMETRYCOLLECTION )
+        error("rgeos_geosring2SpatialRings: invalid type");
+    
+    if (nrings < 1) error("rgeos_geosring2SpatialRings: invalid number of geometries");
+    
+    int pc=0;
+    SEXP bbox, rings_list;
+    PROTECT(bbox = rgeos_geom2bbox(env, geom)); pc++;
+    PROTECT(rings_list = NEW_LIST(nrings)); pc++;
+    
+    for(int j = 0; j < nrings; j++) {
+        
+        GEOSGeom curgeom = (type == GEOS_GEOMETRYCOLLECTION) ?
+                                (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, j) :
+                                geom;
+        if (curgeom == NULL) 
+            error("rgeos_geosring2SpatialRings: unable to get geometry collection geometry");
+        
+        SEXP crdmat;
+        if (GEOSisEmpty_r(GEOShandle, curgeom) == 0) {
+            GEOSCoordSeq s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, curgeom);
+            if (s == NULL) 
+                error("rgeos_geosring2SpatialRings: unable to generate coordinate sequence");
+
+            PROTECT( crdmat = rgeos_CoordSeq2crdMat(env, s, FALSE, FALSE));
+            //GEOSCoordSeq_destroy_r(GEOShandle, s);
+        } else {
+            PROTECT( crdmat = R_NilValue);
+        }
+        
+        SEXP ring;
+        PROTECT(ring = NEW_OBJECT(MAKE_CLASS("Ring")));   
+        SET_SLOT(ring, install("coords"), crdmat);
+        
+        SEXP id;
+        PROTECT( id = NEW_CHARACTER(1) );
+        char idbuf[BUFSIZ];
+        strcpy(idbuf, CHAR( STRING_ELT(idlist, j) ));
+        SET_STRING_ELT(id, 0, COPY_TO_USER_STRING(idbuf));
+        
+        SET_SLOT(ring, install("ID"), id);
+
+        SET_VECTOR_ELT(rings_list, j, ring );
+        
+        
+        UNPROTECT(3);
+    }
+    
+    SEXP ans;    
+    PROTECT(ans = NEW_OBJECT(MAKE_CLASS("SpatialRings"))); pc++;    
+    SET_SLOT(ans, install("rings"), rings_list);
     SET_SLOT(ans, install("bbox"), bbox);
     SET_SLOT(ans, install("proj4string"), p4s);
 

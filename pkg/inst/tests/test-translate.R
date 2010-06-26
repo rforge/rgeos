@@ -5,7 +5,7 @@ context("Translation functions")
 
 test_that("translate points", {
     
-    p = readWKT("POINT( 1 1 )")
+    p = readWKT("POINT(1 1)")
     mp = readWKT("MULTIPOINT(1 1, 2 2, 3 3, 4 4, 5 5)") 
     gcp1 = readWKT("GEOMETRYCOLLECTION( POINT(1 1), POINT(2 2), POINT(3 3), POINT(4 4), POINT(5 5))")
     gcp2 = readWKT("GEOMETRYCOLLECTION( POINT(1 1), POINT(2 2), MULTIPOINT(3 3, 4 4, 5 5))")
@@ -116,21 +116,16 @@ test_that("translate linear ring", {
     gclr2 = readWKT("GEOMETRYCOLLECTION( LINEARRING (1 1, 1 2, 2 2, 2 1, 1 1), LINEARRING (1 1, 2 1, 2 2, 1 2, 1 1) )")
     gclr3 = readWKT("GEOMETRYCOLLECTION( LINEARRING (1 1, 2 1, 2 2, 1 2, 1 1), LINEARRING (1 1, 2 1, 2 2, 1 2, 1 1) )")
     
-    Line1 = Line(cbind( x=c(1,1,2,2,1),y=c(1,2,2,1,1) ))
-    Line2 = Line(cbind( x=c(1,2,2,1,1),y=c(1,1,2,2,1) ))
+    Ring11 = Ring(cbind( x=c(1,1,2,2,1),y=c(1,2,2,1,1) ),ID="1")
+    Ring12 = Ring(cbind( x=c(1,1,2,2,1),y=c(1,2,2,1,1) ),ID="2")
+    Ring21 = Ring(cbind( x=c(1,2,2,1,1),y=c(1,1,2,2,1) ),ID="1")
+    Ring22 = Ring(cbind( x=c(1,2,2,1,1),y=c(1,1,2,2,1) ),ID="2")
     
-    Lineslr11 = Lines( list(Line1), ID="1" )
-    Lineslr12 = Lines( list(Line1), ID="2" )
-    
-    Lineslr21 = Lines( list(Line2), ID="1" ) 
-    Lineslr22 = Lines( list(Line2), ID="2" ) 
-    
-    
-    splr1   = SpatialLines( list(Lineslr11) ); rownames(splr1@bbox) = c("x","y")
-    splr2   = SpatialLines( list(Lineslr21) ); rownames(splr2@bbox) = c("x","y")
-    spgclr1 = SpatialLines( list(Lineslr11,Lineslr12) ); rownames(spgclr1@bbox) = c("x","y")
-    spgclr2 = SpatialLines( list(Lineslr11,Lineslr22) ); rownames(spgclr2@bbox) = c("x","y")
-    spgclr3 = SpatialLines( list(Lineslr21,Lineslr22) ); rownames(spgclr3@bbox) = c("x","y")
+    splr1   = SpatialRings( list(Ring11) ); #rownames(splr1@bbox) = c("x","y")
+    splr2   = SpatialRings( list(Ring21) ); #rownames(splr2@bbox) = c("x","y")
+    spgclr1 = SpatialRings( list(Ring11,Ring12) ); #rownames(spgclr1@bbox) = c("x","y")
+    spgclr2 = SpatialRings( list(Ring11,Ring22) ); #rownames(spgclr2@bbox) = c("x","y")
+    spgclr3 = SpatialRings( list(Ring21,Ring22) ); #rownames(spgclr3@bbox) = c("x","y")
     
 
     expect_that( lr1  , is_identical_to(splr1) )

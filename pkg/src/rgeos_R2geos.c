@@ -24,6 +24,8 @@ GEOSGeom rgeos_convert_R2geos(SEXP env, SEXP obj) {
         ans = rgeos_SpatialPoints2geospoint( env, obj);
     } else if ( !strcmp(classbuf,"SpatialLines") || !strcmp(classbuf,"SpatialLinesDataFrame") ) {
         ans = rgeos_SpatialLines2geosline( env, obj);
+    } else if ( !strcmp(classbuf,"SpatialRings") || !strcmp(classbuf,"SpatialRingsDataFrame") ) {
+        ans = rgeos_SpatialRings2geosring( env, obj);
     } else if ( !strcmp(classbuf,"SpatialPolygons") || !strcmp(classbuf,"SpatialPolygonsDataFrame") ) {
         ans = rgeos_SpatialPolygons2geospolygon( env, obj);
     } else {
@@ -334,3 +336,33 @@ GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj) {
     UNPROTECT(pc);
     return(GC);
 }
+
+
+
+// SpatialRings class to geometry collection
+GEOSGeom rgeos_SpatialRings2geosring(SEXP env, SEXP obj) {
+
+    GEOSContextHandle_t GEOShandle = getContextHandle(env);
+
+    int pc = 0;
+    SEXP rings;
+    PROTECT(rings = GET_SLOT(obj, install("rings"))); pc++;
+    int nrings = length(rings);
+
+    GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) nrings, sizeof(GEOSGeom));
+    for (int i=0; i<nrings; i++) {
+        SEXP crdMat = GET_SLOT(VECTOR_ELT(rings, i), install("coords"));
+        SEXP dim = getAttrib(crdMat, R_DimSymbol);
+        geoms[i] = rgeos_crdMat2LinearRing(env, crdMat, dim);
+    }
+    
+    GEOSGeom GC = geoms[0];
+    if (nrings != 1) {
+        GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, nrings);
+        if (GC == NULL) error("rgeos_SpatialRings2geosring: collection not created");
+    }
+
+    UNPROTECT(pc);
+    return(GC);
+}
+
