@@ -5,7 +5,7 @@ TopologyFunc = function(spgeom, id, byid, func) {
     if (is.na(byid)) 
         stop("Invalid value for byid, must be logical")
     
-    curids = extractIDs(spgeom)
+    curids = unique(row.names(spgeom))
     if (is.null(id)) {
         if (byid)   id = curids
         else        id = "1"

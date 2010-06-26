@@ -7,7 +7,7 @@ RGEOSBuffer = function(spgeom, byid=TRUE, id=NULL, width=1.0, quadsegs=5,
     GEOSCapStyles = c("ROUND","FLAT","SQUARE")
     GEOSJoinStyles = c("ROUND","MITRE","BEVEL")
     
-    curids = extractIDs(spgeom)
+    curids = unique(row.names(spgeom))
     if (is.null(id)) {
         if (byid)   id = curids
         else        id = "buffer"

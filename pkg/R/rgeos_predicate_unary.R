@@ -5,7 +5,7 @@ RGEOSUnaryPredFunc = function(spgeom, byid, func) {
     x <- .Call(func, .RGEOS_HANDLE, spgeom, byid, PACKAGE="rgeos")
     
     if(byid) {
-        id <- extractIDs(spgeom)
+        id <- unique(row.names(spgeom))
         names(x) <- id
     }
     return(x)
