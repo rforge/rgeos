@@ -4,18 +4,20 @@ SEXP rgeos_geom2bbox(SEXP env, GEOSGeom geom) {
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
+    GEOSGeom bb = GEOSEnvelope_r(GEOShandle, geom);
+    if (bb == NULL) return(R_NilValue);
+    
+    if (GEOSisEmpty_r(GEOShandle, bb) == 1) return(R_NilValue);
+    
     GEOSCoordSeq s;
-    int type = GEOSGeomTypeId_r(GEOShandle, geom);
+    int type = GEOSGeomTypeId_r(GEOShandle, bb);
     if (type == GEOS_POINT) {
-        s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, geom);
+        s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, bb);
         if (s == NULL) return(R_NilValue);
     } else {
-        GEOSGeom bb = GEOSEnvelope_r(GEOShandle, geom);
-        if (bb == NULL) return(R_NilValue);
-
         GEOSGeom bbER = (GEOSGeom) GEOSGetExteriorRing_r(GEOShandle, bb);
         if (bbER == NULL) return(R_NilValue);
-
+        
         s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, bbER);
         if (s == NULL) return(R_NilValue);
     }
@@ -26,10 +28,11 @@ SEXP rgeos_geom2bbox(SEXP env, GEOSGeom geom) {
 
     int  pc=0;
     SEXP bbmat;
-    PROTECT(bbmat = rgeos_CoordSeq2crdMat(env, s, (int) GEOSHasZ_r(GEOShandle, geom), FALSE)); pc++;
-    
+    PROTECT(bbmat = rgeos_CoordSeq2crdMat(env, s, 0, FALSE)); pc++;
+    //PROTECT(bbmat = rgeos_CoordSeq2crdMat(env, s, (int) GEOSHasZ_r(GEOShandle, geom), FALSE)); pc++;
+        
     double UX=-DBL_MAX, LX=DBL_MAX, UY=-DBL_MAX, LY=DBL_MAX;
-    for (unsigned int i=0; i<n; i++) {
+    for (int i=0; i<n; i++) {
        if (NUMERIC_POINTER(bbmat)[i] > UX)   UX = NUMERIC_POINTER(bbmat)[i];
        if (NUMERIC_POINTER(bbmat)[i+n] > UY) UY = NUMERIC_POINTER(bbmat)[i+n];
        if (NUMERIC_POINTER(bbmat)[i] < LX)   LX = NUMERIC_POINTER(bbmat)[i];
@@ -42,7 +45,7 @@ SEXP rgeos_geom2bbox(SEXP env, GEOSGeom geom) {
     NUMERIC_POINTER(ans)[1] = LY;
     NUMERIC_POINTER(ans)[2] = UX;
     NUMERIC_POINTER(ans)[3] = UY;
-
+    
     SEXP dim;
     PROTECT(dim = NEW_INTEGER(2)); pc++;
     INTEGER_POINTER(dim)[0] = 2;
@@ -58,7 +61,6 @@ SEXP rgeos_geom2bbox(SEXP env, GEOSGeom geom) {
     SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 0, COPY_TO_USER_STRING("min"));
     SET_STRING_ELT(VECTOR_ELT(dimnames, 1), 1, COPY_TO_USER_STRING("max"));
     setAttrib(ans, R_DimNamesSymbol, dimnames);
-    
     
     //GEOSCoordSeq_destroy_r(GEOShandle,s);
     UNPROTECT(pc);
