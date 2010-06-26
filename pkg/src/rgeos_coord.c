@@ -85,13 +85,13 @@ SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev) {
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
     int n, m;
-    if (GEOSCoordSeq_getSize_r(GEOShandle, s, &n) == 0)
-        return(R_NilValue);
-    if (GEOSCoordSeq_getDimensions_r(GEOShandle, s, &m) == 0)
-        return(R_NilValue);
+    if (GEOSCoordSeq_getSize_r(GEOShandle, s, &n) == 0 ||
+        GEOSCoordSeq_getDimensions_r(GEOShandle, s, &m) == 0) {
+        error("rgeos_CoordSeq2crdMat: unable to get size and or get dimension of Coord Seq");
+    }
+    
     if (m == 3 && HasZ == 1)
         warning("rgeos_CoordSeq2crdMat: only 2D coordinates respected");
-    
     
     int pc=0;
     SEXP crd;
@@ -100,17 +100,14 @@ SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev) {
     double scale = getScale(env);
     for (int i=0; i<n; i++){
         int ii = (rev) ? (n-1)-i : i;
-        double val;
         
-        if (GEOSCoordSeq_getX_r(GEOShandle, s, (unsigned int) i, &val) == 0) {
-            return(R_NilValue);
-        }    
-        NUMERIC_POINTER(crd)[ii] = makePrecise( val, scale);
-
-        if (GEOSCoordSeq_getY_r(GEOShandle, s, (unsigned int) i, &val) == 0) {
-            return(R_NilValue);
+        double x,y;
+        if (GEOSCoordSeq_getX_r(GEOShandle, s, (unsigned int) i, &x) == 0 ||
+            GEOSCoordSeq_getY_r(GEOShandle, s, (unsigned int) i, &y) == 0) {
+            error("rgeos_CoordSeq2crdMat: unable to get X and or Y value from Coord Seq");
         }
-        NUMERIC_POINTER(crd)[ii+n] = makePrecise(val, scale);
+        NUMERIC_POINTER(crd)[ii]    = makePrecise(x, scale);
+        NUMERIC_POINTER(crd)[ii+n]  = makePrecise(y, scale);
     }
 
     SEXP ans;
@@ -125,13 +122,8 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, in
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
-    int m;
-    if (type == GEOS_GEOMETRYCOLLECTION) {
-        m = GEOSGetNumGeometries_r(GEOShandle, geom);
-    } else {
-        m = 1;
-    }
-    if (m == -1) return(R_NilValue);
+    int m = (type == GEOS_GEOMETRYCOLLECTION) ? GEOSGetNumGeometries_r(GEOShandle, geom) : 1;
+    if (m == -1) error("rgeos_geospoint2crdMat: invalid number of geometries");
     
     int pc=0;
     SEXP mat;
@@ -142,52 +134,54 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, in
         PROTECT(ids = NEW_CHARACTER(ntotal)); pc++;
     }
 
-    char idbuf[BUFSIZ];
     int k=0;
     double scale=getScale(env);
     
-    GEOSGeom curgeom = geom;
     int curtype = type;
+    
     for(int j = 0; j<m; j++) {
         
-        if (type == GEOS_GEOMETRYCOLLECTION) {
-            curgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, j);
-            if(curgeom == NULL) return(R_NilValue);
-        }
-        curtype = GEOSGeomTypeId_r(GEOShandle, curgeom);
+        GEOSGeom curgeom = (type == GEOS_GEOMETRYCOLLECTION) ? 
+                                (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, j) :
+                                geom;
+        if (curgeom == NULL) error("rgeos_geospoint2crdMat: unable to get sub geometry");
         
+        int curtype = GEOSGeomTypeId_r(GEOShandle, curgeom);
         int n = GEOSGetNumGeometries_r(GEOShandle, curgeom);
-        if (n == -1) return(R_NilValue);
+        if (n == -1) error("rgeos_geospoint2crdMat: invalid number of geometries");
+        n = n ? n : 1;
         
+        char idbuf[BUFSIZ];
         if (idlist != R_NilValue) /* FIXME RSB */
             strcpy(idbuf, CHAR(STRING_ELT(idlist, j)));
         
-        GEOSGeom subgeom = curgeom;
         for (int i=0; i<n; i++) {
+            GEOSGeom subgeom = (curtype == GEOS_MULTIPOINT && !GEOSisEmpty_r(GEOShandle, curgeom)) ?
+                                (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, curgeom, i) :
+                                curgeom;
+            if (subgeom == NULL) error("rgeos_geospoint2crdMat: unable to get sub geometry");
             
-            if (curtype == GEOS_MULTIPOINT) {
-                subgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, curgeom, i);
-                if (subgeom == NULL) return(R_NilValue);
-            } 
+            if (GEOSisEmpty_r(GEOShandle, subgeom) == 1) {
+                NUMERIC_POINTER(mat)[k]        = NA_REAL;
+                NUMERIC_POINTER(mat)[k+ntotal] = NA_REAL;
+            } else {
+                GEOSCoordSeq s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, subgeom);
+                if (s == NULL) error("rgeos_geospoint2crdMat: unable to get coord seq");
             
-            
-            GEOSCoordSeq s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, subgeom);
-            if (s == NULL) return(R_NilValue);
-            
-            double x,y;
-            if (GEOSCoordSeq_getX_r(GEOShandle, s, (unsigned int) 0, &x) == 0 ||
-                GEOSCoordSeq_getY_r(GEOShandle, s, (unsigned int) 0, &y) == 0 ) {
+                double x,y;
+                if (GEOSCoordSeq_getX_r(GEOShandle, s, (unsigned int) 0, &x) == 0 ||
+                    GEOSCoordSeq_getY_r(GEOShandle, s, (unsigned int) 0, &y) == 0 ) {
                 
-                return(R_NilValue);
+                    error("rgeos_geospoint2crdMat: unable to get X and or Y value from coord seq");
+                }
+                //GEOSCoordSeq_destroy_r(GEOShandle,s);
+                
+                NUMERIC_POINTER(mat)[k]        = makePrecise(x, scale);
+                NUMERIC_POINTER(mat)[k+ntotal] = makePrecise(y, scale);
             }
-            
-            NUMERIC_POINTER(mat)[k]        = makePrecise(x, scale);
-            NUMERIC_POINTER(mat)[k+ntotal] = makePrecise(y, scale);
-            
             if (idlist != R_NilValue) /* FIXME RSB */
                 SET_STRING_ELT(ids, k, COPY_TO_USER_STRING(idbuf));
             
-            GEOSCoordSeq_destroy_r(GEOShandle,s);
             k++;
         }
     }
