@@ -9,7 +9,6 @@
 static const R_CMethodDef CEntries[] = {
     /*
     {"rgeos_crdMat2CoordSeq", (DL_FUNC) &rgeos_crdMat2CoordSeq, 3},
-    {"rgeos_xy2CoordSeq", (DL_FUNC) &rgeos_xy2CoordSeq, 3},
     {"rgeos_xy2Pt", (DL_FUNC) &rgeos_xy2Pt, 3},
     {"rgeos_crdMat2LineString", (DL_FUNC) &rgeos_crdMat2LineString, 3},
     {"rgeos_crdMat2LinearRing", (DL_FUNC) &rgeos_crdMat2LinearRing, 3},

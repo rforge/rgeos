@@ -33,9 +33,9 @@ GEOSGeom rgeos_crdMat2LineString(SEXP env, SEXP mat, SEXP dim) {
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
-    GEOSCoordSeq s = rgeos_crdMat2CoordSeq(env, mat, dim);
-    
+    GEOSCoordSeq s = rgeos_crdMat2CoordSeq(env, mat, dim);    
     GEOSGeom gl = GEOSGeom_createLineString_r(GEOShandle, s);
+    
     if (gl == NULL) {
         GEOSGeom_destroy_r(GEOShandle, gl);
         error("rgeos_crdMat2LineString: lineString not created");
@@ -222,36 +222,37 @@ SEXP rgeos_formatcrdMat( SEXP crdMat, int n ) {
     return(crdMat);
 }
 
-GEOSCoordSeq rgeos_xy2CoordSeq(SEXP env, double x, double y) {
 
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    GEOSCoordSeq s = GEOSCoordSeq_create_r(GEOShandle, (unsigned int) 1, (unsigned int) 2);
-
-    if (GEOSCoordSeq_setX_r(GEOShandle, s, 0, x) == 0) {
-        GEOSCoordSeq_destroy_r(GEOShandle, s);
-        error("rgeos_xy2CoordSeq: X not set");
-    }
-    if (GEOSCoordSeq_setY_r(GEOShandle, s, 0, y) == 0) {
-        GEOSCoordSeq_destroy_r(GEOShandle, s);
-        error("rgeos_xy2CoordSeq: Y not set");
-    }
-
-    return(s);
-}
 
 GEOSGeom rgeos_xy2Pt(SEXP env, double x, double y) {
-
+    
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
+    
+    GEOSGeom gl;
+    GEOSCoordSeq s;
+    
+    if (ISNA(x) && ISNA(y)) {
+        gl = GEOSGeom_createPoint_r(GEOShandle, NULL);
+    } else {
+        s = GEOSCoordSeq_create_r(GEOShandle, (unsigned int) 1, (unsigned int) 2);
 
-    GEOSCoordSeq s = rgeos_xy2CoordSeq(env, x, y);
-
-    GEOSGeom gl = GEOSGeom_createPoint_r(GEOShandle, s);
+        if (GEOSCoordSeq_setX_r(GEOShandle, s, 0, x) == 0) {
+            GEOSCoordSeq_destroy_r(GEOShandle, s);
+            error("rgeos_xy2Pt: X not set");
+        }
+        if (GEOSCoordSeq_setY_r(GEOShandle, s, 0, y) == 0) {
+            GEOSCoordSeq_destroy_r(GEOShandle, s);
+            error("rgeos_xy2Pt: Y not set");
+        }
+        
+        gl = GEOSGeom_createPoint_r(GEOShandle, s);
+    }
+    
     if (gl == NULL) {
         GEOSGeom_destroy_r(GEOShandle, gl);
         error("rgeos_xy2Pt: point not created");
     }
+    
     return(gl);
-
 }
 

@@ -156,22 +156,13 @@ GEOSGeom rgeos_Lines2geosline(SEXP env, SEXP obj) {
     double scale = getScale(env);
     for (int i=0; i<nlns; i++) {
         SEXP crdMat = GET_SLOT(VECTOR_ELT(lns, i), install("coords"));
-        SEXP dim = getAttrib(crdMat, R_DimSymbol);
         
-        int n = INTEGER_POINTER(dim)[0];
-        
-        double x1 = makePrecise( NUMERIC_POINTER(crdMat)[0], scale);
-        double y1 = makePrecise( NUMERIC_POINTER(crdMat)[n], scale);
-        double x2 = makePrecise( NUMERIC_POINTER(crdMat)[n-1], scale);
-        double y2 = makePrecise( NUMERIC_POINTER(crdMat)[2*n-1], scale);
-        
-        GEOSGeom ls;
-        if (x1 == x2 && y1 == y2) { //start and end point equal => linear ring
-            ls = rgeos_crdMat2LinearRing(env, crdMat, dim);
+        if (crdMat == R_NilValue) {
+            geoms[i] = GEOSGeom_createLineString_r(GEOShandle, NULL);
         } else {
-            ls = rgeos_crdMat2LineString(env, crdMat, dim);
+            SEXP dim = getAttrib(crdMat, R_DimSymbol);
+            geoms[i] = rgeos_crdMat2LineString(env, crdMat, dim);
         }
-        geoms[i] = ls;
     }
     
     GEOSGeom GC = geoms[0];
@@ -350,10 +341,15 @@ GEOSGeom rgeos_SpatialRings2geosring(SEXP env, SEXP obj) {
     int nrings = length(rings);
 
     GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) nrings, sizeof(GEOSGeom));
-    for (int i=0; i<nrings; i++) {
+    for (int i=0; i<nrings; i++) {    
         SEXP crdMat = GET_SLOT(VECTOR_ELT(rings, i), install("coords"));
-        SEXP dim = getAttrib(crdMat, R_DimSymbol);
-        geoms[i] = rgeos_crdMat2LinearRing(env, crdMat, dim);
+        
+        if (crdMat == R_NilValue) {
+            geoms[i] = GEOSGeom_createLinearRing_r(GEOShandle, NULL);
+        } else {
+            SEXP dim = getAttrib(crdMat, R_DimSymbol);
+            geoms[i] = rgeos_crdMat2LinearRing(env, crdMat, dim);
+        }
     }
     
     GEOSGeom GC = geoms[0];
