@@ -79,6 +79,33 @@ GEOSGeom rgeos_crdMat2Polygon(SEXP env, SEXP mat, SEXP dim) {
     return(p1);
 }
 
+SEXP rgeos_crdMatFixDir(SEXP crd, int hole) {
+    
+    double area = 0.0;
+    int n = length(crd)/2;
+    for(int i=1; i<n;i++) {
+        area += (NUMERIC_POINTER(crd)[i] - NUMERIC_POINTER(crd)[i-1])*
+                (NUMERIC_POINTER(crd)[i+n] + NUMERIC_POINTER(crd)[i+n-1]);
+    }
+    
+    int cw = (area > 0) ? TRUE : FALSE;
+    
+    if ( (hole && cw) || (!hole && !cw) ) {
+        SEXP newcrd;
+        PROTECT( newcrd = NEW_NUMERIC(n*2) );
+        for(int i=0; i<n;i++) {
+            NUMERIC_POINTER(newcrd)[i] = NUMERIC_POINTER(crd)[n-i-1];
+            NUMERIC_POINTER(newcrd)[n+i] = NUMERIC_POINTER(crd)[n+n-i-1];
+        }
+        
+        PROTECT(crd = rgeos_formatcrdMat(newcrd,n));
+    
+        UNPROTECT(2);
+    }
+    
+    //Rprintf("HERE cw:%d hole:%d\n",cw,hole);
+    return(crd);
+}
 
 SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev) {
 
@@ -90,7 +117,7 @@ SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev) {
         error("rgeos_CoordSeq2crdMat: unable to get size and or get dimension of Coord Seq");
     }
     
-    if (m == 3 && HasZ == 1)
+    if (m == 3 && HasZ)
         warning("rgeos_CoordSeq2crdMat: only 2D coordinates respected");
     
     int pc=0;
@@ -165,16 +192,8 @@ SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, in
                 NUMERIC_POINTER(mat)[k]        = NA_REAL;
                 NUMERIC_POINTER(mat)[k+ntotal] = NA_REAL;
             } else {
-                GEOSCoordSeq s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, subgeom);
-                if (s == NULL) error("rgeos_geospoint2crdMat: unable to get coord seq");
-            
                 double x,y;
-                if (GEOSCoordSeq_getX_r(GEOShandle, s, (unsigned int) 0, &x) == 0 ||
-                    GEOSCoordSeq_getY_r(GEOShandle, s, (unsigned int) 0, &y) == 0 ) {
-                
-                    error("rgeos_geospoint2crdMat: unable to get X and or Y value from coord seq");
-                }
-                //GEOSCoordSeq_destroy_r(GEOShandle,s);
+                rgeos_Pt2xy(env, subgeom, &x, &y);
                 
                 NUMERIC_POINTER(mat)[k]        = makePrecise(x, scale);
                 NUMERIC_POINTER(mat)[k+ntotal] = makePrecise(y, scale);
@@ -254,5 +273,30 @@ GEOSGeom rgeos_xy2Pt(SEXP env, double x, double y) {
     }
     
     return(gl);
+}
+
+void rgeos_Pt2xy(SEXP env, GEOSGeom point, double *x, double *y) {
+    
+    GEOSContextHandle_t GEOShandle = getContextHandle(env);
+    
+    if (GEOSisEmpty_r(GEOShandle, point)) {
+        *x = NA_REAL;
+        *y = NA_REAL;
+        return;
+    }
+    
+    int type = GEOSGeomTypeId_r(GEOShandle, point);
+    if (type != GEOS_POINT)
+        error("rgeos_Pt2xy: invalid geometry type, only accepts POINT type");
+    
+    GEOSCoordSeq s = (GEOSCoordSeq) GEOSGeom_getCoordSeq_r(GEOShandle, point);
+    if (s == NULL) error("rgeos_Pt2xy: unable to get coord seq");
+
+    if (GEOSCoordSeq_getX_r(GEOShandle, s, (unsigned int) 0, x) == 0 ||
+        GEOSCoordSeq_getY_r(GEOShandle, s, (unsigned int) 0, y) == 0 ) {
+    
+        error("rgeos_Pt2xy: unable to get X and or Y value from coord seq");
+    }   
+
 }
 

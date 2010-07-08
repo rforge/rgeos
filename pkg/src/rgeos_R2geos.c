@@ -221,9 +221,12 @@ GEOSGeom rgeos_Polygons2geospolygon(SEXP env, SEXP obj) {
 
         for (int i=0; i<npls; i++) {
             SEXP crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
-            SEXP dim = getAttrib(crdMat, R_DimSymbol);
-            GEOSGeom Pol = rgeos_crdMat2Polygon(env, crdMat, dim);
-            geoms[i] = Pol;
+            
+            if (crdMat == R_NilValue) {
+                geoms[i] = GEOSGeom_createPolygon_r(GEOShandle, NULL, NULL, (unsigned int) 0);
+            } else {
+                geoms[i] = rgeos_crdMat2Polygon(env, crdMat, getAttrib(crdMat, R_DimSymbol));
+            }
         }
         
         GC = geoms[0];
@@ -261,9 +264,15 @@ GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec) {
     int n = length(vec);
     int i = INTEGER_POINTER(vec)[0]-R_OFFSET;
 
+    GEOSGeom pol;
     SEXP mat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
-    SEXP dim = getAttrib(mat, R_DimSymbol);
-    GEOSGeom pol = rgeos_crdMat2LinearRing(env, mat, dim);
+    if (mat == R_NilValue) {
+        if (n != 1) error("Empty polygons should not have holes");
+        pol = GEOSGeom_createLinearRing_r(GEOShandle, NULL);
+    } else {
+        pol = rgeos_crdMat2LinearRing(env, mat, getAttrib(mat, R_DimSymbol));
+    }
+    
     GEOSGeom res;
     if (n == 1) {
         res = GEOSGeom_createPolygon_r(GEOShandle, pol, NULL, (unsigned int) 0);
@@ -272,9 +281,12 @@ GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec) {
         for (int j=1; j<n; j++) {
             i = INTEGER_POINTER(vec)[j]-R_OFFSET;
             mat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
-            dim = getAttrib(mat, R_DimSymbol);
-            GEOSGeom hole = rgeos_crdMat2LinearRing(env, mat, dim);
-            holes[(j-1)] = hole;
+            
+            if (mat == R_NilValue) {
+                holes[j-1] = GEOSGeom_createLinearRing_r(GEOShandle, NULL);
+            } else {
+                holes[j-1] = rgeos_crdMat2LinearRing(env, mat, getAttrib(mat, R_DimSymbol));
+            }
         }
         res = GEOSGeom_createPolygon_r(GEOShandle, pol, holes,(unsigned int) (n-1));
     }

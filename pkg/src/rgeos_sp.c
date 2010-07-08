@@ -102,8 +102,7 @@ SEXP rgeos_Polygons_intersection(SEXP env, SEXP obj1, SEXP obj2) {
         error("rgeos_Polygons_intersection: GEOSIntersection failure");
     }
 
-    strcpy(ibuf, CHAR(STRING_ELT(ID1, 0)));
-    PROTECT(ans = rgeos_GCPolygons(env, out, ibuf, thresh)); pc++;
+    PROTECT(ans = rgeos_geospolygon2Polygons(env, out, STRING_ELT(ID1, 0))); pc++;
     UNPROTECT(pc);
     return(ans);
 
@@ -132,8 +131,6 @@ SEXP rgeos_SpatialPolygonsUnion(SEXP env, SEXP obj, SEXP grps, SEXP grpIDs,
     if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, ngrps)) == NULL) {
             error("rgeos_SpatialPolygonsUnion: collection not created");
     }
-
-    Rprintf("HERE\n");
 
     PROTECT(ans = rgeos_geospolygon2SpatialPolygons(env, GC, p4s, grpIDs, ngrps, thresh)); pc++;
 

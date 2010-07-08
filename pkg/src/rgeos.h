@@ -39,9 +39,11 @@ SEXP rgeos_geom2bbox(SEXP env, GEOSGeom geom);
 
 
 // Coordinate sequence and matrix functions - rgeos_coord.c
-GEOSCoordSeq rgeos_crdMat2CoordSeq(SEXP env, SEXP mat, SEXP dim);
 
+void     rgeos_Pt2xy(SEXP env, GEOSGeom point, double *x, double *y);
 GEOSGeom rgeos_xy2Pt(SEXP env, double x, double y);
+
+GEOSCoordSeq rgeos_crdMat2CoordSeq(SEXP env, SEXP mat, SEXP dim);
 GEOSGeom rgeos_crdMat2LineString(SEXP env, SEXP mat, SEXP dim);
 GEOSGeom rgeos_crdMat2LinearRing(SEXP env, SEXP mat, SEXP dim);
 GEOSGeom rgeos_crdMat2Polygon(SEXP env, SEXP mat, SEXP dim);
@@ -49,18 +51,20 @@ GEOSGeom rgeos_crdMat2Polygon(SEXP env, SEXP mat, SEXP dim);
 SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev);
 SEXP rgeos_geospoint2crdMat(SEXP env, GEOSGeom geom, SEXP idlist, int ntotal, int type);
 
-SEXP rgeos_formatcrdMat( SEXP crdMat, int n );
+SEXP rgeos_formatcrdMat(SEXP crdMat, int n );
+SEXP rgeos_crdMatFixDir(SEXP crd, int hole);
+
 
 
 // Translate functions GEOS to R - rgeos_geos2R.c
 SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres);
 SEXP rgeos_geospoint2SpatialPoints(SEXP env, GEOSGeom mpt, SEXP p4s, SEXP id, int n);
 SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, int ng);
-SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP IDs, int ng, SEXP thresh);
 SEXP rgeos_geosring2SpatialRings(SEXP env, GEOSGeom geom, SEXP p4s, SEXP idlist, int nrings);
 
-SEXP rgeos_GCPolygons(SEXP env, GEOSGeom Geom, char *buf, SEXP thresh);
-SEXP rgeos_LinearRingPolygon(SEXP env, GEOSGeom lr, int hole);
+SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP IDs, int ng, SEXP thresh);
+SEXP rgeos_geospolygon2Polygons(SEXP env, GEOSGeom geom, SEXP id);
+SEXP rgeos_geosring2Polygon(SEXP env, GEOSGeom lr, int hole);
 
 
 //Translate functions R to GEOS - rgeos_R2geos.c
