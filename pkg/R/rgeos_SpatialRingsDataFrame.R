@@ -86,8 +86,8 @@ chFIDsSpatialRingsDataFrame <- function(obj, x) {
     SR <- as(obj, "SpatialRings")
     SRx <- spChFIDs(SR, x)
     df <- as(obj, "data.frame")
-    row.names(df) <- sapply(slot(SLx, "rings"), function(x) slot(x, "ID"))
-    SpatialRingsDataFrame(SLx, data=df)
+    row.names(df) <- sapply(slot(SRx, "rings"), function(x) slot(x, "ID"))
+    SpatialRingsDataFrame(SRx, data=df)
 }
 
 setMethod("spChFIDs", signature(obj="SpatialRingsDataFrame", x="character"), chFIDsSpatialRingsDataFrame)
