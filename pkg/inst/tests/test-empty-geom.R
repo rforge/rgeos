@@ -78,7 +78,7 @@ test_that("empty linestrings", {
     
     
     ml1 = readWKT("MULTILINESTRING((1 1,2 2), EMPTY)")
-    ml1 = readWKT("MULTILINESTRING(EMPTY, (1 1,2 2))")
+    ml2 = readWKT("MULTILINESTRING(EMPTY, (1 1,2 2))")
     
     expect_that( ml1, is_identical_to(doubletranslate(ml1)) )
     expect_that( ml2, is_identical_to(doubletranslate(ml2)) )
