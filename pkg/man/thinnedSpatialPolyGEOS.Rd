@@ -29,12 +29,13 @@ xx <- readShapeSpatial(system.file("shapes/sids.shp", package="maptools")[1],
       IDvar="FIPSNO", proj4string=CRS("+proj=longlat +ellps=clrk66"))
 slot(xx, "polygons") <- lapply(slot(xx, "polygons"), checkPolygonsGEOS)
 object.size(as(xx, "SpatialPolygons"))
-xxx <- thinnedSpatialPolyGEOS(xx, tolerance=0.05, minarea=0.001)
-object.size(as(xxx, "SpatialPolygons"))
-par(mfrow=c(2,1))
-plot(xx)
-plot(xxx)
-par(mfrow=c(1,1))
+#FIXME
+#xxx <- thinnedSpatialPolyGEOS(xx, tolerance=0.05, minarea=0.001)
+#object.size(as(xxx, "SpatialPolygons"))
+#par(mfrow=c(2,1))
+#plot(xx)
+#plot(xxx)
+#par(mfrow=c(1,1))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

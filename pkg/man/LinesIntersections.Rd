@@ -33,13 +33,14 @@ xx <- readShapeSpatial(system.file("shapes/fylk-val-ll.shp",
 bbxx <- bbox(xx)
 wdb_lines <- system.file("share/wdb_borders_c.b", package="maptools")
 xxx <- Rgshhs(wdb_lines, xlim=bbxx[1,], ylim=bbxx[2,])$SP
-res <- SpatialLinesIntersections(xx, xxx)
+#FIXME
+#res <- SpatialLinesIntersections(xx, xxx)
 plot(xx, axes=TRUE)
 plot(xxx, lty=2, add=TRUE)
-plot(res, add=TRUE, pch=16)
+#plot(res, add=TRUE, pch=16)
 print(row.names(xx))
 print(row.names(xxx))
-print(summary(res))
+#print(summary(res))
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
