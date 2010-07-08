@@ -1,7 +1,7 @@
 #include "rgeos.h"
 
 
-SEXP rgeos_readWKT(SEXP env, SEXP obj, SEXP p4s, SEXP id, SEXP thres) {
+SEXP rgeos_readWKT(SEXP env, SEXP obj, SEXP p4s, SEXP id) {
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
@@ -11,7 +11,7 @@ SEXP rgeos_readWKT(SEXP env, SEXP obj, SEXP p4s, SEXP id, SEXP thres) {
     
     if (geom == NULL) error("rgeos_readWKT: unable to read wkt");
     
-    SEXP ans = rgeos_convert_geos2R(env, geom, p4s, id, thres);
+    SEXP ans = rgeos_convert_geos2R(env, geom, p4s, id);
     
     //TODO - Why can't geom be destroyed here?
     //if (geom != NULL) GEOSGeom_destroy_r(GEOShandle, geom);

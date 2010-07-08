@@ -1,6 +1,6 @@
 #include "rgeos.h"
 
-SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP thres, SEXP width, SEXP quadsegs, 
+SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP width, SEXP quadsegs, 
                   SEXP capStyle, SEXP joinStyle, SEXP mitreLimit) {
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
@@ -39,7 +39,7 @@ SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP thres, SEXP width
     }
 
 
-    SEXP ans = rgeos_convert_geos2R(env, res, p4s, id, thres);
+    SEXP ans = rgeos_convert_geos2R(env, res, p4s, id);
 
     GEOSGeom_destroy_r(GEOShandle, geom);
     return(ans);

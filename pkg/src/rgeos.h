@@ -31,7 +31,7 @@ double rgeos_round(double val);
 // inline removed, see Writing R extensions, section 6.14
 // http://cran.r-project.org/doc/manuals/R-exts.html#Inlining-C-functions
 
-SEXP rgeos_double_translate(SEXP env, SEXP obj, SEXP id, SEXP thres);
+SEXP rgeos_double_translate(SEXP env, SEXP obj, SEXP id);
 
 
 // Bounding Box functions - rgeos_bbox.c
@@ -57,12 +57,12 @@ SEXP rgeos_crdMatFixDir(SEXP crd, int hole);
 
 
 // Translate functions GEOS to R - rgeos_geos2R.c
-SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres);
+SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id);
 SEXP rgeos_geospoint2SpatialPoints(SEXP env, GEOSGeom mpt, SEXP p4s, SEXP id, int n);
 SEXP rgeos_geosline2SpatialLines(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, int ng);
 SEXP rgeos_geosring2SpatialRings(SEXP env, GEOSGeom geom, SEXP p4s, SEXP idlist, int nrings);
 
-SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP IDs, int ng, SEXP thresh);
+SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP IDs, int ng);
 SEXP rgeos_geospolygon2Polygons(SEXP env, GEOSGeom geom, SEXP id);
 SEXP rgeos_geosring2Polygon(SEXP env, GEOSGeom lr, int hole);
 
@@ -82,20 +82,20 @@ GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec);
 
 
 // WKT Functions - rgeos_wkt.c
-SEXP rgeos_readWKT(SEXP env, SEXP obj, SEXP p4s, SEXP id, SEXP thres);
+SEXP rgeos_readWKT(SEXP env, SEXP obj, SEXP p4s, SEXP id);
 SEXP rgeos_writeWKT(SEXP env, SEXP obj, SEXP byid);
 
 
 // Topology Functions - rgeos_topology.c
 
-SEXP rgeos_envelope(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
-SEXP rgeos_convexhull(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
-SEXP rgeos_boundary(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid); 
-SEXP rgeos_getcentroid(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
-SEXP rgeos_pointonsurface(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
-SEXP rgeos_linemerge(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid);
-SEXP rgeos_unioncascaded(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid );
-SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid, 
+SEXP rgeos_envelope(SEXP env, SEXP obj, SEXP id, SEXP byid);
+SEXP rgeos_convexhull(SEXP env, SEXP obj, SEXP id, SEXP byid);
+SEXP rgeos_boundary(SEXP env, SEXP obj, SEXP id, SEXP byid); 
+SEXP rgeos_getcentroid(SEXP env, SEXP obj, SEXP id, SEXP byid);
+SEXP rgeos_pointonsurface(SEXP env, SEXP obj, SEXP id, SEXP byid);
+SEXP rgeos_linemerge(SEXP env, SEXP obj, SEXP id, SEXP byid);
+SEXP rgeos_unioncascaded(SEXP env, SEXP obj, SEXP id, SEXP byid );
+SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP byid, 
                         GEOSGeom (*topofunc)(GEOSContextHandle_t, const GEOSGeom) );
 
 
@@ -128,7 +128,7 @@ SEXP rgeos_unarypredfunc(SEXP env, SEXP spgeom, SEXP byid,
                          char (*unarypredfunc)(GEOSContextHandle_t, const GEOSGeom));
 
 // Buffer Functions - rgeos_buffer.c
-SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP thres, SEXP width, SEXP quadsegs, 
+SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP width, SEXP quadsegs, 
                   SEXP capStyle, SEXP joinStyle, SEXP mitreLimit);
 
 
@@ -164,25 +164,9 @@ SEXP rgeos_LinearRingGCPPts(SEXP env, GEOSGeom lr, int hole);
 
 // Needs to be classified
 
-/*GEOSGeom rgeos_plspairUnion(SEXP env, SEXP ipls, SEXP igrp);*/
-
-void rgeos_csArea(SEXP env, GEOSCoordSeq s, double *area);
-
-GEOSGeom rgeos_plsbufUnion(SEXP env, SEXP ipls, SEXP igrp);
-
-SEXP rgeos_SpatialPolygonsSimplify(SEXP env, SEXP obj, SEXP tolerance, SEXP thresh);
 
 SEXP rgeos_PolygonsContain(SEXP env, SEXP obj);
-
-SEXP rgeos_SpatialPolygonsUnion(SEXP env, SEXP obj, SEXP grps, SEXP grpIDs, SEXP thresh);
-
-
-SEXP rgeos_Polygons_intersection(SEXP env, SEXP obj1, SEXP obj2);
-
-SEXP rgeos_Lines_intersection(SEXP env, SEXP obj1, SEXP obj2);
-
 SEXP GC_Contains(SEXP env, GEOSGeom GC);
-
 SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points);
 
 

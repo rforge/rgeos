@@ -1,35 +1,35 @@
 #include "rgeos.h"
 
 
-SEXP rgeos_envelope(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid) {
-    return( rgeos_topologyfunc(env, obj, id, thres, byid, &GEOSEnvelope_r) );
+SEXP rgeos_envelope(SEXP env, SEXP obj, SEXP id, SEXP byid) {
+    return( rgeos_topologyfunc(env, obj, id, byid, &GEOSEnvelope_r) );
 }
 
-SEXP rgeos_convexhull(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid) {
-    return( rgeos_topologyfunc(env, obj, id, thres, byid, &GEOSConvexHull_r) );
+SEXP rgeos_convexhull(SEXP env, SEXP obj, SEXP id, SEXP byid) {
+    return( rgeos_topologyfunc(env, obj, id, byid, &GEOSConvexHull_r) );
 }
 
-SEXP rgeos_boundary(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid) {
-    return( rgeos_topologyfunc(env, obj, id, thres, byid, &GEOSBoundary_r) );
+SEXP rgeos_boundary(SEXP env, SEXP obj, SEXP id, SEXP byid) {
+    return( rgeos_topologyfunc(env, obj, id, byid, &GEOSBoundary_r) );
 }
     
-SEXP rgeos_getcentroid(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid) {
-    return( rgeos_topologyfunc(env, obj, id, thres, byid, &GEOSGetCentroid_r) );
+SEXP rgeos_getcentroid(SEXP env, SEXP obj, SEXP id, SEXP byid) {
+    return( rgeos_topologyfunc(env, obj, id, byid, &GEOSGetCentroid_r) );
 }
 
-SEXP rgeos_pointonsurface(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid) {
-    return( rgeos_topologyfunc(env, obj, id, thres, byid, &GEOSPointOnSurface_r) );
+SEXP rgeos_pointonsurface(SEXP env, SEXP obj, SEXP id, SEXP byid) {
+    return( rgeos_topologyfunc(env, obj, id, byid, &GEOSPointOnSurface_r) );
 }
 
-SEXP rgeos_linemerge(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid) {
-    return( rgeos_topologyfunc(env, obj, id, thres, byid, &GEOSLineMerge_r) );
+SEXP rgeos_linemerge(SEXP env, SEXP obj, SEXP id, SEXP byid) {
+    return( rgeos_topologyfunc(env, obj, id, byid, &GEOSLineMerge_r) );
 }
 
-SEXP rgeos_unioncascaded(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid ) {
-    return( rgeos_topologyfunc(env, obj, id, thres, byid, &GEOSUnionCascaded_r) );  
+SEXP rgeos_unioncascaded(SEXP env, SEXP obj, SEXP id, SEXP byid ) {
+    return( rgeos_topologyfunc(env, obj, id, byid, &GEOSUnionCascaded_r) );  
 }
 
-SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid, 
+SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP byid, 
                         GEOSGeom (*topofunc)(GEOSContextHandle_t, const GEOSGeom) ) {
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
@@ -73,5 +73,5 @@ SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP thres, SEXP byid,
     //FIXME - crashes if geom created from a collection created by R_Alloc
     //GEOSGeom_destroy_r(GEOShandle, geom);
         
-    return( rgeos_convert_geos2R(env, res, p4s, id, thres) );
+    return( rgeos_convert_geos2R(env, res, p4s, id) );
 }

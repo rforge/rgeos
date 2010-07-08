@@ -18,7 +18,7 @@ TopologyFunc = function(spgeom, id, byid, func) {
     if ( !(!byid && length(id) == 1) && !(byid && length(id) == length(curids)) )
         stop("Invalid number of values in id" ) 
     
-    return( .Call(func, .RGEOS_HANDLE, spgeom, id, 0, byid, PACKAGE="rgeos") )
+    return( .Call(func, .RGEOS_HANDLE, spgeom, id, byid, PACKAGE="rgeos") )
 }
 
 RGEOSEnvelope = function(spgeom, id = NULL, byid=FALSE) {

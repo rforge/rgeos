@@ -1,9 +1,9 @@
 
-# width - double, quadsegs - int, joinStyle - int, mitreLimit - double, leftSide - int
+
 
 RGEOSBuffer = function(spgeom, byid=TRUE, id=NULL, width=1.0, quadsegs=5, 
                        capStyle="ROUND", joinStyle="ROUND", mitreLimit=1.0) {
-    
+
     GEOSCapStyles = c("ROUND","FLAT","SQUARE")
     GEOSJoinStyles = c("ROUND","MITRE","BEVEL")
     
@@ -42,7 +42,7 @@ RGEOSBuffer = function(spgeom, byid=TRUE, id=NULL, width=1.0, quadsegs=5,
     if (width < 0 && !inherits(spgeom,"SpatialPolygons")) 
         stop("Negative width values may only be used with SpatialPolygons geometries")
 
-    ans = .Call("rgeos_buffer", .RGEOS_HANDLE, spgeom, byid, id, 0.0, width, quadsegs,
+    ans = .Call("rgeos_buffer", .RGEOS_HANDLE, spgeom, byid, id, width, quadsegs,
                                 capStyle, joinStyle, mitreLimit, PACKAGE="rgeos")
     
     return(ans)

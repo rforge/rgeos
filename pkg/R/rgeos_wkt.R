@@ -1,5 +1,5 @@
 
-readWKT = function( text, id = NULL, p4s = NULL, threshold=0) {
+readWKT = function( text, id = NULL, p4s = NULL) {
     
     #WKTregex = "(GEOMETRYCOLLECTION\\s?\\(?\\s?)?(((POINT|LINESTRING|LINEARRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON)\\s?((\\(\\s?(\\(?\\s?(\\(?((-?\\d+(\\.\\d+)?\\s-?\\d+(\\.\\d+)?,?\\s?)+,?)+\\)?,?\\s?)+\\)?,?\\s?)+\\))|EMPTY),?\\s?)+)\\)?"
     #wkts = str_match_all(text,WKTregex)[[1]][,1]
@@ -22,11 +22,10 @@ readWKT = function( text, id = NULL, p4s = NULL, threshold=0) {
 
     p4s = checkP4S(p4s)
     
-    threshold=as.double(threshold)
     id = as.character(id)
         
     tryCatch(res <- .Call("rgeos_readWKT", .RGEOS_HANDLE, wkt, p4s, 
-                            id, threshold, PACKAGE="rgeos"), 
+                            id, PACKAGE="rgeos"), 
              error = function(e) { stop( paste( "Unable to parse: ",wkt,"\n",
                                                 "GEOS reported: \"", e$message,"\"",sep=""),call.=FALSE) } )
     

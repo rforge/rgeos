@@ -34,17 +34,17 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_double_translate", (DL_FUNC) &rgeos_double_translate, 4},
     
     //WKT Functions
-    {"rgeos_readWKT", (DL_FUNC) &rgeos_readWKT,5}, 
+    {"rgeos_readWKT", (DL_FUNC) &rgeos_readWKT,4}, 
     {"rgeos_writeWKT", (DL_FUNC) &rgeos_writeWKT, 3}, 
     
     //Topology Functions
-    {"rgeos_envelope", (DL_FUNC) &rgeos_envelope, 5},
-    {"rgeos_convexhull", (DL_FUNC) &rgeos_convexhull, 5},
-    {"rgeos_boundary", (DL_FUNC) &rgeos_boundary, 5},
-    {"rgeos_getcentroid", (DL_FUNC) &rgeos_getcentroid, 5},
-    {"rgeos_pointonsurface", (DL_FUNC) &rgeos_pointonsurface, 5},
-    {"rgeos_linemerge", (DL_FUNC) &rgeos_linemerge, 5},
-    {"rgeos_unioncascaded", (DL_FUNC) &rgeos_unioncascaded, 5},
+    {"rgeos_envelope", (DL_FUNC) &rgeos_envelope, 4},
+    {"rgeos_convexhull", (DL_FUNC) &rgeos_convexhull, 4},
+    {"rgeos_boundary", (DL_FUNC) &rgeos_boundary, 4},
+    {"rgeos_getcentroid", (DL_FUNC) &rgeos_getcentroid, 4},
+    {"rgeos_pointonsurface", (DL_FUNC) &rgeos_pointonsurface, 4},
+    {"rgeos_linemerge", (DL_FUNC) &rgeos_linemerge, 4},
+    {"rgeos_unioncascaded", (DL_FUNC) &rgeos_unioncascaded, 4},
 
     //Binary Predicate Functions
     {"rgeos_disjoint", (DL_FUNC) &rgeos_disjoint, 4},
@@ -67,7 +67,7 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_isvalidreason", (DL_FUNC) &rgeos_isvalidreason, 3},
     
     //Buffer Functions
-    {"rgeos_buffer", (DL_FUNC) &rgeos_buffer, 10},
+    {"rgeos_buffer", (DL_FUNC) &rgeos_buffer, 9},
     
     //Misc functions
     {"rgeos_area", (DL_FUNC) &rgeos_area, 3},
@@ -75,11 +75,7 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_distance", (DL_FUNC) &rgeos_distance, 4},
     {"rgeos_hausdorffdistance", (DL_FUNC) &rgeos_hausdorffdistance, 4},
     
-    {"rgeos_SpatialPolygonsUnion", (DL_FUNC) &rgeos_SpatialPolygonsUnion, 5},
-    {"rgeos_SpatialPolygonsSimplify", (DL_FUNC) &rgeos_SpatialPolygonsSimplify, 4},
     {"rgeos_PolygonsContain", (DL_FUNC) &rgeos_PolygonsContain, 2},
-    {"rgeos_Polygons_intersection", (DL_FUNC) &rgeos_Polygons_intersection, 3},
-    {"rgeos_Lines_intersection", (DL_FUNC) &rgeos_Lines_intersection, 3},
     {"SymDiffGpcGEOS", (DL_FUNC) &SymDiffGpcGEOS, 3},
     {"DiffGpcGEOS", (DL_FUNC) &DiffGpcGEOS, 3},
     {"UnionGpcGEOS", (DL_FUNC) &UnionGpcGEOS, 3},

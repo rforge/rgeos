@@ -1,14 +1,14 @@
 #include "rgeos.h"
 #include <string.h>
 
-SEXP rgeos_double_translate(SEXP env, SEXP obj, SEXP id, SEXP thres) {
+SEXP rgeos_double_translate(SEXP env, SEXP obj, SEXP id) {
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
     GEOSGeom geom = rgeos_convert_R2geos( env, obj);
     SEXP p4s = GET_SLOT(obj, install("proj4string"));
     
-    SEXP ans = rgeos_convert_geos2R(env, geom, p4s, id, thres); 
+    SEXP ans = rgeos_convert_geos2R(env, geom, p4s, id); 
     
     return(ans);
 }

@@ -1,6 +1,6 @@
 #include "rgeos.h"
 
-SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres) {
+SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
@@ -32,7 +32,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
     
         case GEOS_POLYGON:
         case GEOS_MULTIPOLYGON:
-            PROTECT( ans = rgeos_geospolygon2SpatialPolygons(env, geom,p4s, id, 1, thres) ); pc++;
+            PROTECT( ans = rgeos_geospolygon2SpatialPolygons(env, geom,p4s, id, 1) ); pc++;
             break;
         
         case GEOS_GEOMETRYCOLLECTION:
@@ -70,7 +70,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
             } else if ( isLine && !isPoint && !isPoly && !isRing && !isGC ) {
                 PROTECT( ans = rgeos_geosline2SpatialLines(env, geom, p4s, id, ng) ); pc++;
             } else if ( isPoly && !isPoint && !isLine && !isRing && !isGC ) {
-                PROTECT( ans = rgeos_geospolygon2SpatialPolygons(env, geom, p4s,id, ng, thres) ); pc++;
+                PROTECT( ans = rgeos_geospolygon2SpatialPolygons(env, geom, p4s,id, ng) ); pc++;
             } else if ( isRing && !isPoint && !isLine && !isPoly && !isGC ) {
                 PROTECT( ans = rgeos_geosring2SpatialRings(env, geom, p4s, id, ng) ); pc++;    
             } else {
@@ -88,7 +88,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id, SEXP thres
 }
 
 
-SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP IDs, int ng, SEXP thresh) {
+SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP IDs, int ng) {
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
