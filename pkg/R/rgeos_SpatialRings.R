@@ -30,9 +30,18 @@ setClass("SpatialRings",
 )
 
 Ring <- function(coords,ID=as.character(NA)) {
-    coords <- coordinates(coords)
     if (ncol(coords) != 2) 
         stop("coords must be a two-column matrix")
+    
+    n = nrow(coords)
+    area2 = sum( (coords[-1,1]-coords[-n,1])*(coords[-1,2]+coords[-n,2]) )
+    if (area2 < 0) {
+        # if area2 is negative coordinates are ccw, reverse them
+        coords[,1] = rev(coords[,1])
+        coords[,2] = rev(coords[,2])
+    }
+    
+    coords <- coordinates(coords)
     new("Ring", coords = coords, ID = ID)
 }
 
