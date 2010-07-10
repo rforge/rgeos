@@ -4,7 +4,9 @@ import(methods)
 import(sp)
 
 
-export(thinnedSpatialPolyGEOS, checkPolygonsGEOS, unionSpatialPolygonsGEOS)
+#export(thinnedSpatialPolyGEOS, checkPolygonsGEOS, unionSpatialPolygonsGEOS)
+
+export(checkPolygonsGEOS)
 
 export(SpatialLinesIntersections, LinesIntersections, PolygonsIntersections)
 
