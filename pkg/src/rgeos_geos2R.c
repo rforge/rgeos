@@ -37,6 +37,10 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
         
         case GEOS_GEOMETRYCOLLECTION:
         {    
+            
+            if (GEOSisEmpty_r(GEOShandle,geom))
+                return(R_NilValue);
+            
             int gctypes[] = {0,0,0,0,0,0,0,0};
             int n=0;
             

@@ -11,8 +11,14 @@ readWKT = function( text, id = NULL, p4s = NULL) {
     m =  str_match_all(wkt, "POINT|LINESTRING|LINEARRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON")   
     ngeoms =  dim( m[[1]] )[1]
     
-    if(is.null(id)) id = 1:ngeoms
-
+    if(is.null(id)) {
+        if (ngeoms == 0) {
+            id = c()
+        } else {
+            id = 1:ngeoms
+        }
+    } 
+    
     # if the number of ids doesn't take into account sub geometries in geometry collection then create subids
     if( length(id) == 1 & ngeoms != 1)
         id = paste(id,1:ngeoms,sep=".")
