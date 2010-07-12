@@ -1259,6 +1259,9 @@ fi
 
 
 
+
+svnversion | sed -n 's/^/Revision: /p' > inst/SVN_VERSION
+
           ac_config_files="$ac_config_files src/Makevars"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -2161,4 +2164,5 @@ if test "$no_create" != yes; then
   # would make configure fail if this is the last instruction.
   $ac_cs_success || { (exit 1); exit 1; }
 fi
+
 

@@ -35,4 +35,8 @@ fi
 
 AC_SUBST(PKG_CPPFLAGS)
 AC_SUBST(PKG_LIBS)
+
+svnversion | sed -n 's/^/Revision: /p' > inst/SVN_VERSION
+
 AC_OUTPUT(src/Makevars)
+

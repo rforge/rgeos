@@ -9,7 +9,9 @@
   GEOSptr <- .Call('rgeos_Init', PACKAGE="rgeos")
   assign("GEOSptr", GEOSptr, envir=.RGEOS_HANDLE)
   assign("scale", 100000000, envir=.RGEOS_HANDLE)
-  cat("rgeos: (svn revision $Rev$)\n")
+  svn_version <- scan(system.file("SVN_VERSION", package="rgeos"),
+    what=character(1), sep="\n", quiet=TRUE)
+  cat("rgeos: (SVN ", svn_version, ")\n", sep="")
   cat("GEOS runtime version:", .Call("rgeos_GEOSversion", PACKAGE="rgeos"),"\n")
 }
 
