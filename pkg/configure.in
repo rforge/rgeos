@@ -37,7 +37,7 @@ AC_SUBST(PKG_CPPFLAGS)
 AC_SUBST(PKG_LIBS)
 
 if test -e ".svn" ; then
-  svnversion | sed -n 's/^/Revision: /p' > inst/SVN_VERSION
+  svnversion -n > inst/SVN_VERSION
 fi
 
 AC_OUTPUT(src/Makevars)
