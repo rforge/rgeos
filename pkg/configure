@@ -1260,7 +1260,9 @@ fi
 
 
 
-svnversion | sed -n 's/^/Revision: /p' > inst/SVN_VERSION
+if test -e ".svn" ; then
+  svnversion | sed -n 's/^/Revision: /p' > inst/SVN_VERSION
+fi
 
           ac_config_files="$ac_config_files src/Makevars"
 cat >confcache <<\_ACEOF
