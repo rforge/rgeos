@@ -8,18 +8,16 @@ RGEOSMiscFunc = function(spgeom, byid, func) {
     return(x)
 }
 
-RGEOSArea = function(spgeom, byid=FALSE) {
-
+gArea = function(spgeom, byid=FALSE) {
     return( RGEOSMiscFunc(spgeom,byid,"rgeos_area") )
 }
 
-RGEOSLength = function(spgeom, byid=FALSE) {
-
+gLength = function(spgeom, byid=FALSE) {
     return(RGEOSMiscFunc(spgeom,byid,"rgeos_length"))
 }
 
 
-RGEOSDistanceFunc = function(spgeom1, spgeom2, byid, func) {
+RGEOSDistanceFunc = function(spgeom1, spgeom2, byid, func, densifyFrac = 1) {
     byid = as.logical(byid)
     if (any(is.na(byid)) ) stop("Invalid value for byid, must be logical")
 
@@ -29,44 +27,71 @@ RGEOSDistanceFunc = function(spgeom1, spgeom2, byid, func) {
     if (length(byid) == 1)
         byid <- rep(byid,2)
 
-    x <- .Call(func, .RGEOS_HANDLE, spgeom1, spgeom2, byid, PACKAGE="rgeos")
+    if(!is.null(spgeom1) & !is.null(spgeom2)) {
+        if(!identical(spgeom1@proj4string,spgeom2@proj4string))
+            warning("spgeom1 and spgeom2 have different proj4 strings")
+    }
+
+    if (func == "rgeos_hausdorffdistancedensify") {
+        x <- .Call(func, .RGEOS_HANDLE, spgeom1, spgeom2, densifyFrac, byid, PACKAGE="rgeos")
+    } else {
+        x <- .Call(func, .RGEOS_HANDLE, spgeom1, spgeom2, byid, PACKAGE="rgeos")
+    }
     
-    if(all(byid)) {
+    if(any(byid)) {
         id1 = row.names(spgeom1) 
         if (is.null(spgeom2)) id2 = id1
         else id2 = row.names(spgeom2)
         
-        if ( length(id1) != 1 && length(id2) == 1 ) {
-            names(x) <- id1       
-        } else if ( length(id1) == 1 && length(id2) != 1 ) {
-            names(x) <- id2
-        } else if ( length(id1) != 1 && length(id2) != 1 ) {
-            colnames(x) <- id1
-            rownames(x) <- id2
-        }
-    } else if (byid[1]) {
-        names(x) = row.names(spgeom1)
-    } else if (byid[2]) {
-        if (is.null(spgeom2)) names(x) = row.names(spgeom1)
-        else names(x) = row.names(spgeom2)
+		colnames(x) <- id1
+        rownames(x) <- id2
     }
+
     return(x)
 } 
 
-RGEOSDistance = function(spgeom1, spgeom2=NULL, byid=FALSE) {
-    
-    return( RGEOSDistanceFunc(spgeom1, spgeom2, byid, "rgeos_distance") )
+gDistance = function(spgeom1, spgeom2=NULL, byid=FALSE, hausdorff=FALSE, densifyFrac = NULL) {
+	if (hausdorff) {
+		if(is.null(densifyFrac)) {
+			return( RGEOSDistanceFunc(spgeom1, spgeom2, byid, "rgeos_hausdorffdistance") )
+		} else {
+			if (!is.numeric(densifyFrac))
+		        stop("densifyFrac must be numeric")
+
+		    if (densifyFrac > 1 | densifyFrac <= 0)
+		        stop("densifyFrac must be in the range (0,1]")
+
+		    return( RGEOSDistanceFunc(spgeom1, spgeom2, byid, "rgeos_hausdorffdistancedensify", densifyFrac) )
+		}
+	} else {
+    	return( RGEOSDistanceFunc(spgeom1, spgeom2, byid, "rgeos_distance") )
+	}
 }
 
-
-RGEOSisWithinDistance = function(spgeom1, spgeom2=NULL, dist, byid=FALSE) {
+gWithinDistance = function(spgeom1, spgeom2=NULL, dist, byid=FALSE, hausdorff=FALSE, densifyFrac=NULL) {
     #TODO - include a tolerance?
-    return( RGEOSDistance(spgeom1,spgeom2,byid) <= dist )
+    return( gDistance(spgeom1,spgeom2,byid, hausdorff, densifyFrac) <= dist )
 }
 
+
+#Deprecated function names
+RGEOSArea = function(spgeom, byid=FALSE) {
+    .Deprecated("gArea")
+    return( gArea(spgeom, byid) )
+}
+RGEOSLength = function(spgeom, byid=FALSE) {
+    .Deprecated("gLength")
+    return( gLength(spgeom, byid) )
+}
+RGEOSDistance = function(spgeom1, spgeom2=NULL, byid=FALSE) {
+    .Deprecated("gDistance")
+    return( gDistance(spgeom1, spgeom2, byid) )
+}
+RGEOSisWithinDistance = function(spgeom1, spgeom2=NULL, dist, byid=FALSE) {
+    .Deprecated("gWithinDistance")
+    return( gWithinDistance(spgeom1, spgeom2, dist, byid) )
+}
 RGEOSHausdorffDistance = function(spgeom1, spgeom2=NULL, byid=FALSE) {
-
-    return( RGEOSDistanceFunc(spgeom1, spgeom2, byid, "rgeos_hausdorffdistance") )
+    .Deprecated("gDistance")
+    return( gDistance(spgeom1, spgeom2, byid, TRUE) )
 }
-
-RGEOSHausdorffDistanceDensify = function(g1, g2, densifyFrac) {}

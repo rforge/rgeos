@@ -4,15 +4,11 @@ import(methods)
 import(sp)
 
 
-#export(thinnedSpatialPolyGEOS, checkPolygonsGEOS, unionSpatialPolygonsGEOS)
-
 export(checkPolygonsGEOS)
-
-export(SpatialLinesIntersections, LinesIntersections, PolygonsIntersections)
-
+#export(thinnedSpatialPolyGEOS, checkPolygonsGEOS,unionSpatialPolygonsGEOS)
+export(SpatialLinesIntersections, LinesIntersections,PolygonsIntersections)
 export(poly_findInBoxGEOS)
-
-export(DiffGpcGEOS, SymDiffGpcGEOS, UnionGpcGEOS, UnionGpcGEOS, IntersectGpcGEOS, checkHolesGPC)
+export(checkHolesGPC)
 
 # sp extension classes
 exportClasses(Ring,SpatialRings, SpatialRingsDataFrame)
@@ -26,36 +22,49 @@ export(readWKT, writeWKT)
 
 
 # GEOS unary predicate functions
-export(RGEOSisEmpty, RGEOSisValid, RGEOSisValidReason, RGEOSisSimple, RGEOSisRing, RGEOSHasZ)
+export(RGEOSisEmpty, RGEOSisValid, RGEOSisSimple, RGEOSisRing, RGEOSHasZ)
+export(gEmpty, gValid, gSimple, gRing, gHasZ)
+
 
 # GEOS binary predicate functions
-export( RGEOSRelatePattern, RGEOSDisjoint, RGEOSTouches, RGEOSIntersects, RGEOSCrosses,
+export( RGEOSRelate, RGEOSDisjoint, RGEOSTouches, RGEOSIntersects, RGEOSCrosses,
 		RGEOSWithin, RGEOSContains, RGEOSOverlaps, RGEOSEquals, RGEOSEqualsExact)
+export( gRelate, gDisjoint, gTouches, gIntersects, gCrosses,
+		gWithin, gContains, gOverlaps, gEquals, gEqualsExact)
 
 # GEOS misc functions
 export( RGEOSArea, RGEOSLength, RGEOSDistance, RGEOSisWithinDistance, 
-		RGEOSHausdorffDistance, RGEOSHausdorffDistanceDensify)
+		RGEOSHausdorffDistance)
+export( gArea, gLength, gDistance, gWithinDistance)
+
 
 # GEOS topology functions
-export( RGEOSEnvelope, RGEOSConvexHull, RGEOSBoundary, RGEOSGetCentroid, RGEOSSimplify, 
-		RGEOSTopologyPreserveSimplify, RGEOSPolygonize, RGEOSPolygonizer_getCutEdges,
-		RGEOSPointOnSurface, RGEOSLineMerge)
+export( RGEOSEnvelope, RGEOSConvexHull, RGEOSBoundary, RGEOSGetCentroid, 
+		RGEOSPointOnSurface, RGEOSLineMerge, RGEOSUnionCascaded)
+export( gEnvelope, gConvexHull, gBoundary, gCentroid, 
+		gPointOnSurface, gLineMerge, gUnionCascaded)
+
+export(	gSimplify, gPolygonize, gPolygonizer_getCutEdges)
 		
-# GEOS topology relation functions
-export( RGEOSRelate, RGEOSDifference, RGEOSSymDifference, RGEOSIntersection, RGEOSUnion, RGEOSUnionCascaded)# RSB FIXME
+# GEOS binary topology functions
+export( gDifference, gSymdifference, gIntersection, gUnion)# RSB FIXME
 
 # GEOS buffer functions
-export( RGEOSBuffer, RGEOSSingleSidedBuffer)
+export( RGEOSBuffer, gBuffer )
 
 # GEOS linearref functions
-export( RGEOSProject, RGEOSInterpolate, RGEOSProjectNormalized, RGEOSInterpolateNormalized)
+export( gProject, gInterpolate)
 
 
 # gpclib shadows
 
-exportClasses("gpc.poly")
-exportMethods("show", "get.bbox", "plot", "intersect", "union",
+#importFrom(graphics, plot)
+
+exportClasses("gpc.poly", "gpc.poly.nohole")
+exportMethods("show", "get.bbox", "plot", "intersect", "union", "symdiff",
               "setdiff", "[", "append.poly", "scale.poly", "area.poly",
-              "coerce", "symdiff")
+              "get.pts", "coerce", "tristrip", "triangulate")
+
+export("read.polyfile", "write.polyfile")
 
 

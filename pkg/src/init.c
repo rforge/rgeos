@@ -46,6 +46,12 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_linemerge", (DL_FUNC) &rgeos_linemerge, 4},
     {"rgeos_unioncascaded", (DL_FUNC) &rgeos_unioncascaded, 4},
 
+    //Binary Topology Functions
+    {"rgeos_difference", (DL_FUNC) &rgeos_difference, 5},
+    {"rgeos_symdifference", (DL_FUNC) &rgeos_symdifference, 5},
+    {"rgeos_intersection", (DL_FUNC) &rgeos_intersection, 5},
+    {"rgeos_union", (DL_FUNC) &rgeos_union, 5},
+
     //Binary Predicate Functions
     {"rgeos_disjoint", (DL_FUNC) &rgeos_disjoint, 4},
     {"rgeos_touches", (DL_FUNC) &rgeos_touches, 4},
@@ -74,13 +80,9 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_length", (DL_FUNC) &rgeos_length, 3},
     {"rgeos_distance", (DL_FUNC) &rgeos_distance, 4},
     {"rgeos_hausdorffdistance", (DL_FUNC) &rgeos_hausdorffdistance, 4},
+    {"rgeos_hausdorffdistancedensify", (DL_FUNC) &rgeos_hausdorffdistancedensify, 5},
     
     {"rgeos_PolygonsContain", (DL_FUNC) &rgeos_PolygonsContain, 2},
-    {"SymDiffGpcGEOS", (DL_FUNC) &SymDiffGpcGEOS, 3},
-    {"DiffGpcGEOS", (DL_FUNC) &DiffGpcGEOS, 3},
-    {"UnionGpcGEOS", (DL_FUNC) &UnionGpcGEOS, 3},
-    {"IntersectGpcGEOS", (DL_FUNC) &IntersectGpcGEOS, 3},
-    {"UnaryUnionGpcGEOS", (DL_FUNC) &UnaryUnionGpcGEOS, 2},
     {"checkHolesGPC", (DL_FUNC) &checkHolesGPC, 2},
     {"rgeos_poly_findInBox", (DL_FUNC) &rgeos_poly_findInBox, 3}, 
     {NULL, NULL, 0}

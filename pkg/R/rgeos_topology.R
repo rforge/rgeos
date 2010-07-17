@@ -1,3 +1,11 @@
+gSimplify = function(g1, tol, topologyPreserve=FALSE) {}
+
+gPolygonize = function( geoms, ngeoms) {}
+
+gPolygonizer_getCutEdges = function(geoms, ngeoms) {}
+
+
+
 
 TopologyFunc = function(spgeom, id, byid, func) {
     
@@ -21,31 +29,25 @@ TopologyFunc = function(spgeom, id, byid, func) {
     return( .Call(func, .RGEOS_HANDLE, spgeom, id, byid, PACKAGE="rgeos") )
 }
 
-RGEOSEnvelope = function(spgeom, id = NULL, byid=FALSE) {
+gEnvelope = function(spgeom, id = NULL, byid=FALSE) {
     return( TopologyFunc(spgeom,id,byid,"rgeos_envelope") ) 
 }
-
-RGEOSConvexHull = function(spgeom, id = NULL, byid=FALSE) {
+gConvexHull = function(spgeom, id = NULL, byid=FALSE) {
     return( TopologyFunc(spgeom,id,byid,"rgeos_convexhull") ) 
 }
-
-RGEOSBoundary = function(spgeom, id = NULL, byid=FALSE) {
+gBoundary = function(spgeom, id = NULL, byid=FALSE) {
      return( TopologyFunc(spgeom,id,byid,"rgeos_boundary") ) 
 }
-
-RGEOSGetCentroid = function(spgeom, id = NULL, byid=FALSE) {
+gCentroid = function(spgeom, id = NULL, byid=FALSE) {
     return( TopologyFunc(spgeom,id,byid,"rgeos_getcentroid") ) 
 }
-
-RGEOSPointOnSurface = function(spgeom, id = NULL, byid=FALSE) {
+gPointOnSurface = function(spgeom, id = NULL, byid=FALSE) {
     return( TopologyFunc(spgeom,id,byid,"rgeos_pointonsurface") ) 
 }
-
-RGEOSLineMerge = function(spgeom, id = NULL, byid=FALSE) {
+gLineMerge = function(spgeom, id = NULL, byid=FALSE) {
     return( TopologyFunc(spgeom,id,byid,"rgeos_linemerge") ) 
 }
-
-RGEOSUnionCascaded = function(spgeom, id = NULL) {
+gUnionCascaded = function(spgeom, id = NULL) {
     
     if (!inherits(spgeom,"SpatialPolygons"))
         stop("Invalid geometry, may only be applied to polygons")
@@ -57,14 +59,35 @@ RGEOSUnionCascaded = function(spgeom, id = NULL) {
 }
 
 
-RGEOSSimplify = function(g1, tolerance) {}
 
-RGEOSTopologyPreserveSimplify = function(g1, tolerance) {}
-
-RGEOSPolygonize = function( geoms, ngeoms) {}
-
-RGEOSPolygonizer_getCutEdges = function(geoms, ngeoms) {}
-
+RGEOSEnvelope = function(spgeom, id = NULL, byid=FALSE) {
+    .Deprecated("gEnvelope")
+    return( gEnvelope(spgeom, id, byid) )
+}
+RGEOSConvexHull = function(spgeom, id = NULL, byid=FALSE) {
+    .Deprecated("gConvexHull")
+    return( gConvexHull(spgeom, id, byid) )
+}
+RGEOSBoundary = function(spgeom, id = NULL, byid=FALSE) {
+    .Deprecated("gBoundary")
+    return( gBoundary(spgeom, id, byid) )
+}
+RGEOSGetCentroid = function(spgeom, id = NULL, byid=FALSE) {
+    .Deprecated("gCentroid")
+    return( gCentroid(spgeom, id, byid) )
+}
+RGEOSPointOnSurface = function(spgeom, id = NULL, byid=FALSE) {
+    .Deprecated("gPointOnSurface")
+    return( gPointOnSurface(spgeom, id, byid) )
+}
+RGEOSLineMerge = function(spgeom, id = NULL, byid=FALSE) {
+    .Deprecated("gLineMerge")
+    return( gLineMerge(spgeom, id, byid) )
+}
+RGEOSUnionCascaded = function(spgeom, id = NULL) {
+    .Deprecated("gUnionCascaded")
+    return( gUnionCascaded(spgeom, id) )
+}
 
 
 

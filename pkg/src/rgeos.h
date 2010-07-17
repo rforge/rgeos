@@ -99,6 +99,16 @@ SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP byid,
                         GEOSGeom (*topofunc)(GEOSContextHandle_t, const GEOSGeom) );
 
 
+// Binary Topology Functions - rgeos_topology_binary.c
+
+SEXP rgeos_difference(SEXP env, SEXP geom1, SEXP geom2, SEXP byid, SEXP ids);
+SEXP rgeos_symdifference(SEXP env, SEXP geom1, SEXP geom2, SEXP byid, SEXP ids);
+SEXP rgeos_intersection(SEXP env, SEXP geom1, SEXP geom2, SEXP byid, SEXP ids);
+SEXP rgeos_union(SEXP env, SEXP geom1, SEXP geom2, SEXP byid, SEXP ids);
+SEXP rgeos_binarytopologyfunc(SEXP env, SEXP geom1, SEXP geom2, SEXP byid, SEXP ids,
+                              GEOSGeom (*bintopofunc)(GEOSContextHandle_t, const GEOSGeom, const GEOSGeom));
+
+
 // Binary Predicate Functions - rgeos_predicate_binary.c
 
 SEXP rgeos_disjoint(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
@@ -143,6 +153,10 @@ SEXP rgeos_hausdorffdistance(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
 SEXP rgeos_distancefunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, 
                         int (*distfunc)(GEOSContextHandle_t,const GEOSGeom,const GEOSGeom, double *));
 
+SEXP rgeos_hausdorffdistancedensify(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP densifyFrac, SEXP byid);
+SEXP rgeos_distancedensifyfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP densifyFrac, SEXP byid, 
+                                int (*distfunc)(GEOSContextHandle_t,const GEOSGeom,const GEOSGeom, double, double *));
+
 // GPC functions
 GEOSGeom GPCptPolygon(SEXP env, SEXP obj);
 GEOSGeom GPCpt2LinearRing(SEXP env, SEXP obj);
@@ -150,11 +164,7 @@ GEOSCoordSeq GPCpt2CoordSeq(SEXP env, SEXP obj);
 GEOSGeom GCPPtsGC(SEXP env, SEXP pls);
 GEOSGeom GPCpt_i_Polygon(SEXP env, SEXP pls, SEXP vec);
 
-SEXP SymDiffGpcGEOS(SEXP env, SEXP A, SEXP B);
-SEXP UnaryUnionGpcGEOS(SEXP env, SEXP A);
-SEXP UnionGpcGEOS(SEXP env, SEXP A, SEXP B);
-SEXP IntersectGpcGEOS(SEXP env, SEXP A, SEXP B);
-SEXP DiffGpcGEOS(SEXP env, SEXP A, SEXP B);
+
 SEXP checkHolesGPC(SEXP env, SEXP A);
 
 /* SEXP GCpolysGPCpts(SEXP env, GEOSGeom GC); */

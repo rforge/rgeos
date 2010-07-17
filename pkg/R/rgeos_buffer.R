@@ -1,8 +1,7 @@
 
 
-
-RGEOSBuffer = function(spgeom, byid=TRUE, id=NULL, width=1.0, quadsegs=5, 
-                       capStyle="ROUND", joinStyle="ROUND", mitreLimit=1.0) {
+gBuffer = function(spgeom, byid=TRUE, id=NULL, width=1.0, quadsegs=5, 
+                     capStyle="ROUND", joinStyle="ROUND", mitreLimit=1.0) {
 
     GEOSCapStyles = c("ROUND","FLAT","SQUARE")
     GEOSJoinStyles = c("ROUND","MITRE","BEVEL")
@@ -48,6 +47,11 @@ RGEOSBuffer = function(spgeom, byid=TRUE, id=NULL, width=1.0, quadsegs=5,
     return(ans)
 }
 
+RGEOSBuffer = function(spgeom, byid=TRUE, id=NULL, width=1.0, quadsegs=5, 
+                       capStyle="ROUND", joinStyle="ROUND", mitreLimit=1.0) {
+   .Deprecated("gBuffer")
+   return( gBuffer(spgeom, byid, id, width, quadsegs, capStyle, joinStyle, mitreLimit) )
+}
 
 RGEOSSingleSidedBuffer = function(spgeom, width, quadsegs, joinStyle, mitreLimit) {
     

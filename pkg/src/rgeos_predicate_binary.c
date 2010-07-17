@@ -129,7 +129,7 @@ SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid,
         }
     }
     
-    if (n != 1 && m !=1) {
+    if (LOGICAL_POINTER(byid)[0] || LOGICAL_POINTER(byid)[1]) {
         PROTECT(dims = NEW_INTEGER(2)); pc++;
         INTEGER_POINTER(dims)[0] = n;
         INTEGER_POINTER(dims)[1] = m;

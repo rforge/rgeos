@@ -55,12 +55,13 @@ GEOSGeom rgeos_crdMat2LinearRing(SEXP env, SEXP mat, SEXP dim) {
         GEOSGeom_destroy_r(GEOShandle, gl);
         error("rgeos_crdMat2LinearRing: linearRing not created");
     }
-    if ((int) GEOSisValid_r(GEOShandle, gl) == 1) {
+    /*
+	if ((int) GEOSisValid_r(GEOShandle, gl) == 1) {
         if (GEOSNormalize_r(GEOShandle, gl) == -1)
             warning("rgeos_crdMat2LinearRing: normalization failure");
     } else {
         warning("rgeos_crdMat2LinearRing: validity failure");
-    }
+    }*/
 
     return(gl);
 }

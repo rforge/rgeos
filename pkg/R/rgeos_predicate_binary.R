@@ -2,97 +2,128 @@ RGEOSBinPredFunc = function(spgeom1, spgeom2, byid, func, optparam=NULL) {
     byid = as.logical(byid)
     if (any(is.na(byid)) ) stop("Invalid value for byid, must be logical")
 
-	if( length(byid) < 1 || length(byid) > 2 )
-		stop("Invalid length for byid, must be of length 1 or 2")
-	
-	if (length(byid) == 1)
-		byid <- rep(byid,2)
+    if( length(byid) < 1 || length(byid) > 2 )
+        stop("Invalid length for byid, must be of length 1 or 2")
 
+    if (length(byid) == 1)
+        byid <- rep(byid,2)
+
+    if(!is.null(spgeom1) & !is.null(spgeom2)) {
+        if(!identical(spgeom1@proj4string,spgeom2@proj4string))
+            warning("spgeom1 and spgeom2 have different proj4 strings")
+    }
 
     if ( func == "rgeos_equalsexact"  ) {
-        tol <- optparam
-        
-        if ( is.null(tol) ) tol <- 0.0
-        tol <- as.numeric(tol)
-        if ( is.na(tol) ) stop("Invalid value for tolerance, must be numeric")
-        
-        x <- .Call(func, .RGEOS_HANDLE, spgeom1, spgeom2, tol, byid, PACKAGE="rgeos")
-        
+        x <- .Call(func, .RGEOS_HANDLE, spgeom1, spgeom2, optparam, byid, PACKAGE="rgeos")
     } else {
         x <- .Call(func, .RGEOS_HANDLE, spgeom1, spgeom2, byid, PACKAGE="rgeos")
     }
     
-    if(all(byid)) {
+    if(any(byid)) {
         id1 = row.names(spgeom1) 
         if (is.null(spgeom2)) id2 = id1
         else id2 = row.names(spgeom2)
-        
-        if ( length(id1) != 1 && length(id2) == 1 ) {
-            names(x) <- id1       
-        } else if ( length(id1) == 1 && length(id2) != 1 ) {
-            names(x) <- id2
-        } else if ( length(id1) != 1 && length(id2) != 1 ) {
-            colnames(x) <- id1
-            rownames(x) <- id2
-        }
-    } else if (byid[1]) {
-        names(x) = row.names(spgeom1)
-    } else if (byid[2]) {
-        if (is.null(spgeom2)) names(x) = row.names(spgeom1)
-        else names(x) = row.names(spgeom2)
+
+        colnames(x) <- id1
+        rownames(x) <- id2
     }
     
     return(x)
 }
 
 
-RGEOSDisjoint = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+gDisjoint = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_disjoint") )
 }
-
-RGEOSTouches = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+gTouches = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_touches") )
 }
-
-RGEOSIntersects = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+gIntersects = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_intersects") )
 }
-
-RGEOSCrosses = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+gCrosses = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_crosses") )
 }
-
-RGEOSWithin = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+gWithin = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_within") )
 }
-
-RGEOSContains = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+gContains = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_contains") )
 }
-
-RGEOSOverlaps = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+gOverlaps = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_overlaps") )
 }
-
-RGEOSEquals = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+gEquals = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_equals") )
 }
+gEqualsExact = function(spgeom1, spgeom2 = NULL, tol=0.0, byid = FALSE) {
+    
+    if ( is.null(tol) ) 
+        tol <- 0.0
+    
+    tol <- as.numeric(tol)
+    if ( is.na(tol) ) 
+        stop("Invalid value for tolerance, must be numeric")
 
-RGEOSEqualsExact = function(spgeom1, spgeom2 = NULL, tol=0.0, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_equalsexact", tol) )
 }
-
-RGEOSRelate = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
-    return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_relate") )
+gRelate = function(spgeom1, spgeom2 = NULL, pattern = NULL, byid = FALSE) {
+    
+	if (is.null(pattern)) {
+		return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_relate") )
+	} else {
+		
+	    if (length(pattern) != 1)
+	        stop("Pattern must have length of 1")
+    
+	    if ( !is.character(pattern) || nchar(pattern) != 9 || !grepl("[0-2TF\\*]{9}",pattern) )
+	        stop("Invalid pattern, see documentation for proper format")
+    
+	    return( RGEOSRelate(spgeom1, spgeom2, byid ) == pattern )
+	}
 }
 
-RGEOSRelatePattern = function(spgeom1, spgeom2 = NULL, pattern, byid = FALSE) {
-    
-    if (length(pattern) != 1)
-        stop("Pattern must have length of 1")
-    
-    if ( !is.character(pattern) || nchar(pattern) != 9 || !grepl("[0-2TF\\*]{9}",pattern) )
-        stop("Invalid pattern, see documentation for proper format")
-    
-    return( RGEOSRelate(spgeom1, spgeom2, byid ) == pattern )
+
+
+
+
+RGEOSDisjoint = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+    .Deprecated("gDisjoint")
+    return( gDisjoint(spgeom1,spgeom2, byid) )
+}
+RGEOSTouches = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+    .Deprecated("gTouches")
+    return( gTouches(spgeom1,spgeom2, byid) )
+}
+RGEOSIntersects = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+    .Deprecated("gIntersects")
+    return( gIntersects(spgeom1,spgeom2, byid) )
+}
+RGEOSCrosses = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+    .Deprecated("gCrosses")
+    return( gCrosses(spgeom1,spgeom2, byid) )
+}
+RGEOSWithin = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+    .Deprecated("gWithin")
+    return( gWithin(spgeom1,spgeom2, byid) )
+}
+RGEOSContains = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+    .Deprecated("gContains")
+    return( gContains(spgeom1,spgeom2, byid) )
+}
+RGEOSOverlaps = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+    .Deprecated("gOverlaps")
+    return( gOverlaps(spgeom1,spgeom2, byid) )
+}
+RGEOSEquals = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+    .Deprecated("gEquals")
+    return( gEquals(spgeom1,spgeom2, byid) )
+}
+RGEOSEqualsExact = function(spgeom1, spgeom2 = NULL, tol=0.0, byid = FALSE) {
+    .Deprecated("gEqualsexact")
+    return( gEqualsExact(spgeom1,spgeom2,tol, byid) )
+}
+RGEOSRelate = function(spgeom1, spgeom2 = NULL, pattern = NULL, byid = FALSE) {
+    .Deprecated("gRelate")
+    return( gRelate(spgeom1,spgeom2,pattern, byid) )
 }

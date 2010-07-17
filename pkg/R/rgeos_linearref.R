@@ -1,7 +1,3 @@
-RGEOSProject = function(spg, spp){}
+gProject = function(spg, spp,normalized=FALSE){}
 
-RGEOSInterpolate = function(spgeom, d){}
-
-RGEOSProjectNormalized = function(spgeom, d){}
-
-RGEOSInterpolateNormalized = function(spgeom, d){}
+gInterpolate = function(spgeom, d,normalized=FALSE){}
