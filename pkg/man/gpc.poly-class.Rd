@@ -108,10 +108,7 @@ legend("topleft", legend=c("intersection", "p1 \\\\ p2 difference", "p2 \\\\ p1 
 plot(union(p1, p2), poly.args = list(col = 2))
 text(316.5, 94.0, "Unary union")
 
-res <- UnionGpcGEOS(slot(p1, "pts"), slot(p2, "pts"), unary=FALSE)
-p3 <- new("gpc.poly", pts=res)
-plot(p3, poly.args = list(col = 2))
-text(316.5, 94.0, "Not unary union")
+
 
 ## Coerce from a matrix
 x <- 
