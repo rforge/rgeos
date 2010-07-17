@@ -1,42 +1,132 @@
-SymDiffGpcGEOS <- function(gpclist1, gpclist2) {
-    stopifnot(length(gpclist1) > 0)
-    stopifnot(length(gpclist2) > 0)
-    gpclist1 <- checkHolesGPC(gpclist1)
-    gpclist2 <- checkHolesGPC(gpclist2)
-    .Call("SymDiffGpcGEOS", .RGEOS_HANDLE, gpclist1, gpclist2, PACKAGE="rgeos")
+rgeos_SpatialPolygons2gpcpoly <- function(from) {
+	
+	if (!inherits(from,"SpatialPolygons"))
+		stop("sp does not inherit from SpatialPolygons")
+	
+	gpcs = list()
+	for(i in 1:length(from@polygons)) {
+		polys = from@polygons[[i]]
+		
+		pts = list()
+		for(j in 1:length(polys@Polygons)) {
+			coords = polys@Polygons[[j]]@coords
+			hole = polys@Polygons[[j]]@hole
+			l=nrow(coords)
+			
+			pts[[j]] = list(x=coords[-l,1],y=coords[-l,2],hole=hole)
+		}
+		
+		gpc = new("gpc.poly", pts = pts)
+		gpcs[i] = gpc
+	}
+	
+	if (length(gpcs) == 0)
+		gpcs = NULL
+	if (length(gpcs) == 1)
+		gpcs = gpcs[[1]]
+
+	return(gpcs)
 }
 
-DiffGpcGEOS <- function(gpclist1, gpclist2) {
-    stopifnot(length(gpclist1) > 0)
-    stopifnot(length(gpclist2) > 0)
-    gpclist1 <- checkHolesGPC(gpclist1)
-    gpclist2 <- checkHolesGPC(gpclist2)
-    .Call("DiffGpcGEOS", .RGEOS_HANDLE, gpclist1, gpclist2, PACKAGE="rgeos")
+rgeos_gpcpoly2SpatialPolygons <- function(from) {
+	
+	if (!is.list(from))
+		from = list(from)
+		
+	res=list()
+	for (m in 1:length(from)) {
+		gpc = from[[m]]
+		
+		if (!inherits(gpc,"gpc.poly"))
+			stop("gpc does not inherit from gpc.poly")
+	
+		npoly = length(gpc@pts)
+		if (npoly < 1)
+			stop("must be at least one polygon")
+	
+		polylist = list()
+		holes = rep(FALSE,npoly)
+		for (i in 1:npoly) {
+			x=gpc@pts[[i]]$x
+			y=gpc@pts[[i]]$y
+		
+			l=length(x)
+			if (x[1]!=x[l] | y[1]!=y[l]) {
+				x = c(x,x[1])
+				y = c(y,y[1])
+			}
+			
+			polylist[i] = Polygon(cbind(x,y),gpc@pts[[i]]$hole)
+			holes[i] = gpc@pts[[i]]$hole
+		}
+	
+		if (sum(holes)==0) {
+			res[[m]] = Polygons(polylist,m)
+			attr(res[[m]],"comment") = paste(rep(0,npoly),collapse=" ")
+			next
+		}
+		
+		templist = list()
+		for(i in 1:npoly) {
+			templist[i] = Polygons(list(polylist[[i]]),i)
+		}
+		tempsp = SpatialPolygons(templist)
+		
+		owners = gContains(tempsp[!holes],tempsp[holes],byid=TRUE)
+	
+		#make sure all holes belong to only one polygon
+		for(i in 1:nrow(owners)) {
+			ncontain = sum(owners[i,])
+			if (ncontain==0) {
+				stop("Invalid polygon(s), hole is not contained within given polygons")
+			} else if (ncontain > 1){
+				#if a hole is inside multiple polygons then pick the one with the smallest area
+				
+				areas = sapply(tempsp@polygons[which(!holes)[owners[i,]]], function(x) x@Polygons[[1]]@area )
+				iown = which(owners[i,])[which.min(areas)]
+				
+				owners[i,] = FALSE
+				owners[i, iown] = TRUE
+			}
+		}
+	
+	
+		comm = rep(NA,npoly)
+		k=1		
+		for(i in which(!holes)) {
+			
+			comm[i] = 0
+			for (j in which(holes)[which(owners[,k])]) {
+				comm[j] = i
+			}
+			k=k+1	
+		}
+	
+		res[[m]] = Polygons(polylist,m)
+		attr(res[[m]],"comment") = paste(comm,collapse=" ")
+	}
+	
+	return( SpatialPolygons(res) )
+}
+
+setAs("SpatialPolygons", "gpc.poly", rgeos_SpatialPolygons2gpcpoly)
+setAs("gpc.poly", "SpatialPolygons", rgeos_gpcpoly2SpatialPolygons)
+
+setAs("SpatialPolygons", "gpc.poly.nohole", rgeos_SpatialPolygons2gpcpoly)
+setAs("gpc.poly.nohole", "SpatialPolygons", rgeos_gpcpoly2SpatialPolygons)
+
+
+areaGPC <- function(x.mat) {
+    if(nrow(x.mat) < 3) 
+        return(0);   
+    x.segmat <- cbind(x.mat, rbind(x.mat[2:nrow(x.mat), ],
+         x.mat[1, ]));
+    abs(sum(x.segmat[,1] * x.segmat[,4] - x.segmat[,3]
+        * x.segmat[,2])) / 2
 }
 
 
-UnionGpcGEOS <- function(gpclist1, gpclist2, unary=TRUE) {
-    stopifnot(length(gpclist1) > 0)
-    stopifnot(length(gpclist2) > 0)
-    gpclist1 <- checkHolesGPC(gpclist1)
-    gpclist2 <- checkHolesGPC(gpclist2)
-    if (unary) {
-        gpclist <- c(gpclist1, gpclist2)
-        res <- .Call("UnaryUnionGpcGEOS", .RGEOS_HANDLE, gpclist, PACKAGE="rgeos")
-    } else {
-        res <- .Call("UnionGpcGEOS", .RGEOS_HANDLE, gpclist1, gpclist2, PACKAGE="rgeos")
-    }
-    res
-}
 
-
-IntersectGpcGEOS <- function(gpclist1, gpclist2) {
-    stopifnot(length(gpclist1) > 0)
-    stopifnot(length(gpclist2) > 0)
-    gpclist1 <- checkHolesGPC(gpclist1)
-    gpclist2 <- checkHolesGPC(gpclist2)
-    .Call("IntersectGpcGEOS", .RGEOS_HANDLE, gpclist1, gpclist2, PACKAGE="rgeos")
-}
 
 
 checkHolesGPC <- function(gpclist) {

@@ -1,173 +1,44 @@
 #include "rgeos.h"
 
-SEXP IntersectGpcGEOS(SEXP env, SEXP A, SEXP B) {
-
-    GEOSGeom GCA, GCB, GCC;
-    SEXP res;
-    int pc=0;
-
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    GCA = GCPPtsGC(env, A);
-    GCB = GCPPtsGC(env, B);
-
-    if ((GCC = GEOSIntersection_r(GEOShandle, GCA, GCB)) == NULL) {
-        GEOSGeom_destroy_r(GEOShandle, GCA);
-        GEOSGeom_destroy_r(GEOShandle, GCB);
-        error("IntersectGpcGEOS: intersection not created");
-    }
-    GEOSGeom_destroy_r(GEOShandle, GCA);
-    GEOSGeom_destroy_r(GEOShandle, GCB);
-    PROTECT(res = GCGCPPts(env, GCC)); pc++;
-//    GEOSGeom_destroy_r(GEOShandle, GCC); now crashing on memory not mapped
-    UNPROTECT(pc);
-    return(res);
-
-}
-
-SEXP UnionGpcGEOS(SEXP env, SEXP A, SEXP B) {
-
-    GEOSGeom GCA, GCB, GCC;
-    SEXP res;
-    int pc=0;
-
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    GCA = GCPPtsGC(env, A);
-    GCB = GCPPtsGC(env, B);
-
-    if ((GCC = GEOSUnion_r(GEOShandle, GCA, GCB)) == NULL) {
-        GEOSGeom_destroy_r(GEOShandle, GCA);
-        GEOSGeom_destroy_r(GEOShandle, GCB);
-        error("UnionGpcGEOS: union not created");
-    }
-
-    GEOSGeom_destroy_r(GEOShandle, GCA);
-    GEOSGeom_destroy_r(GEOShandle, GCB);
-    PROTECT(res = GCGCPPts(env, GCC)); pc++;
-//    GEOSGeom_destroy_r(GEOShandle, GCC); now crashing on memory not mapped
-    UNPROTECT(pc);
-    return(res);
-
-}
-
-SEXP SymDiffGpcGEOS(SEXP env, SEXP A, SEXP B) {
-
-    GEOSGeom GCA, GCB, GCC;
-    SEXP res;
-    int pc=0;
-
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    GCA = GCPPtsGC(env, A);
-    GCB = GCPPtsGC(env, B);
-
-    if ((GCC = GEOSSymDifference_r(GEOShandle, GCA, GCB)) == NULL) {
-        GEOSGeom_destroy_r(GEOShandle, GCA);
-        GEOSGeom_destroy_r(GEOShandle, GCB);
-        error("SymDiffGpcGEOS: symmetric difference not created");
-    }
-
-    GEOSGeom_destroy_r(GEOShandle, GCA);
-    GEOSGeom_destroy_r(GEOShandle, GCB);
-    PROTECT(res = GCGCPPts(env, GCC)); pc++;
-//    GEOSGeom_destroy_r(GEOShandle, GCC); now crashing on memory not mapped
-    UNPROTECT(pc);
-    return(res);
-
-}
-
-
-SEXP DiffGpcGEOS(SEXP env, SEXP A, SEXP B) {
-
-    GEOSGeom GCA, GCB, GCC;
-    SEXP res;
-    int pc=0;
-
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    GCA = GCPPtsGC(env, A);
-    GCB = GCPPtsGC(env, B);
-
-    if ((GCC = GEOSDifference_r(GEOShandle, GCA, GCB)) == NULL) {
-        GEOSGeom_destroy_r(GEOShandle, GCA);
-        GEOSGeom_destroy_r(GEOShandle, GCB);
-        error("SymDiffGpcGEOS: symmetric difference not created");
-    }
-
-    GEOSGeom_destroy_r(GEOShandle, GCA);
-    GEOSGeom_destroy_r(GEOShandle, GCB);
-    PROTECT(res = GCGCPPts(env, GCC)); pc++;
-//    GEOSGeom_destroy_r(GEOShandle, GCC); now crashing on memory not mapped
-    UNPROTECT(pc);
-    return(res);
-
-}
-
-SEXP UnaryUnionGpcGEOS(SEXP env, SEXP A) {
-
-    GEOSGeom GCA, GCC;
-    SEXP res;
-    int pc=0;
-
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    GCA = GCPPtsGC(env, A);
-    if ((GCC = GEOSUnionCascaded_r(GEOShandle, GCA)) == NULL) {
-        error("UnaryUnionGpcGEOS: unary union not created");
-    }
-
-    PROTECT(res = GCGCPPts(env, GCC)); pc++;
-    UNPROTECT(pc);
-    return(res);
-}
 
 
 SEXP checkHolesGPC(SEXP env, SEXP A) {
 
-    GEOSGeom GC;
-
-    GC = GCPPtsGC(env, A);
-
+    GEOSGeom GC = GCPPtsGC(env, A);
     return(GC_Contains(env, GC));
-
 }
 
 
 GEOSGeom GPCptPolygon(SEXP env, SEXP obj) {
 
-    GEOSGeom g1, p1;
-
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
-    g1 = GPCpt2LinearRing(env, obj);
-
-    if ((p1 = GEOSGeom_createPolygon_r(GEOShandle, g1, NULL,
-        (unsigned int) 0)) == NULL) {
+    GEOSGeom g1 = GPCpt2LinearRing(env, obj);
+	GEOSGeom p1 = GEOSGeom_createPolygon_r(GEOShandle, g1, NULL, (unsigned int) 0);
+    if (p1 == NULL) {
         GEOSGeom_destroy_r(GEOShandle, g1);
         error("GPCptPolygon: Polygon not created");
     }
 
     return(p1);
-
 }
 
 GEOSGeom GPCpt2LinearRing(SEXP env, SEXP obj) {
 
-    GEOSCoordSeq s;
-
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
-    s = GPCpt2CoordSeq(env, obj);
-
-    GEOSGeom gl;
-    if ((gl = GEOSGeom_createLinearRing_r(GEOShandle, s)) == NULL) {
+    GEOSCoordSeq s = GPCpt2CoordSeq(env, obj);
+    GEOSGeom gl = GEOSGeom_createLinearRing_r(GEOShandle, s);
+    if (gl == NULL) {
         GEOSGeom_destroy_r(GEOShandle, gl);
         error("GPCpt2LinearRing: linearRing not created");
     }
-    if ((int) GEOSisValid_r(GEOShandle, gl) == 1) {
-        if (GEOSNormalize_r(GEOShandle, gl) == -1)
-            warning("GPCpt2LinearRing: normalization failure");
+
+
+    if (GEOSisValid_r(GEOShandle, gl)) {
+		int norm = GEOSNormalize_r(GEOShandle, gl);
+		if (norm == -1)
+			warning("GPCpt2LinearRing: normalization failure");
     } else {
         warning("GPCpt2LinearRing: validity failure");
     }
@@ -177,81 +48,69 @@ GEOSGeom GPCpt2LinearRing(SEXP env, SEXP obj) {
 
 GEOSCoordSeq GPCpt2CoordSeq(SEXP env, SEXP obj) {
 
-    unsigned int i, n, m;
-    n = (unsigned int) length(VECTOR_ELT(obj, 0));
-    m = 2;
-
-    GEOSCoordSeq s;
+    int n = length(VECTOR_ELT(obj, 0));
+    int m = 2;
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
+    GEOSCoordSeq s = GEOSCoordSeq_create_r(GEOShandle, (n+1), m);
 
-    s = GEOSCoordSeq_create_r(GEOShandle, (n+1), m);
+    for(int i=0; i<n; i++) {
+		double x = NUMERIC_POINTER(VECTOR_ELT(obj, 0))[i];
+		double y = NUMERIC_POINTER(VECTOR_ELT(obj, 1))[i];
 
-    for(i=0; i<n; i++) {
-        if (GEOSCoordSeq_setX_r(GEOShandle, s, i, 
-            NUMERIC_POINTER(VECTOR_ELT(obj, 0))[i]) == 0) {
-            GEOSCoordSeq_destroy_r(GEOShandle, s);
-            error("GPCpt2CoordSeq: X not set for %d", i);
-        }
-        if (GEOSCoordSeq_setY_r(GEOShandle, s, i, 
-            NUMERIC_POINTER(VECTOR_ELT(obj, 1))[i]) == 0) {
-            GEOSCoordSeq_destroy_r(GEOShandle, s);
-            error("GPCpt2CoordSeq: Y not set for %d", i);
+		if (GEOSCoordSeq_setX_r(GEOShandle, s, i, x) == 0 || 
+			GEOSCoordSeq_setY_r(GEOShandle, s, i, y) == 0) {
+            
+			GEOSCoordSeq_destroy_r(GEOShandle, s);
+            error("GPCpt2CoordSeq: X or Y not set for %d", i);
         }
     }
-// enforce ring closure
-    if (GEOSCoordSeq_setX_r(GEOShandle, s, n, 
-        NUMERIC_POINTER(VECTOR_ELT(obj, 0))[0]) == 0) {
-        GEOSCoordSeq_destroy_r(GEOShandle, s);
-        error("GPCpt2CoordSeq: X not set for %d", i);
-    }
-    if (GEOSCoordSeq_setY_r(GEOShandle, s, n, 
-        NUMERIC_POINTER(VECTOR_ELT(obj, 1))[0]) == 0) {
-        GEOSCoordSeq_destroy_r(GEOShandle, s);
-        error("GPCpt2CoordSeq: Y not set for %d", i);
+
+	double x = NUMERIC_POINTER(VECTOR_ELT(obj, 0))[0];
+	double y = NUMERIC_POINTER(VECTOR_ELT(obj, 1))[0];
+
+	if (GEOSCoordSeq_setX_r(GEOShandle, s, n, x) == 0 || 
+		GEOSCoordSeq_setY_r(GEOShandle, s, n, y) == 0) {
+        
+		GEOSCoordSeq_destroy_r(GEOShandle, s);
+        error("GPCpt2CoordSeq: X or Y not set for %d", n);
     }
 
     return(s);
-
 }
 
 
 GEOSGeom GCPPtsGC(SEXP env, SEXP pls) {
 
-    SEXP comm;
-    GEOSGeom *geoms;
-    GEOSGeom Pol, GC;
-    int npls, i, pc=0;
-
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
-    npls = length(pls);
-    PROTECT(comm = SP_PREFIX(comment2comm)(pls)); pc++;
+    int npls = length(pls);
+    
+	int pc=0;
+	SEXP comm;
+	PROTECT(comm = SP_PREFIX(comment2comm)(pls)); pc++;
 
+	GEOSGeom *geoms;
     if (comm == R_NilValue) {
         geoms = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
 
-        for (i=0; i<npls; i++) {
-            Pol = GPCptPolygon(env, VECTOR_ELT(pls, i));
-            geoms[i] = Pol;
-        }
-        if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON,
-            geoms, npls)) == NULL) {
-            error("GCPPtsGC: collection not created");
+        for (int i=0; i<npls; i++) {
+            geoms[i] = GPCptPolygon(env, VECTOR_ELT(pls, i));
         }
     } else {
-
         int nErings = length(comm);
         geoms = (GEOSGeom *) R_alloc((size_t) nErings, sizeof(GEOSGeom));
-        for (i=0; i<nErings; i++) {
-            Pol = GPCpt_i_Polygon(env, pls, VECTOR_ELT(comm, i));
-            geoms[i] = Pol;
-        }
-        if ((GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON,
-            geoms, nErings)) == NULL) {
-            error("GCPPtsGC: collection not created");
+        
+		for (int i=0; i<nErings; i++) {
+            geoms[i] = GPCpt_i_Polygon(env, pls, VECTOR_ELT(comm, i));
         }
     }
+
+	GEOSGeom GC = (npls == 1) ? geoms[0]
+		: GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, npls);
+    
+	if (GC == NULL)
+        error("GCPPtsGC: collection not created");
 
     UNPROTECT(pc);
     return(GC);
