@@ -17,6 +17,8 @@ export(Ring,SpatialRings,SpatialRingsDataFrame)
 exportClasses(SpatialCollections)
 export(SpatialCollections)
 
+exportMethods(row.names)
+
 # Utility Functions
 export(getScale,setScale,doubletranslate,groupID)
 

@@ -35,7 +35,8 @@ readWKT = function( text, id = NULL, p4s = NULL) {
              error = function(e) { stop( paste( "Unable to parse: ",wkt,"\n",
                                                 "GEOS reported: \"", e$message,"\"",sep=""),call.=FALSE) } )
     
-    if (length(unique(row.names(res))) != ngeoms)
+	#if (length(unique(row.names(res))) != ngeoms)
+	if ( sum(sapply(row.names(res),length)) != ngeoms )
         warning("Number of geometries does not match between object and text, check WKT validity.",call.=FALSE)
     
     return( res )

@@ -371,3 +371,14 @@ plotSpatialCollections <- function(SC,
 		
 setMethod("plot", signature(x = "SpatialCollections", y = "missing"),
 	function(x, y, ...) plotSpatialCollections(x, ...))
+	
+setMethod("row.names", "SpatialCollections", function(x) {
+	
+	ans = list()
+	if (!is.null(x@pointobj)) ans$points = row.names(x@pointobj)
+	if (!is.null(x@lineobj)) ans$lines = row.names(x@lineobj)
+	if (!is.null(x@ringobj)) ans$rings = row.names(x@ringobj)
+	if (!is.null(x@polyobj)) ans$polygons = row.names(x@polyobj)
+	
+	return(ans)
+})
