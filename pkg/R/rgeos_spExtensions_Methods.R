@@ -309,16 +309,15 @@ plotSpatialCollections <- function(SC,
 								   add = FALSE, axes = FALSE, ...,
 	  							   setParUsrBB=FALSE) {
 		
-	first = TRUE
+	if (!add) {
+		plot(as(SC,"Spatial"), xlim=xlim, ylim=ylim, axes=axes, 
+			 ..., setParUsrBB=setParUsrBB)
+	}
+	add=TRUE
+	
 	for (i in order(SC@plotOrder)) {
-		if (first) {
-			first = FALSE
-		} else {
-			add = TRUE
-		}
 		
 		if (i == 1 & !is.null(SC@pointobj)) { # plot points
-			print("point")
 			ptpch = pch
 			ptcex = cex
 			ptcol = col
@@ -335,7 +334,6 @@ plotSpatialCollections <- function(SC,
 				 cex=ptcex, col=ptcol, lwd=ptlwd, bg=ptbg, ..., setParUsrBB=setParUsrBB)
 			
 		} else if (i == 2 & !is.null(SC@lineobj)) { #plot lines
-			print("line")
 			lcol = col
 			llwd = lwd
 			llty = lty
@@ -348,7 +346,6 @@ plotSpatialCollections <- function(SC,
 				 add=add, axes=axes, ..., setParUsrBB=setParUsrBB)
 			
 		} else if (i == 3 & !is.null(SC@ringobj)) { #plot rings
-			print("ring")
 			rcol = col
 			rlwd = lwd
 			rlty = lty
@@ -361,7 +358,6 @@ plotSpatialCollections <- function(SC,
 				 add=add, axes=axes, ..., setParUsrBB=setParUsrBB)
 				
 		} else if (i == 4 & !is.null(SC@polyobj)) { #plot polygons
-			print("poly")
 			pcol = col
 			if (!is.null(polyopt[["col"]])) pcol = polyopt[["col"]]
 			
