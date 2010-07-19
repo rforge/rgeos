@@ -14,6 +14,9 @@ export(checkHolesGPC)
 exportClasses(Ring,SpatialRings, SpatialRingsDataFrame)
 export(Ring,SpatialRings,SpatialRingsDataFrame)
 
+exportClasses(SpatialCollections)
+export(SpatialCollections)
+
 # Utility Functions
 export(getScale,setScale,doubletranslate,groupID)
 
