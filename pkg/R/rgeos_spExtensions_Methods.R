@@ -300,7 +300,7 @@ SpatialCollections <- function( points = NULL, lines = NULL,
 
 plotSpatialCollections <- function(SC, 
 								   pointopt = list(), lineopt = list(),
-								   ringopt = list(), polyopt = list(col=NA),
+								   ringopt = list(), polyopt = list(),
 								   pch = 3, cex = 1, bg = 1,
 								   col = 1, lwd = 1, lty=1,
 								   border = par("fg"), xpd = NULL, 
@@ -315,14 +315,15 @@ plotSpatialCollections <- function(SC,
 	}
 	add=TRUE
 	
+	call = match.call()
+	if (is.null(call$col) & is.null(polyopt[["col"]]))
+		polyopt[["col"]] = NA
+		
 	for (i in order(SC@plotOrder)) {
 		
 		if (i == 1 & !is.null(SC@pointobj)) { # plot points
-			ptpch = pch
-			ptcex = cex
 			ptcol = col
 			ptlwd = lwd
-			ptbg  = bg
 			
 			if (!is.null(pointopt[["pch"]])) ptpch = pointopt[["pch"]]
 			if (!is.null(pointopt[["cex"]])) ptcex = pointopt[["cex"]]
@@ -330,8 +331,8 @@ plotSpatialCollections <- function(SC,
 			if (!is.null(pointopt[["lwd"]])) ptlwd = pointopt[["lwd"]]
 			if (!is.null(pointopt[["bg"]]))  ptbg  = pointopt[["bg"]]
 			
-			plot(SC@pointobj, pch=ptpch, axes=axes, add=add, xlim=xlim, ylim=ylim, 
-				 cex=ptcex, col=ptcol, lwd=ptlwd, bg=ptbg, ..., setParUsrBB=setParUsrBB)
+			plot(SC@pointobj, pch=pch, axes=axes, add=add, xlim=xlim, ylim=ylim, 
+				 cex=cex, col=ptcol, lwd=ptlwd, bg=bg, ..., setParUsrBB=setParUsrBB)
 			
 		} else if (i == 2 & !is.null(SC@lineobj)) { #plot lines
 			lcol = col
