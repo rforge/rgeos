@@ -15,7 +15,9 @@ SEXP rgeos_double_translate(SEXP env, SEXP obj, SEXP id) {
 
 GEOSGeom rgeos_convert_R2geos(SEXP env, SEXP obj) {
     
-    char classbuf[BUFSIZ];
+	GEOSContextHandle_t GEOShandle = getContextHandle(env);
+    
+	char classbuf[BUFSIZ];
     strcpy(classbuf, CHAR( STRING_ELT(GET_CLASS(obj), 0) ));
     
     //TODO - handle DataFrame classes gracefully
@@ -28,7 +30,60 @@ GEOSGeom rgeos_convert_R2geos(SEXP env, SEXP obj) {
         ans = rgeos_SpatialRings2geosring( env, obj);
     } else if ( !strcmp(classbuf,"SpatialPolygons") || !strcmp(classbuf,"SpatialPolygonsDataFrame") ) {
         ans = rgeos_SpatialPolygons2geospolygon( env, obj);
-    } else {
+    } else if ( !strcmp(classbuf,"SpatialCollections") ) {
+		
+		SEXP pointobj = GET_SLOT(obj, install("pointobj"));
+		SEXP lineobj = GET_SLOT(obj, install("lineobj"));
+		SEXP ringobj = GET_SLOT(obj, install("ringobj"));
+		SEXP polyobj = GET_SLOT(obj, install("polyobj"));
+		
+		GEOSGeom GCs[] = {NULL,NULL,NULL,NULL};
+		int cnts[] = {0,0,0,0};
+		
+		if (pointobj != R_NilValue) {
+			GCs[0] = rgeos_SpatialPoints2geospoint(env, pointobj);
+			cnts[0] = GEOSGetNumGeometries_r(GEOShandle, GCs[0]);
+			cnts[0] = cnts[0] ? cnts[0] : 1;
+		}
+		if (lineobj != R_NilValue) {
+			GCs[1] = rgeos_SpatialLines2geosline(env, lineobj);
+			cnts[1] = GEOSGetNumGeometries_r(GEOShandle, GCs[1]);
+			cnts[1] = cnts[1] ? cnts[1] : 1;
+		}
+		if (ringobj != R_NilValue) {
+			GCs[2] = rgeos_SpatialRings2geosring(env, ringobj);
+			cnts[2] = GEOSGetNumGeometries_r(GEOShandle, GCs[2]);
+			cnts[2] = cnts[2] ? cnts[2] : 1;
+		}
+		if (polyobj != R_NilValue) {
+			GCs[3] = rgeos_SpatialPolygons2geospolygon(env, polyobj);
+			cnts[3] = GEOSGetNumGeometries_r(GEOShandle, GCs[3]);
+			cnts[3] = cnts[3] ? cnts[3] : 1;		
+		}
+		int ng = cnts[0]+cnts[1]+cnts[2]+cnts[3];
+		
+		GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) ng, sizeof(GEOSGeom));
+		int k=0;
+		for(int i=0;i<4;i++) {
+			
+			if (cnts[i] == 0) continue;
+			
+			int n = GEOSGetNumGeometries_r(GEOShandle, GCs[i]);
+			n = n ? n : 1;
+			
+			if (n == 1) {
+				geoms[k] = GCs[i];
+				k++;
+			} else if (n > 1) {
+				for(int j=0;j<cnts[i];j++) {
+					geoms[k] = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, GCs[i],j);
+					k++;
+				}
+			}
+		}
+		ans = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, ng);
+		
+	} else {
         error("rgeos_convert_R2geos: invalid R class, unable to convert");
     }
     
@@ -77,10 +132,8 @@ GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj) {
             unqcnt[j]++;
             whichid[i] = j;
         }
-                
-        GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) nunq, sizeof(GEOSGeom));
-        
-        
+		
+		GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) nunq, sizeof(GEOSGeom));
         for (j=0; j<nunq; j++) {
 
             GEOSGeom *subgeoms = (GEOSGeom *) R_alloc((size_t) unqcnt[j], sizeof(GEOSGeom));
@@ -98,7 +151,7 @@ GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj) {
             }
             if (geoms[j] == NULL) error("rgeos_SpatialPoints2geospoint: collection not created");
         }
-
+		
         if (nunq == 1) {
             GC = geoms[0];
         } else {
