@@ -98,6 +98,8 @@ SEXP rgeos_unioncascaded(SEXP env, SEXP obj, SEXP id, SEXP byid );
 SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP byid, 
                         GEOSGeom (*topofunc)(GEOSContextHandle_t, const GEOSGeom) );
 
+SEXP rgeos_simplify(SEXP env, SEXP obj, SEXP tol, SEXP id, SEXP byid, SEXP topPres);
+SEXP rgeos_polygonize(SEXP env, SEXP obj, SEXP id, SEXP p4s, SEXP cutEdges);
 
 // Binary Topology Functions - rgeos_topology_binary.c
 

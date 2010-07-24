@@ -45,6 +45,8 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_pointonsurface", (DL_FUNC) &rgeos_pointonsurface, 4},
     {"rgeos_linemerge", (DL_FUNC) &rgeos_linemerge, 4},
     {"rgeos_unioncascaded", (DL_FUNC) &rgeos_unioncascaded, 4},
+	{"rgeos_simplify", (DL_FUNC) &rgeos_simplify, 6},
+    {"rgeos_polygonize", (DL_FUNC) &rgeos_polygonize, 5},
 
     //Binary Topology Functions
     {"rgeos_difference", (DL_FUNC) &rgeos_difference, 5},

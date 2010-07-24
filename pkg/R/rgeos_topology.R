@@ -1,8 +1,57 @@
-gSimplify = function(g1, tol, topologyPreserve=FALSE) {}
+gSimplify = function(spgeom, tol, id=NULL, byid=FALSE, topologyPreserve=FALSE) {
 
-gPolygonize = function( geoms, ngeoms) {}
+	getCutEdges = as.logical(topologyPreserve)
+	if (is.na(topologyPreserve))
+		stop("Invalid value for topologyPreserve, must be logical")
+	
+    byid = as.logical(byid)
+    if (is.na(byid)) 
+        stop("Invalid value for byid, must be logical")
 
-gPolygonizer_getCutEdges = function(geoms, ngeoms) {}
+    curids = unique(row.names(spgeom))
+    if (is.null(id)) {
+        if (byid)   id = curids
+        else        id = "1"
+    }
+    id = as.character(id)
+
+    if ( length(id) != length(unique(id)) )
+        stop("Non-unique values for id ")
+
+    if ( !(!byid && length(id) == 1) && !(byid && length(id) == length(curids)) )
+        stop("Invalid number of values in id" ) 
+
+    return( .Call("rgeos_simplify", .RGEOS_HANDLE, spgeom, tol, id, 
+									byid, topologyPreserve, PACKAGE="rgeos") )
+}
+
+gPolygonize = function( splist, getCutEdges=FALSE) {
+	
+	if (!is.list(splist))
+		splist = list(splist)
+
+	p4slist = lapply(splist,function(x) x@proj4string)
+	
+	p4s = p4slist[[1]]
+	if (length(p4slist) != 1) {
+		for(i in 2:length(p4slist)) {
+			if (!identical(p4s, p4slist[[i]]))
+				stop("spgeoms in splist have different proj4strings")
+		}
+	}
+	
+
+	getCutEdges = as.logical(getCutEdges)
+	if (is.na(getCutEdges))
+		stop("Invalid value for getCutEdges, must be logical")
+	
+	nid = sum(sapply(list(x),function(x) length(unlist(row.names(x)))))
+    id = as.character(1:nid)
+
+    return( .Call("rgeos_polygonize", .RGEOS_HANDLE, splist, id, p4s,
+									getCutEdges, PACKAGE="rgeos") )
+}
+
 
 
 
