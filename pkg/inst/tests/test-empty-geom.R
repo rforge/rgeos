@@ -3,6 +3,13 @@ library(rgeos)
 
 context("Translation empty geometries")
 
+test_that("empty geometrycollection", {
+	gc1 = readWKT("GEOMETRYCOLLECTION EMPTY")
+
+	expect_that( gc1,  is_identical_to(doubletranslate(gc1)) )
+})
+
+
 test_that("empty points", {
     p1 = readWKT("POINT EMPTY")
     p2 = readWKT("MULTIPOINT EMPTY")
