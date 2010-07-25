@@ -72,7 +72,6 @@ gRelate = function(spgeom1, spgeom2 = NULL, pattern = NULL, byid = FALSE) {
 	if (is.null(pattern)) {
 		return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_relate") )
 	} else {
-		print(pattern)
 		if ( !is.character(pattern) )
 			stop("Invalid value for pattern, must be character")
 		pattern = toupper(pattern)
