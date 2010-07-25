@@ -86,7 +86,6 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
             } else if ( isRing && !isPoint && !isLine && !isPoly && !isGC ) {
                 PROTECT( ans = rgeos_geosring2SpatialRings(env, geom, p4s, id, ng) ); pc++;    
             } else {
-				Rprintf("CHERE\n");
 				GEOSGeom *GCS[4];
 				GCS[0] = (!isPoint) ? NULL :
 						 (GEOSGeom *) R_alloc((size_t) isPoint, sizeof(GEOSGeom));
