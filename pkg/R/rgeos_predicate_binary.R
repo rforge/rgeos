@@ -72,14 +72,18 @@ gRelate = function(spgeom1, spgeom2 = NULL, pattern = NULL, byid = FALSE) {
 	if (is.null(pattern)) {
 		return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_relate") )
 	} else {
+		print(pattern)
+		if ( !is.character(pattern) )
+			stop("Invalid value for pattern, must be character")
+		pattern = toupper(pattern)
 		
 	    if (length(pattern) != 1)
 	        stop("Pattern must have length of 1")
     
-	    if ( !is.character(pattern) || nchar(pattern) != 9 || !grepl("[0-2TF\\*]{9}",pattern) )
+	    if (nchar(pattern) != 9 || !grepl("[0-2TF\\*]{9}",pattern) )
 	        stop("Invalid pattern, see documentation for proper format")
     
-	    return( RGEOSRelate(spgeom1, spgeom2, byid ) == pattern )
+	    return( gRelate(spgeom1, spgeom2, NULL,byid ) == pattern )
 	}
 }
 
