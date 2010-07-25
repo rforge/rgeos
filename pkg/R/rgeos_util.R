@@ -33,8 +33,11 @@ checkP4S = function(proj4string) {
 
 doubletranslate = function(obj) {
     
-    ids = unlist( sapply(row.names(obj), unique) )
-
+	rn = row.names(obj)
+	if (!is.list(rn))
+		rn = list(rn)
+	
+    ids = unlist( sapply(rn, unique) ))
     x = .Call("rgeos_double_translate", .RGEOS_HANDLE, obj, ids, 0, PACKAGE="rgeos")
     return(x)
 }

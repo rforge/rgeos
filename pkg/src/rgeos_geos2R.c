@@ -2,21 +2,20 @@
 
 SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
     
-	
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-    
+	GEOSContextHandle_t GEOShandle = getContextHandle(env);
+
     int type = GEOSGeomTypeId_r(GEOShandle, geom);
     int ng = GEOSGetNumGeometries_r(GEOShandle, geom);
     if (ng == -1) error("rgeos_convert_geos2R: invalid number of subgeometries"); 
     
-	if (type == GEOS_GEOMETRYCOLLECTION && !ng && GEOSisEmpty_r(GEOShandle,geom))
+	if (type == GEOS_GEOMETRYCOLLECTION && ng==0 && GEOSisEmpty_r(GEOShandle,geom))
 	    return(R_NilValue);
 	
 	ng = ng ? ng : 1; // Empty MULTI type geometries return size 0
-    
-    int pc=0;
-    SEXP ans;
 
+    int pc=0;
+
+    SEXP ans;
     switch(type) { // Determine appropriate conversion for the collection
         case -1:
             error("rgeos_convert_geos2R: unknown geometry type");
@@ -60,22 +59,20 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
                 n += ns;
                 
 				int type =  GEOSGeomTypeId_r(GEOShandle, subgeom);
+				if (type == GEOS_GEOMETRYCOLLECTION)
+					error("Geometry collections may not contain other geometry collections");
+				
 				types[i] = type;
                 gctypes[ type ] += 1; 
 				gctypen[ type ] += ns;
             }
-            
+
             int isPoint = gctypes[GEOS_POINT] + gctypes[GEOS_MULTIPOINT];
             int isLine  = gctypes[GEOS_LINESTRING] + gctypes[GEOS_MULTILINESTRING];
             int isPoly  = gctypes[GEOS_POLYGON] + gctypes[GEOS_MULTIPOLYGON];
             int isRing  = gctypes[GEOS_LINEARRING];
             int isGC    = gctypes[GEOS_GEOMETRYCOLLECTION];
-            
-            //Rprintf("isPoint: %d  isLine: %d  isPoly: %d  isRing: %d  isGC: %d\n",isPoint, isLine, isPoly, isRing, isGC);
-            
-            if ( isGC ) {
-                error("Geometry collections may not contain other geometry collections");
-            }
+
 			
             if ( isPoint && !isLine && !isPoly && !isRing && !isGC ) {
 				PROTECT( ans = rgeos_geospoint2SpatialPoints(env, geom, p4s, id, n) ); pc++;
@@ -86,6 +83,20 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
             } else if ( isRing && !isPoint && !isLine && !isPoly && !isGC ) {
                 PROTECT( ans = rgeos_geosring2SpatialRings(env, geom, p4s, id, ng) ); pc++;    
             } else {
+	
+				//Rprintf("isPoint: %d  isLine: %d  isPoly: %d  isRing: %d  isGC: %d\n",isPoint, isLine, isPoly, isRing, isGC);
+				
+				int m = MAX(MAX(MAX(isPoint,isLine),isPoly),isRing);
+				if (length(id) < m) {
+					char buf[BUFSIZ];
+
+					PROTECT(id = NEW_CHARACTER(m)); pc++;
+					for (int i=0;i<m;i++) {
+						sprintf(buf,"%d",i);
+						SET_STRING_ELT(id, i, COPY_TO_USER_STRING(buf));
+					}
+				}
+				
 				GEOSGeom *GCS[4];
 				GCS[0] = (!isPoint) ? NULL :
 						 (GEOSGeom *) R_alloc((size_t) isPoint, sizeof(GEOSGeom));
@@ -110,19 +121,19 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
 					
 					if (types[i]==GEOS_POINT || types[i]==GEOS_MULTIPOINT) {
 						GCS[0][typei[0]] = subgeom;
-						SET_STRING_ELT(ptID, typei[0], STRING_ELT(id,i));
+						SET_STRING_ELT(ptID, typei[0], STRING_ELT(id,typei[0]));
 						typei[0]++;
 					} else if (types[i]==GEOS_LINESTRING || types[i]==GEOS_MULTILINESTRING) {
 						GCS[1][typei[1]] = subgeom;
-						SET_STRING_ELT(lID, typei[1], STRING_ELT(id,i));
+						SET_STRING_ELT(lID, typei[1], STRING_ELT(id,typei[1]));
 						typei[1]++;
 					} else if (types[i]==GEOS_LINEARRING) {
 						GCS[2][typei[2]] = subgeom;
-						SET_STRING_ELT(rID, typei[2], STRING_ELT(id,i));
+						SET_STRING_ELT(rID, typei[2], STRING_ELT(id,typei[2]));
 						typei[2]++;
 					} else if (types[i]==GEOS_POLYGON || types[i]==GEOS_MULTIPOLYGON) {
 						GCS[3][typei[3]] = subgeom;
-						SET_STRING_ELT(pID, typei[3], STRING_ELT(id,i));
+						SET_STRING_ELT(pID, typei[3], STRING_ELT(id,typei[3]));
 						typei[3]++;
 					}
 				}		 

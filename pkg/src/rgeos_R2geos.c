@@ -107,10 +107,7 @@ GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj) {
         GC = rgeos_xy2Pt(env, NUMERIC_POINTER(crds)[0], NUMERIC_POINTER(crds)[1]);
     } else if ( n != 1 ) {
         int pc = 0;
-        int *unique  = (int *) R_alloc((size_t) n, sizeof(int));
-        int *unqcnt  = (int *) R_alloc((size_t) n, sizeof(int));
-        int *whichid = (int *) R_alloc((size_t) n, sizeof(int));
-        int nunq = 1;
+
 
         SEXP ids;
         PROTECT(ids = VECTOR_ELT( getAttrib(crds, R_DimNamesSymbol), 0 ));pc++;
@@ -126,6 +123,11 @@ GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj) {
 	        if (GC == NULL) error("rgeos_SpatialPoints2geospoint: collection not created");
 			
 		} else {
+			
+			int *unique  = (int *) R_alloc((size_t) n, sizeof(int));
+	        int *unqcnt  = (int *) R_alloc((size_t) n, sizeof(int));
+	        int *whichid = (int *) R_alloc((size_t) n, sizeof(int));
+	        int nunq = 1;
 
 	        unique[0] = 0;
 	        unqcnt[0] = 1;
@@ -148,7 +150,6 @@ GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj) {
 	            unqcnt[j]++;
 	            whichid[i] = j;
 	        }
-		
 		
 			GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) nunq, sizeof(GEOSGeom));
 	        for (int j=0; j<nunq; j++) {
