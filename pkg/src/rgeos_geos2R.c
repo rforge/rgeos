@@ -2,15 +2,21 @@
 
 SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
     
+	
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
     int type = GEOSGeomTypeId_r(GEOShandle, geom);
     int ng = GEOSGetNumGeometries_r(GEOShandle, geom);
     if (ng == -1) error("rgeos_convert_geos2R: invalid number of subgeometries"); 
-    ng = ng ? ng : 1; // Empty MULTI type geometries return size 0
+    
+	if (type == GEOS_GEOMETRYCOLLECTION && !ng && GEOSisEmpty_r(GEOShandle,geom))
+	    return(R_NilValue);
+	
+	ng = ng ? ng : 1; // Empty MULTI type geometries return size 0
     
     int pc=0;
     SEXP ans;
+
     switch(type) { // Determine appropriate conversion for the collection
         case -1:
             error("rgeos_convert_geos2R: unknown geometry type");
@@ -37,9 +43,6 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
         
         case GEOS_GEOMETRYCOLLECTION:
         {    
-            
-            if (GEOSisEmpty_r(GEOShandle,geom))
-                return(R_NilValue);
             
             int gctypes[] = {0,0,0,0,0,0,0,0};
 			int gctypen[] = {0,0,0,0,0,0,0,0};
@@ -73,16 +76,17 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
             if ( isGC ) {
                 error("Geometry collections may not contain other geometry collections");
             }
-            
+			
             if ( isPoint && !isLine && !isPoly && !isRing && !isGC ) {
-                PROTECT( ans = rgeos_geospoint2SpatialPoints(env, geom, p4s, id, n) ); pc++;
+				PROTECT( ans = rgeos_geospoint2SpatialPoints(env, geom, p4s, id, n) ); pc++;
             } else if ( isLine && !isPoint && !isPoly && !isRing && !isGC ) {
-                PROTECT( ans = rgeos_geosline2SpatialLines(env, geom, p4s, id, ng) ); pc++;
+				PROTECT( ans = rgeos_geosline2SpatialLines(env, geom, p4s, id, ng) ); pc++;
             } else if ( isPoly && !isPoint && !isLine && !isRing && !isGC ) {
                 PROTECT( ans = rgeos_geospolygon2SpatialPolygons(env, geom, p4s,id, ng) ); pc++;
             } else if ( isRing && !isPoint && !isLine && !isPoly && !isGC ) {
                 PROTECT( ans = rgeos_geosring2SpatialRings(env, geom, p4s, id, ng) ); pc++;    
             } else {
+				Rprintf("CHERE\n");
 				GEOSGeom *GCS[4];
 				GCS[0] = (!isPoint) ? NULL :
 						 (GEOSGeom *) R_alloc((size_t) isPoint, sizeof(GEOSGeom));

@@ -6,7 +6,7 @@ SEXP rgeos_double_translate(SEXP env, SEXP obj, SEXP id) {
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
     GEOSGeom geom = rgeos_convert_R2geos( env, obj);
-    SEXP p4s = GET_SLOT(obj, install("proj4string"));
+    SEXP p4s = (obj == R_NilValue) ? R_NilValue : GET_SLOT(obj, install("proj4string"));
     
     SEXP ans = rgeos_convert_geos2R(env, geom, p4s, id); 
     
@@ -17,6 +17,9 @@ GEOSGeom rgeos_convert_R2geos(SEXP env, SEXP obj) {
     
 	GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
+	if (obj == R_NilValue)
+		return(GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, NULL, 0));
+
 	char classbuf[BUFSIZ];
     strcpy(classbuf, CHAR( STRING_ELT(GET_CLASS(obj), 0) ));
     
