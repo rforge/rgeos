@@ -37,7 +37,7 @@ doubletranslate = function(obj) {
 	if (!is.list(rn))
 		rn = list(rn)
 	
-    ids = unlist( sapply(rn, unique) ))
+    ids = unlist( sapply(rn, unique) )
     x = .Call("rgeos_double_translate", .RGEOS_HANDLE, obj, ids, 0, PACKAGE="rgeos")
     return(x)
 }
