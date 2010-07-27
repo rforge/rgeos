@@ -1,6 +1,7 @@
 library(testthat)
 library(rgeos)
 
+setScale()
 context("Translation empty geometries")
 
 test_that("empty geometrycollection", {

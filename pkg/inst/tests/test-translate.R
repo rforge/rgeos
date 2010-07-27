@@ -1,6 +1,8 @@
 library(testthat)
 library(rgeos)
 
+setScale()
+
 context("Translation functions")
 
 test_that("translate points", {
