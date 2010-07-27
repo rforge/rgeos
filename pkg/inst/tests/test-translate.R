@@ -17,41 +17,41 @@ test_that("translate points", {
     spmp = SpatialPoints(list(x=1:5,y=1:5))
     
     rownames(spp@coords) = c("1")
-    expect_that( p, is_identical_to(spp) )
-    expect_that( spp , is_identical_to( doubletranslate(spp)))
+    expect_that( identical(p,spp), is_true())
+    expect_that( identical(spp, doubletranslate(spp)), is_true())
     
     rownames(spmp@coords) = c("1","1","1","1","1")
-    expect_that( mp, is_identical_to(spmp) )
-    expect_that( spmp, is_identical_to( doubletranslate(spmp)))
+    expect_that( identical(mp,spmp), is_true() )
+    expect_that( identical(spmp,doubletranslate(spmp)), is_true())
     
     rownames(spmp@coords) = c("1","2","3","4","5")
-    expect_that( gcp1, is_identical_to(spmp) )
-    expect_that( spmp, is_identical_to( doubletranslate(spmp)))
+    expect_that( identical(gcp1,spmp), is_true() )
+	expect_that( identical(spmp,doubletranslate(spmp)), is_true())
     
     rownames(spmp@coords) = c("1","2","3","3","3")
-    expect_that( gcp2, is_identical_to(spmp) )
-    expect_that( spmp, is_identical_to( doubletranslate(spmp)))
+    expect_that( identical(gcp2,spmp), is_true() )
+    expect_that( identical(spmp,doubletranslate(spmp)), is_true())
 
     rownames(spmp@coords) = c("1","2","3","3","4")
-    expect_that( gcp3, is_identical_to(spmp) )
-    expect_that( spmp, is_identical_to( doubletranslate(spmp)))
+    expect_that( identical(gcp3,spmp), is_true() )
+    expect_that( identical(spmp,doubletranslate(spmp)), is_true())
     
     rownames(spmp@coords) = c("1","1","2","2","2")    
-    expect_that( gcp4, is_identical_to(spmp) )
-    expect_that( spmp, is_identical_to( doubletranslate(spmp)))
+    expect_that( identical(gcp4,spmp), is_true() )
+    expect_that( identical(spmp,doubletranslate(spmp)), is_true())
     
     rownames(spmp@coords) = c("1","1","2","2","3")
-    expect_that( gcp5, is_identical_to(spmp) )
-    expect_that( spmp, is_identical_to( doubletranslate(spmp)))
+    expect_that( identical(gcp5,spmp), is_true() )
+    expect_that( identical(spmp,doubletranslate(spmp)), is_true())
 
     
-    expect_that( p   , is_identical_to( doubletranslate(p) ))
-    expect_that( mp  , is_identical_to( doubletranslate(mp) ))
-    expect_that( gcp1, is_identical_to( doubletranslate(gcp1) ))
-    expect_that( gcp2, is_identical_to( doubletranslate(gcp2) ))
-    expect_that( gcp3, is_identical_to( doubletranslate(gcp3) ))
-    expect_that( gcp4, is_identical_to( doubletranslate(gcp4) ))
-    expect_that( gcp5, is_identical_to( doubletranslate(gcp5) ))
+    expect_that( identical(p, doubletranslate(p) ), is_true())
+    expect_that( identical(mp, doubletranslate(mp) ), is_true())
+    expect_that( identical(gcp1, doubletranslate(gcp1) ), is_true())
+    expect_that( identical(gcp2, doubletranslate(gcp2) ), is_true())
+    expect_that( identical(gcp3, doubletranslate(gcp3) ), is_true())
+    expect_that( identical(gcp4, doubletranslate(gcp4) ), is_true())
+    expect_that( identical(gcp5, doubletranslate(gcp5) ), is_true())
     
 })
 
@@ -192,13 +192,13 @@ test_that("translate simple polygon", {
     attr(spmph2@polygons[[1]],"comment") = "0 0 2"
     attr(spmph3@polygons[[1]],"comment") = "0 1 0 3"
     
-    expect_that( p    , is_identical_to(spp) )
-    expect_that( ph1  , is_identical_to(spph1) )
-    expect_that( ph2  , is_identical_to(spph2) )
-    expect_that( mp   , is_identical_to(spmp) )
-    expect_that( mph1 , is_identical_to(spmph1) )
-    expect_that( mph2 , is_identical_to(spmph2) )
-    expect_that( mph3 , is_identical_to(spmph3) )
+    expect_that( identical(p    , spp), is_true())
+    expect_that( identical(ph1  , spph1), is_true())
+    expect_that( identical(ph2  , spph2), is_true())
+    expect_that( identical(mp   , spmp), is_true())
+    expect_that( identical(mph1 , spmph1), is_true())
+    expect_that( identical(mph2 , spmph2), is_true())
+    expect_that( identical(mph3 , spmph3), is_true())
     
     expect_that( spp   , is_identical_to( doubletranslate(spp)))
     expect_that( spph1 , is_identical_to( doubletranslate(spph1)))
