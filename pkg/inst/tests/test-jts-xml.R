@@ -2,29 +2,32 @@ library(testthat)
 library(XML)
 library(rgeos)
 
-# case-insensitive get function
-fuzzyget = function(x, pos = -1, envir = as.environment(pos), mode = "any", inherits = TRUE) {
-    
-    obj = objects(envir=envir,all=TRUE)
-    
-    if(x %in% obj)
-        get(x, pos, envir, mode, inherits)
-        
-    w = which( tolower(x) == tolower(obj) )
-    if (length(w) != 1)
-        return(NULL)
-    
-    return( get(obj[w], pos, envir, mode, inherits) )
-}
 
-processArg = function(x) {
-    
-    return(x)
-}
 
 # Some functions have different names between GEOS and JTS
-funcTranslate = list (  "getboundary" = "Boundary",
-                        "getInteriorPoint" = "PointOnSurface") # Unsure about the equivalence
+funcTranslate=list( "getboundary"		= list(func=gBoundary,res=readWKT,arg1=readWKT),
+					"getCentroid"		= list(func=gCentroid,res=readWKT,arg1=readWKT),
+					"convexhull"		= list(func=gConvexHull,res=readWKT,arg1=readWKT),
+					"getInteriorPoint"	= list(func=gPointOnSurface,res=readWKT,arg1=readWKT),
+					
+					"isSimple"			= list(func=gSimple,res=as.logical,arg1=readWKT),
+					"isValid" 			= list(func=gValid,res=as.logical,arg1=readWKT),
+					
+					"isWithinDistance"	= list(func=gWithinDistance,res=as.logical,arg1=readWKT,arg2=readWKT,arg3=as.numeric),
+					"intersects"		= list(func=gIntersects,res=as.logical,arg1=readWKT,arg2=readWKT),
+					"contains"			= list(func=gContains,res=as.logical,arg1=readWKT,arg2=readWKT),
+					"within" 			= list(func=gWithin,res=as.logical,arg1=readWKT,arg2=readWKT),
+					
+					
+					"intersection" 		= list(func=gIntersection,res=readWKT,arg1=readWKT,arg2=readWKT),
+					"union"				= list(func=gUnion,res=readWKT,arg1=readWKT,arg2=readWKT),
+					"difference"		= list(func=gDifference,res=readWKT,arg1=readWKT,arg2=readWKT),
+					"symdifference"		= list(func=gSymdifference,res=readWKT,arg1=readWKT,arg2=readWKT),
+					
+					"relate" 			= list(func=gRelate,res=as.logical,arg1=readWKT,arg2=readWKT,arg3=as.character),
+					
+					"covers"			= list(func=gCovers,res=as.logical,arg1=readWKT,arg2=readWKT),
+					"coveredBy"			= list(func=gCoveredBy,res=as.logical,arg1=readWKT,arg2=readWKT))
 
 
 xmldir = 'tests/testxml'
@@ -34,9 +37,14 @@ for (d in testdirs) {
     testfiles = list.files(system.file(file.path(xmldir,d),package="rgeos")) 
     
     for (f in testfiles)  {
+	
+		# files to skip
+		if (f=="TestValid2.xml" | f=="ExternalRobustness.xml")
+			next
+			
         xmlfile =  system.file(file.path(xmldir,d,f),package="rgeos")
-
-        context(f)
+		
+		context(paste('(',which(f==testfiles),'/',length(testfiles),')',f))
         x = xmlRoot(xmlTreeParse(xmlfile,ignoreBlanks=TRUE))
         nodes = xmlSApply(x,xmlName)
 
@@ -44,7 +52,7 @@ for (d in testdirs) {
             validNodeTypes = c("precisionModel","case","comment")
             expect_that( all(nodes %in% validNodeTypes), is_true() )
         })
-        next
+        
         
         #Handle precisionModel nodes - only use the first model
         pmAttrs =  xmlAttrs( x[[ which(nodes == "precisionModel")[1] ]] )
@@ -77,18 +85,16 @@ for (d in testdirs) {
             # argument nodes can either contain the value or have a file attribute
             for ( j in whichArgs) {
                 if (is.null( xmlAttrs(x[[i]][[j]]) )) {
-                    args[[ xmlName(x[[i]][[j]]) ]] = processArg(xmlValue(x[[i]][[j]]))
+                    args[[ xmlName(x[[i]][[j]]) ]] = xmlValue(x[[i]][[j]])
                 } else {
                     file = xmlAttrs(x[[i]][[j]])[["file"]]
-                    l = paste( readLines(file), collapse="" )
-                    args[[ xmlName(x[[i]][[j]]) ]] = processArg(l)
+                    args[[ xmlName(x[[i]][[j]]) ]] = paste( readLines(file), collapse="" )
                 }
             }
             
             #make sure the arg names are lowercase for the sake of consistency
             names(args) = tolower(names(args))
             
-
             for ( j in whichTests ) {
                 
                 test_that(paste(desc,'- test nodes in proper format') , {
@@ -101,35 +107,46 @@ for (d in testdirs) {
                     opAttrs = xmlAttrs( x[[i]][[j]][[1]] )
                     opReturn = xmlValue( x[[i]][[j]][[1]] )
                     opNArgs = length(opAttrs)-1
-                    
+
+					# some ops seem to have a pattern argument that is not used
+                    if ( 'pattern' %in% names(opAttrs) )
+						opNArgs = opNArgs-1
+
                     opName = opAttrs[['name']]
-                    if ( !is.null(funcTranslate[[opName]]) )
-                        opName = funcTranslate[[opName]]
                     
-                    funcPtr = fuzzyget( paste("RGEOS",opName,sep=''),
-                                        envir=as.environment("package:rgeos") )
+                   	
                     
                     test_that(paste(desc,'-',opName), {
-                        expect_that( is.null(funcPtr), is_false() )
+                        
+						funcdetails = funcTranslate[[opName]]
+						expect_that( is.null(funcdetails), is_false() )
                     
-                    
-                        if ( !is.null(funcPtr) ) {
-                            funcNArgs = length( formals(funcPtr) )
-                            funcArgs = list()
-                            for (argi in 1:funcNArgs) {
+                        if ( !is.null(funcdetails) ) {
+                            funcNArgs = length( funcdetails )-2
+                            expect_that(funcNArgs==opNArgs, is_true())
+							
+							funcArgs = list()
+                            for (k in 1:funcNArgs) {
+                                argName = paste("arg",k,sep='')
 
-                                argName = opAttrs[[ paste("arg",argi,sep='') ]]
-
-                                if ( tolower(argName) %in% names(args) ) {
-                                    funcArgs[[argi]] = args[[ tolower(argName) ]]
-                                } else {
-                                    funcArgs[[argi]] = argName
-                                }
-
+								argVal = tolower(opAttrs[[argName]])
+								if (argVal %in% names(args))
+									argVal = args[[ argVal ]]
+								funcArgs[k] =  funcdetails[[argName]](argVal)	
                             }
-
-                            funcReturn = do.call(funcPtr, funcArgs, envir=as.environment("package:rgeos"))
-                            #print(opReturn)
+							
+							funcReturn = do.call(funcdetails[["func"]], funcArgs)
+							expectedReturn = funcdetails[["res"]](opReturn)
+							
+							if (is.logical(funcReturn)) {
+								expect_that(funcReturn == expectedReturn, is_true())
+							} else if (is.null(funcReturn)) {
+								expect_that(is.null(funcReturn) & is.null(expectedReturn), is_true())
+							} else if (gEmpty(expectedReturn)) {
+								expect_that(identical(funcReturn,expectedReturn), is_true())
+							} else { # if it isn't logical or NULL it should be a geometry
+								expect_that(gEquals(funcReturn,expectedReturn),is_true())
+							}
                         }
                     }) 
                 }                
