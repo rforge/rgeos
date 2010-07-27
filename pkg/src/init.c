@@ -55,6 +55,11 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_union", (DL_FUNC) &rgeos_union, 5},
 
     //Binary Predicate Functions
+	{"rgeos_intersects_prepared", (DL_FUNC) &rgeos_intersects_prepared, 4},
+	{"rgeos_contains_prepared", (DL_FUNC) &rgeos_contains_prepared, 4},
+	{"rgeos_containsproperly_prepared", (DL_FUNC) &rgeos_containsproperly_prepared, 4},
+	{"rgeos_covers_prepared", (DL_FUNC) &rgeos_covers_prepared, 4},
+	
     {"rgeos_disjoint", (DL_FUNC) &rgeos_disjoint, 4},
     {"rgeos_touches", (DL_FUNC) &rgeos_touches, 4},
     {"rgeos_intersects", (DL_FUNC) &rgeos_intersects, 4},

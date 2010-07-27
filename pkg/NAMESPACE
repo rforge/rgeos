@@ -35,7 +35,8 @@ export(gEmpty, gValid, gSimple, gRing, gHasZ)
 export( RGEOSRelate, RGEOSDisjoint, RGEOSTouches, RGEOSIntersects, RGEOSCrosses,
 		RGEOSWithin, RGEOSContains, RGEOSOverlaps, RGEOSEquals, RGEOSEqualsExact)
 export( gRelate, gDisjoint, gTouches, gIntersects, gCrosses,
-		gWithin, gContains, gOverlaps, gEquals, gEqualsExact)
+		gWithin, gContains, gOverlaps, gEquals, gEqualsExact,
+		gContainsProperly, gCovers, gCoveredBy)
 
 # GEOS misc functions
 export( RGEOSArea, RGEOSLength, RGEOSDistance, RGEOSisWithinDistance, 

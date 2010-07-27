@@ -113,6 +113,14 @@ SEXP rgeos_binarytopologyfunc(SEXP env, SEXP geom1, SEXP geom2, SEXP byid, SEXP 
 
 // Binary Predicate Functions - rgeos_predicate_binary.c
 
+SEXP rgeos_intersects_prepared(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+SEXP rgeos_contains_prepared(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+SEXP rgeos_containsproperly_prepared(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+SEXP rgeos_covers_prepared(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
+
+SEXP rgeos_binpredfunc_prepared(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, 
+		char (*binpredfunc_prepared)(GEOSContextHandle_t, const GEOSPreparedGeometry* pg1, const GEOSGeometry* g2));
+
 SEXP rgeos_disjoint(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
 SEXP rgeos_touches(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);
 SEXP rgeos_intersects(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid);

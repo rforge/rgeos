@@ -32,23 +32,44 @@ RGEOSBinPredFunc = function(spgeom1, spgeom2, byid, func, optparam=NULL) {
 }
 
 
+
+gContains = function(spgeom1, spgeom2 = NULL, byid = FALSE, prepared=TRUE) {
+    func = "rgeos_contains"
+	if (prepared)
+		func = paste(func,"_prepared",sep="")
+
+	return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,func) )
+}
+gIntersects = function(spgeom1, spgeom2 = NULL, byid = FALSE,prepared=TRUE) {
+	func = "rgeos_intersects"
+	if (prepared)
+		func = paste(func,"_prepared",sep="")
+
+	return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,func) )
+}
+
+gContainsProperly = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+    return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_containsproperly_prepared") )
+}
+gCovers = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+    return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_covers_prepared") )
+}
+gCoveredBy = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+    return( RGEOSBinPredFunc(spgeom2,spgeom1,rev(byid),"rgeos_covers_prepared") )
+}
+
+
 gDisjoint = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_disjoint") )
 }
 gTouches = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_touches") )
 }
-gIntersects = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
-    return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_intersects") )
-}
 gCrosses = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_crosses") )
 }
 gWithin = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_within") )
-}
-gContains = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
-    return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_contains") )
 }
 gOverlaps = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_overlaps") )
