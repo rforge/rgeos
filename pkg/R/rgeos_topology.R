@@ -78,22 +78,22 @@ TopologyFunc = function(spgeom, id, byid, func) {
     return( .Call(func, .RGEOS_HANDLE, spgeom, id, byid, PACKAGE="rgeos") )
 }
 
-gEnvelope = function(spgeom, id = NULL, byid=FALSE) {
+gEnvelope = function(spgeom, byid=FALSE, id = NULL) {
     return( TopologyFunc(spgeom,id,byid,"rgeos_envelope") ) 
 }
-gConvexHull = function(spgeom, id = NULL, byid=FALSE) {
+gConvexHull = function(spgeom, byid=FALSE, id = NULL) {
     return( TopologyFunc(spgeom,id,byid,"rgeos_convexhull") ) 
 }
-gBoundary = function(spgeom, id = NULL, byid=FALSE) {
+gBoundary = function(spgeom, byid=FALSE, id = NULL) {
      return( TopologyFunc(spgeom,id,byid,"rgeos_boundary") ) 
 }
-gCentroid = function(spgeom, id = NULL, byid=FALSE) {
+gCentroid = function(spgeom, byid=FALSE, id = NULL) {
     return( TopologyFunc(spgeom,id,byid,"rgeos_getcentroid") ) 
 }
-gPointOnSurface = function(spgeom, id = NULL, byid=FALSE) {
+gPointOnSurface = function(spgeom, byid=FALSE, id = NULL) {
     return( TopologyFunc(spgeom,id,byid,"rgeos_pointonsurface") ) 
 }
-gLineMerge = function(spgeom, id = NULL, byid=FALSE) {
+gLineMerge = function(spgeom, byid=FALSE, id = NULL) {
     return( TopologyFunc(spgeom,id,byid,"rgeos_linemerge") ) 
 }
 gUnionCascaded = function(spgeom, id = NULL) {
@@ -109,27 +109,27 @@ gUnionCascaded = function(spgeom, id = NULL) {
 
 
 
-RGEOSEnvelope = function(spgeom, id = NULL, byid=FALSE) {
+RGEOSEnvelope = function(spgeom, byid=FALSE, id = NULL) {
     .Deprecated("gEnvelope")
     return( gEnvelope(spgeom, id, byid) )
 }
-RGEOSConvexHull = function(spgeom, id = NULL, byid=FALSE) {
+RGEOSConvexHull = function(spgeom, byid=FALSE, id = NULL) {
     .Deprecated("gConvexHull")
     return( gConvexHull(spgeom, id, byid) )
 }
-RGEOSBoundary = function(spgeom, id = NULL, byid=FALSE) {
+RGEOSBoundary = function(spgeom, byid=FALSE, id = NULL) {
     .Deprecated("gBoundary")
     return( gBoundary(spgeom, id, byid) )
 }
-RGEOSGetCentroid = function(spgeom, id = NULL, byid=FALSE) {
+RGEOSGetCentroid = function(spgeom, byid=FALSE, id = NULL) {
     .Deprecated("gCentroid")
     return( gCentroid(spgeom, id, byid) )
 }
-RGEOSPointOnSurface = function(spgeom, id = NULL, byid=FALSE) {
+RGEOSPointOnSurface = function(spgeom, byid=FALSE, id = NULL) {
     .Deprecated("gPointOnSurface")
     return( gPointOnSurface(spgeom, id, byid) )
 }
-RGEOSLineMerge = function(spgeom, id = NULL, byid=FALSE) {
+RGEOSLineMerge = function(spgeom, byid=FALSE, id = NULL) {
     .Deprecated("gLineMerge")
     return( gLineMerge(spgeom, id, byid) )
 }
