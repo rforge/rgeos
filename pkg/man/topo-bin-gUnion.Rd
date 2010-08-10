@@ -7,7 +7,7 @@
 \usage{
 gUnion(spgeom1, spgeom2, byid=FALSE, id=NULL)
 gUnionCascaded(spgeom, id = NULL)
-gLineMerge(spgeom, id = NULL, byid=FALSE)
+gLineMerge(spgeom, byid=FALSE, id = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
