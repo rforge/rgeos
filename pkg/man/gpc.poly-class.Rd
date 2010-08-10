@@ -135,10 +135,10 @@ plot(append.poly(x1, y1))
 plot(intersect(x1, y1), poly.args = list(col = 2), add = TRUE)
 
 ## Show the triangulation
-plot(append.poly(x1, y1))
-triangles <- triangulate(append.poly(x1,y1))
-for (i in 0:(nrow(triangles)/3 - 1)) 
-    polygon(triangles[3*i + 1:3,], col="lightblue")
+#plot(append.poly(x1, y1))
+#triangles <- triangulate(append.poly(x1,y1))
+#for (i in 0:(nrow(triangles)/3 - 1)) 
+#    polygon(triangles[3*i + 1:3,], col="lightblue")
 
 
 }
