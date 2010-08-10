@@ -3,7 +3,7 @@
 \title{Geometry Envelope}
 \description{Calculates the rectangular bounding box for the given geometry}
 \usage{
-gCentroid(spgeom, byid=FALSE, id = NULL)
+gEnvelope(spgeom, byid=FALSE, id = NULL)
 }
 
 \arguments{

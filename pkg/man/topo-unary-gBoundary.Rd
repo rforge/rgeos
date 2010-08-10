@@ -3,7 +3,7 @@
 \title{Geometry Boundary}
 \description{Returns the Boundary of the given geometry as defined by SFS Section 2.1.13.1}
 \usage{
-gCentroid(spgeom, byid=FALSE, id = NULL)
+gBoundary(spgeom, byid=FALSE, id = NULL)
 }
 
 \arguments{
@@ -61,10 +61,10 @@ b3 = gBoundary(x3)
 b4 = gBoundary(x4)
 
 par(mfrow=c(2,2))
-plot(x1); plot(b1,pch=16,col='red',add=T)
-plot(x2); plot(b2,pch=16,col='red',add=T)
-plot(x3); plot(b3,pch=16,col='red',add=T)
-plot(x4); plot(b4,pch=16,col='red',add=T)
+plot(x1); plot(b1,pch=16,col='red',add=TRUE)
+plot(x2); plot(b2,pch=16,col='red',add=TRUE)
+plot(x3); plot(b3,pch=16,col='red',add=TRUE)
+plot(x4); plot(b4,pch=16,col='red',add=TRUE)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

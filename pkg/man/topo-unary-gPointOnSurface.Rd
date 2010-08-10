@@ -3,7 +3,7 @@
 \title{Point on Surface of Geometry}
 \description{This function returns a point on the surface of the given geometry}
 \usage{
-gCentroid(spgeom, byid=FALSE, id = NULL)
+gPointOnSurface(spgeom, byid=FALSE, id = NULL)
 }
 
 \arguments{
@@ -35,12 +35,12 @@ g5 = readWKT("POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))")
 g6 = readWKT("MULTIPOLYGON (((60 320, 240 340, 260 100, 20 60, 120 180, 60 320),(200 280, 140 260, 180 160, 240 140, 200 280)),((380 280, 300 260, 340 100, 440 80, 380 280), (380 220, 340 200, 400 100, 380 220)))")
 
 par(mfrow=c(2,3))
-plot(g1); plot(gPointOnSurface(g1),col='red',add=T)
-plot(g2); plot(gPointOnSurface(g2),col='red',add=T)
-plot(g3); plot(gPointOnSurface(g3),col='red',add=T)
-plot(g4); plot(gPointOnSurface(g4),col='red',add=T)
-plot(g5); plot(gPointOnSurface(g5),col='red',add=T)
-plot(g6); plot(gPointOnSurface(g6),col='red',add=T)
+plot(g1); plot(gPointOnSurface(g1),col='red',add=TRUE)
+plot(g2); plot(gPointOnSurface(g2),col='red',add=TRUE)
+plot(g3); plot(gPointOnSurface(g3),col='red',add=TRUE)
+plot(g4); plot(gPointOnSurface(g4),col='red',add=TRUE)
+plot(g5); plot(gPointOnSurface(g5),col='red',add=TRUE)
+plot(g6); plot(gPointOnSurface(g6),col='red',add=TRUE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
