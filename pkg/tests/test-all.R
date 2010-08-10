@@ -100,5 +100,4 @@ SummaryByContextReporter$do({
 })
 
 
-#test_dir(system.file("tests", package = "rgeos"), SummaryByContextReporter)
-test_dir("/Users/rundel/Desktop/Summer of Code/rgeos/pkg/inst/tests", SummaryByContextReporter)
+test_dir(system.file("tests", package = "rgeos"), SummaryByContextReporter)
