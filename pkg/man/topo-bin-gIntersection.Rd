@@ -1,8 +1,7 @@
 \name{gIntersection}
 \alias{gIntersection}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Geometry intersections}
-\description{The function finds intersection points between sp objects}
+\title{Geometry Intersections}
+\description{The function returns intersection points (or lines or polygons) between geometries}
 \usage{
 gIntersection(spgeom1, spgeom2, byid=FALSE, id=NULL)
 }
@@ -13,12 +12,17 @@ gIntersection(spgeom1, spgeom2, byid=FALSE, id=NULL)
   \item{id}{Character vector defining id labels for the resulting geometries, if unspecified returned geometries will be labeled based on their parent geometries' labels.}
 }
 
-\details{The \code{gIntersection} function returns all intersections between the two input sp objects. FIXME The points found correspond to those returned by the spatstat \code{crossing.psp} function, but are annotated with Lines IDs.
-}
+\details{Returns all spatial intersections as sp objects of the appropriate class. If the geometries do not intersect then an empty geometry is returned.}
 
 \value{}
 
 \author{Roger Bivand & Colin Rundel}
+
+\seealso{
+\code{\link{gDifference}}
+\code{\link{gSymdifference}}
+\code{\link{gUnion}}
+}
 
 \examples{
 library(maptools)

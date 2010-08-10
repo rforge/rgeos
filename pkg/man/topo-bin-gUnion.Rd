@@ -1,24 +1,38 @@
 \name{gUnion}
 \alias{gUnion}
 \alias{gUnionCascaded}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Geometry Union in an sp object}
-\description{These functions aggregates geometries through the GEOS union operator.}
+\alias{gLineMerge}
+\title{Geometry Union}
+\description{These functions join intersecting geometries.}
 \usage{
 gUnion(spgeom1, spgeom2, byid=FALSE, id=NULL)
 gUnionCascaded(spgeom, id = NULL)
+gLineMerge(spgeom, id = NULL, byid=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{spgeom1,spgeom2}{sp objects (usually of class SpatialPolygon)}
+  \item{spgeom1, spgeom2}{sp objects as defined in package sp}
   \item{byid}{Logical vector determining if the function should be applied across ids (TRUE) or the entire object (FALSE) for spgeom1 and spgeom2}
-  \item{id}{Character vector defining id labels for the resulting geometries, if unspecified returned geometries will be labeled based on their parent geometries' labels.}
-  \item{spgeom}{sp object with multiple subgeometries}
+  \item{id}{Character vector defining id labels for the resulting geometries, if unspecified returned geometries will be labeled based on their parent geometries' labels}
+  \item{spgeom}{sp Polygon(s) or Line(s) depending on the function used}
 }
 
-\value{Returns an aggregated sp object with geometries named with the given id values.}
+\details{Returns an sp object with intersecting geometries merged. If geometries do not intersect then both are returned as distinct subgeometries.
+
+gUnionCascaded expects a single sp object of class SpatialPolygons with subgeometries which it unions together.
+
+gLineMerge is similar to gUnionCascaded but is written to work with lines, specifically it joins line segments with intersecting end points. 
+}
+
+\value{}
 
 \author{Roger Bivand & Colin Rundel}
+
+\seealso{
+\code{\link{gDifference}}
+\code{\link{gIntersection}}
+\code{\link{gSymdifference}}
+}
 
 \examples{
 library(maptools)
@@ -42,14 +56,6 @@ spol <- as(spix, "SpatialPolygonsDataFrame")
 image(grd, axes=TRUE)
 spol1 <- gUnionCascaded(spol, as.character(spol$xvs))
 plot(spol1, add=TRUE)
-
-gtx <- GridTopology(c(50,50), c(100,100), c(2,2))
-grdx <- SpatialGridDataFrame(gtx, data.frame(xvs))
-spixx <- as(grdx, "SpatialPixelsDataFrame")
-spolx <- as(spixx, "SpatialPolygonsDataFrame")
-image(grdx, axes=TRUE)
-spol1x <- gUnionCascaded(spolx,as.character(spol$xvs))
-plot(spol1x, add=TRUE)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
