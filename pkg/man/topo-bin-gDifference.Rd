@@ -3,7 +3,7 @@
 \title{Geometry Difference}
 \description{The function returns the difference between geometries.}
 \usage{
-gIntersection(spgeom1, spgeom2, byid=FALSE, id=NULL)
+gDifference(spgeom1, spgeom2, byid=FALSE, id=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -14,7 +14,6 @@ gIntersection(spgeom1, spgeom2, byid=FALSE, id=NULL)
 
 \details{Returns the regions of spgeom1 that are not within spgeom2. If the geometries do not intersect then the result is just spgeom1. Note that the function is not symmetric for spgeom1 and spgeom2.}
 
-\value{}
 
 \author{Roger Bivand & Colin Rundel}
 

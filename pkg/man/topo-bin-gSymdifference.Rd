@@ -14,8 +14,6 @@ gSymdifference(spgeom1, spgeom2, byid=FALSE, id=NULL)
 
 \details{Returns the regions of spgeom1 and spgeom2 that do not intersect. If the geometries do not intersect then spgeom1 and spgeom2 will be returned as separate subgeometries.}
 
-\value{}
-
 \author{Roger Bivand & Colin Rundel}
 
 \seealso{

@@ -14,8 +14,6 @@ gIntersection(spgeom1, spgeom2, byid=FALSE, id=NULL)
 
 \details{Returns all spatial intersections as sp objects of the appropriate class. If the geometries do not intersect then an empty geometry is returned.}
 
-\value{}
-
 \author{Roger Bivand & Colin Rundel}
 
 \seealso{
@@ -39,4 +37,5 @@ plot(res, add=TRUE, pch=16,col='red')
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{spatial}
+
 

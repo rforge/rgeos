@@ -24,8 +24,6 @@ gUnionCascaded expects a single sp object of class SpatialPolygons with subgeome
 gLineMerge is similar to gUnionCascaded but is written to work with lines, specifically it joins line segments with intersecting end points. 
 }
 
-\value{}
-
 \author{Roger Bivand & Colin Rundel}
 
 \seealso{

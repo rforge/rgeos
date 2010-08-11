@@ -24,13 +24,11 @@ MultiLineString	\tab 	MultiPoint obtained by applying the Mod-2 rule to the boun
 LinearRing		\tab 	empty MultiPoint \cr
 Polygon			\tab 	MultiLineString containing the LinearRings of the shell and holes, in that order (SFS 2.1.10) \cr
 MultiPolygon	\tab 	MultiLineString containing the LinearRings for the boundaries of the element polygons, in the same order as they occur in the MultiPolygon (SFS 2.1.12/JTS) \cr
-GeometryCollection	\tab 	(SFS Section 2.1.13.1) “The boundary of an arbitrary collection of geometries whose interiors are disjoint consist of geometries drawn from the boundaries of the element geometries by application of the Mod-2 rule.” \cr
+GeometryCollection	\tab The boundary of an arbitrary collection of geometries whose interiors are disjoint consist of geometries drawn from the boundaries of the element geometries by application of the Mod-2 rule (SFS Section 2.1.13.1)\cr
 }
 
 The mod-2 rule states that for a multiline a point is on the boundary if and only if it on the boundary of an odd number of subgeometries of the multiline (See example below).
 }
-
-\value{}
 
 \author{Roger Bivand & Colin Rundel}
 

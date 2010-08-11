@@ -14,8 +14,6 @@ gCentroid(spgeom, byid=FALSE, id = NULL)
 
 \details{Returns a SpatialPoints object of the centroid(s) for spgeom.}
 
-\value{}
-
 \author{Roger Bivand & Colin Rundel}
 
 \seealso{

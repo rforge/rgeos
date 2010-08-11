@@ -14,8 +14,6 @@ gPointOnSurface(spgeom, byid=FALSE, id = NULL)
 
 \details{Returns a SpatialPoints object with a point that intersects with the geometry}
 
-\value{}
-
 \author{Roger Bivand & Colin Rundel}
 
 \seealso{

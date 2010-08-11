@@ -14,8 +14,6 @@ gEnvelope(spgeom, byid=FALSE, id = NULL)
 
 \details{Returns the rectangular bounding box as a SpatailPolygons object. If spgeom is a degenerate case (horizontal/vertical line, single point) then the function may return an object with lower dimension (SpatialLines or SpatialPoints) or an invalid polygon.}
 
-\value{}
-
 \author{Roger Bivand & Colin Rundel}
 
 \seealso{

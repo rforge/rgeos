@@ -14,8 +14,6 @@ gConvexHull(spgeom, byid=FALSE, id = NULL)
 
 \details{Returns the convex hull as a SpatialPolygons object.}
 
-\value{}
-
 \author{Roger Bivand & Colin Rundel}
 
 \seealso{
