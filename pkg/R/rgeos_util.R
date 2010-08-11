@@ -31,7 +31,7 @@ checkP4S = function(proj4string) {
     return( proj4string )
 }
 
-doubletranslate = function(obj) {
+translate = function(obj) {
     
 	rn = row.names(obj)
 	if (!is.list(rn))
