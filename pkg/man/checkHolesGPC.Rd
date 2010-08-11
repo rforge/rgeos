@@ -11,13 +11,10 @@ checkHolesGPC(gpclist)
   \item{gpclist}{pts slot of gpc.poly object}
 }
 
-\details{}
-\value{}
 \author{Roger Bivand}
-\note{}
 
 
-\seealso{}
+
 \examples{
 p1 <- list(x=c(0, 0, 10, 10, 0), y=c(0, 10, 10, 0, 0), hole=FALSE) # I
 p2 <- list(x=c(3, 3, 7, 7, 3), y=c(3, 7, 7, 3, 3), hole=FALSE) # H
