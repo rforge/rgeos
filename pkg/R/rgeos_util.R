@@ -13,37 +13,40 @@ setScale <- function(scale=100000000) {
     assign("scale",scale,envir=.RGEOS_HANDLE)
 }
 
-checkP4S = function(proj4string) {
+checkP4S = function(p4s) {
     
-    if ( is.null(proj4string) )
+    if ( is.null(p4s) )
         proj4string = CRS(as.character(NA))
 
-    if( is.character(proj4string))
-        proj4string = CRS(proj4string) 
+    if( is.character(p4s))
+        proj4string = CRS(p4s) 
     
-    if (length(proj4string) != 1)
+    if (length(p4s) != 1)
         stop("proj4string must be of length 1")
     
-    if ( class(proj4string) != "CRS") {
+    if ( class(p4s) != "CRS") {
         stop("proj4string has invalid class")
     }
     
-    return( proj4string )
+    return( p4s )
 }
 
-translate = function(obj) {
+translate = function(spgeom) {
     
-	rn = row.names(obj)
+	rn = row.names(spgeom)
 	if (!is.list(rn))
 		rn = list(rn)
 	
     ids = unlist( sapply(rn, unique) )
-    x = .Call("rgeos_double_translate", .RGEOS_HANDLE, obj, ids, 0, PACKAGE="rgeos")
+    x = .Call("rgeos_double_translate", .RGEOS_HANDLE, spgeom, ids, 0, PACKAGE="rgeos")
     return(x)
 }
 
 groupID = function(spgeom, ids) {
     
+	if (inherits(spgeom,"SpatialCollections"))
+		stop("groupID does not work with SpatialCollections objects")
+		
     if (length(row.names(spgeom)) != length(ids)) 
         stop("length of ids does not match number of geometries")
     
