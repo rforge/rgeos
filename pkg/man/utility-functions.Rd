@@ -2,7 +2,7 @@
 \alias{getScale}
 \alias{setScale}
 \alias{translate}
-\alaias{checkP4S}
+\alias{checkP4S}
 
 \title{RGEOS Utility Functions}
 \description{Utility functions for the RGEOS package}

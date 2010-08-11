@@ -16,10 +16,10 @@ setScale <- function(scale=100000000) {
 checkP4S = function(p4s) {
     
     if ( is.null(p4s) )
-        proj4string = CRS(as.character(NA))
+        p4s = CRS(as.character(NA))
 
     if( is.character(p4s))
-        proj4string = CRS(p4s) 
+        p4s = CRS(p4s) 
     
     if (length(p4s) != 1)
         stop("proj4string must be of length 1")
