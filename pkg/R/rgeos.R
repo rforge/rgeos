@@ -82,46 +82,7 @@ comment2comm <- function(str) {
     res
 }
 
-SpatialLinesIntersections <- function(SL1, SL2) {
-    stopifnot(is(SL1, "SpatialLines"))
-    stopifnot(is(SL2, "SpatialLines"))
-    sl1 <- slot(SL1, "lines")
-    sl2 <- slot(SL2, "lines")
-    p4s <- proj4string(SL1)
-    if (!is.na(p4s) && p4s != proj4string(SL2)) 
-        warning("Object coordinate reference systems differ")
-    res <- NULL
-    id1 <- NULL
-    id2 <- NULL
-    for (i in seq(along=sl1)) {
-        sl1i <- sl1[[i]]
-        for (j in seq(along=sl2)) {
-            zzz <- LinesIntersections(sl1i, sl2[[j]])
-            if (!is.null(zzz)) {
-                res <- rbind(res, zzz)
-                id1 <- c(id1, rep(slot(sl1i, "ID"), dim(zzz)[1]))
-                id2 <- c(id2, rep(slot(sl2[[j]], "ID"), dim(zzz)[1]))
-            }
-        }
-    }
-    if (is.null(res)) return(res)
-    df <- data.frame(id1, id2)
-    SpatialPointsDataFrame(res, proj4string=CRS(p4s), data=df)
-}
 
-LinesIntersections <- function(Lobj1, Lobj2) {
-    stopifnot(is(Lobj1, "Lines"))
-    stopifnot(is(Lobj2, "Lines"))
-    .Call("rgeos_Lines_intersection", .RGEOS_HANDLE, Lobj1, Lobj2,
-        PACKAGE="rgeos")
-}
-
-PolygonsIntersections <- function(Pobj1, Pobj2) {
-    stopifnot(is(Pobj1, "Polygons"))
-    stopifnot(is(Pobj2, "Polygons"))
-    .Call("rgeos_Polygons_intersection", .RGEOS_HANDLE, Pobj1, Pobj2,
-        PACKAGE="rgeos")
-}
 
 poly_findInBoxGEOS <- function(spl, as_points=TRUE) {
     stopifnot(is(spl, "SpatialPolygons"))

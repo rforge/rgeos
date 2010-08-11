@@ -5,8 +5,6 @@ import(sp)
 
 
 export(checkPolygonsGEOS)
-#export(thinnedSpatialPolyGEOS, checkPolygonsGEOS,unionSpatialPolygonsGEOS)
-export(SpatialLinesIntersections, LinesIntersections,PolygonsIntersections)
 export(poly_findInBoxGEOS)
 export(checkHolesGPC)
 
