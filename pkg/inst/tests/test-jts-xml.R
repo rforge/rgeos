@@ -10,8 +10,8 @@ funcTranslate=list( "getboundary"		= list(func=gBoundary,res=readWKT,arg1=readWK
 					"convexhull"		= list(func=gConvexHull,res=readWKT,arg1=readWKT),
 					"getInteriorPoint"	= list(func=gPointOnSurface,res=readWKT,arg1=readWKT),
 					
-					"isSimple"			= list(func=gSimple,res=as.logical,arg1=readWKT),
-					"isValid" 			= list(func=gValid,res=as.logical,arg1=readWKT),
+					"isSimple"			= list(func=gIsSimple,res=as.logical,arg1=readWKT),
+					"isValid" 			= list(func=gIsValid,res=as.logical,arg1=readWKT),
 					
 					"isWithinDistance"	= list(func=gWithinDistance,res=as.logical,arg1=readWKT,arg2=readWKT,arg3=as.numeric),
 					"intersects"		= list(func=gIntersects,res=as.logical,arg1=readWKT,arg2=readWKT),
@@ -142,7 +142,7 @@ for (d in testdirs) {
 								expect_that(funcReturn == expectedReturn, is_true())
 							} else if (is.null(funcReturn)) {
 								expect_that(is.null(funcReturn) & is.null(expectedReturn), is_true())
-							} else if (gEmpty(expectedReturn)) {
+							} else if (gIsEmpty(expectedReturn)) {
 								expect_that(identical(funcReturn,expectedReturn), is_true())
 							} else { # if it isn't logical or NULL it should be a geometry
 								expect_that(gEquals(funcReturn,expectedReturn),is_true())

@@ -11,19 +11,19 @@ RGEOSUnaryPredFunc = function(spgeom, byid, func) {
     return(x)
 }
 
-gEmpty = function(spgeom, byid = FALSE) { 
+gIsEmpty = function(spgeom, byid = FALSE) { 
     return( RGEOSUnaryPredFunc(spgeom, byid,"rgeos_isempty") )
 }
-gSimple  = function(spgeom, byid = FALSE) { 
+gIsSimple  = function(spgeom, byid = FALSE) { 
     return( RGEOSUnaryPredFunc(spgeom, byid,"rgeos_issimple") )
 }
-gRing  = function(spgeom, byid = FALSE) { 
+gIsRing  = function(spgeom, byid = FALSE) { 
     return( RGEOSUnaryPredFunc(spgeom, byid,"rgeos_isring") )
 }
 gHasZ  = function(spgeom, byid = FALSE) { 
     return( RGEOSUnaryPredFunc(spgeom, byid,"rgeos_hasz") )
 }
-gValid  = function(spgeom, byid = FALSE, reason=FALSE) {
+gIsValid  = function(spgeom, byid = FALSE, reason=FALSE) {
 	if (reason) 
 		return( RGEOSUnaryPredFunc(spgeom, byid,"rgeos_isvalidreason") )	    	
 	else
@@ -31,22 +31,22 @@ gValid  = function(spgeom, byid = FALSE, reason=FALSE) {
 }
 
 RGEOSisEmpty = function(spgeom, byid = FALSE) { 
-    .Deprecated("gEmpty")
-    return( gEmpty(spgeom, byid) )
+    .Deprecated("gIsEmpty")
+    return( gIsEmpty(spgeom, byid) )
 }
 RGEOSisSimple  = function(spgeom, byid = FALSE) { 
-    .Deprecated("gSimple")
-    return( gSimple(spgeom, byid) )
+    .Deprecated("gIsSimple")
+    return( gIsSimple(spgeom, byid) )
 }
 RGEOSisRing  = function(spgeom, byid = FALSE) { 
-    .Deprecated("gRing")
-    return( gRing(spgeom, byid) )
+    .Deprecated("gIsRing")
+    return( gIsRing(spgeom, byid) )
 }
 RGEOSHasZ  = function(spgeom, byid = FALSE) { 
     .Deprecated("gHasZ")
     return( gHasZ(spgeom, byid) )
 }
 RGEOSisValid  = function(spgeom, byid = FALSE, reason=FALSE) {
-    .Deprecated("gValid")
-    return( gValid(spgeom, byid, reason) )
+    .Deprecated("gIsValid")
+    return( gIsValid(spgeom, byid, reason) )
 }
