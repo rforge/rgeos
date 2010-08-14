@@ -21,6 +21,7 @@
 \alias{tristrip-methods}
 \alias{triangulate}
 \alias{triangulate-methods}
+\alias{symdiff}
 
 \title{Generics/Methods for polygon objects}
 
