@@ -44,7 +44,7 @@ A MULTIPOLYGON is valid if and only if all of its elements are valid and the int
 
 #LINEARRING Example
 l = readWKT("LINEARRING(0 0, 100 100, 100 0, 0 100, 0 0)")
-plot(l);title(paste("Valid:",gIsValid(l)))
+plot(l);title(paste("Valid:",gIsValid(l),"\n",gIsValid(l,reason=T)))
 
 #POLYGON and MULTIPOLYGON Examples
 p1 = readWKT("POLYGON ((0 60, 0 0, 60 0, 60 60, 0 60), (20 40, 20 20, 40 20, 40 40, 20 40))")
@@ -57,9 +57,6 @@ p6 = readWKT("POLYGON ((0 60, 0 0, 60 0, 60 20, 100 20, 60 20, 60 60, 0 60))")
 p7 = readWKT("POLYGON ((40 300, 40 20, 280 20, 280 300, 40 300),(120 240, 80 180, 160 220, 120 240),(220 240, 160 220, 220 160, 220 240),(160 100, 80 180, 100 80, 160 100),(160 100, 220 160, 240 100, 160 100))")
 p8 = readWKT("POLYGON ((40 320, 340 320, 340 20, 40 20, 40 320),(100 120, 40 20, 180 100, 100 120),(200 200, 180 100, 240 160, 200 200),(260 260, 240 160, 300 200, 260 260),(300 300, 300 200, 340 320, 300 300))")
 p9 = readWKT("MULTIPOLYGON (((20 380, 420 380, 420 20, 20 20, 20 380),(220 340, 180 240, 60 200, 200 180, 340 60, 240 220, 220 340)),((60 200, 340 60, 220 340, 60 200)))")
-
-plot(p,col='black',pbg='white');gIsValid(p)
-
 
 par(mfrow=c(3,3))
 plot(p1,col='black',pbg='white');title(paste("Valid:",gIsValid(p1),"\n",gIsValid(p1,reason=T)))
