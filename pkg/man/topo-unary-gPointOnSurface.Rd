@@ -8,7 +8,7 @@ gPointOnSurface(spgeom, byid=FALSE, id = NULL)
 
 \arguments{
   \item{spgeom}{sp object as defined in package sp}
-  \item{byid}{Logical determining if the function should be applied across ids (TRUE) or the entire object (FALSE)}
+  \item{byid}{Logical determining if the function should be applied across subgeometries (TRUE) or the entire object (FALSE)}
   \item{id}{Character vector defining id labels for the resulting geometries, if unspecified returned geometries will be labeled based on their parent geometries' labels.}
 }
 
