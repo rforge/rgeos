@@ -2,7 +2,7 @@ RGEOSMiscFunc = function(spgeom, byid, func) {
     byid = as.logical(byid)
     if (is.na(byid)) stop("Invalid value for byid, must be logical")
     
-    x <- .Call("rgeos_area", .RGEOS_HANDLE, spgeom, byid, PACKAGE="rgeos")
+    x <- .Call(func, .RGEOS_HANDLE, spgeom, byid, PACKAGE="rgeos")
     if(byid) names(x) <- unique(row.names(spgeom))
     
     return(x)
