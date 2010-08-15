@@ -25,8 +25,8 @@ export(readWKT, writeWKT)
 
 
 # GEOS unary predicate functions
-export(RGEOSisEmpty, RGEOSisValid, RGEOSisSimple, RGEOSisRing, RGEOSHasZ)
-export(gIsEmpty, gIsValid, gIsSimple, gIsRing, gHasZ)
+export(RGEOSisEmpty, RGEOSisValid, RGEOSisSimple, RGEOSisRing)#, RGEOSHasZ)
+export(gIsEmpty, gIsValid, gIsSimple, gIsRing)#, gHasZ)
 
 
 # GEOS binary predicate functions
