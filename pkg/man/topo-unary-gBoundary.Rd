@@ -1,5 +1,7 @@
 \name{gBoundary}
 \alias{gBoundary}
+\alias{RGEOSBoundary}
+
 \title{Geometry Boundary}
 \description{Returns the Boundary of the given geometry as defined by SFS Section 2.1.13.1}
 \usage{

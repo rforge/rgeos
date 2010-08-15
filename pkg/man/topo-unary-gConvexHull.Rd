@@ -1,5 +1,7 @@
 \name{gConvexHull}
 \alias{gConvexHull}
+\alias{RGEOSConvexHull}
+
 \title{Geometry Convex Hull}
 \description{Calculates the Convex Hull, the smallest convex polygon that contains all subgeometries, of the given geometry}
 \usage{

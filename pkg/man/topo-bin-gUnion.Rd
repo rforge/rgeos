@@ -1,7 +1,9 @@
 \name{gUnion}
 \alias{gUnion}
 \alias{gUnionCascaded}
+\alias{RGEOSUnionCascaded}
 \alias{gLineMerge}
+
 \title{Geometry Union}
 \description{These functions join intersecting geometries.}
 \usage{

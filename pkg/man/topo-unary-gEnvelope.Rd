@@ -1,5 +1,7 @@
 \name{gEnvelope}
 \alias{gEnvelope}
+\alias{RGEOSEnvelope}
+
 \title{Geometry Envelope}
 \description{Calculates the rectangular bounding box for the given geometry}
 \usage{

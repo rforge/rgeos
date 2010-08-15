@@ -1,5 +1,7 @@
 \name{gCentroid}
 \alias{gCentroid}
+\alias{RGEOSGetCentroid}
+
 \title{Geometry Centroid}
 \description{This function calculates the centroid of the given geometry.}
 \usage{
