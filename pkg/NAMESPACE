@@ -33,7 +33,7 @@ export(gIsEmpty, gIsValid, gIsSimple, gIsRing)#, gHasZ)
 export( RGEOSRelate, RGEOSDisjoint, RGEOSTouches, RGEOSIntersects, RGEOSCrosses,
 		RGEOSWithin, RGEOSContains, RGEOSOverlaps, RGEOSEquals, RGEOSEqualsExact)
 export( gRelate, gDisjoint, gTouches, gIntersects, gCrosses,
-		gWithin, gContains, gOverlaps, gEquals, gEqualsExact,
+		gWithin, gContains, gOverlaps, gEquals,
 		gContainsProperly, gCovers, gCoveredBy)
 
 # GEOS misc functions
@@ -57,7 +57,7 @@ export( gDifference, gSymdifference, gIntersection, gUnion)# RSB FIXME
 export( RGEOSBuffer, gBuffer )
 
 # GEOS linearref functions
-export( gProject, gInterpolate)
+#export( gProject, gInterpolate)
 
 
 # gpclib shadows

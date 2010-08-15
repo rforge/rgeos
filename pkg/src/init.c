@@ -69,6 +69,7 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_overlaps", (DL_FUNC) &rgeos_overlaps, 4},
     {"rgeos_equals", (DL_FUNC) &rgeos_equals, 4},
     {"rgeos_relate", (DL_FUNC) &rgeos_relate, 4},
+	{"rgeos_relatepattern", (DL_FUNC) &rgeos_relatepattern, 5},
     {"rgeos_equalsexact", (DL_FUNC) &rgeos_equalsexact, 5},
     
     //Unary Predicate Functions

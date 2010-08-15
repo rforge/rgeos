@@ -12,8 +12,8 @@ RGEOSBinPredFunc = function(spgeom1, spgeom2, byid, func, optparam=NULL) {
         if(!identical(spgeom1@proj4string,spgeom2@proj4string))
             warning("spgeom1 and spgeom2 have different proj4 strings")
     }
-
-    if ( func == "rgeos_equalsexact"  ) {
+	
+    if ( func == "rgeos_equalsexact" | func == "rgeos_relatepattern" ) {
         x <- .Call(func, .RGEOS_HANDLE, spgeom1, spgeom2, optparam, byid, PACKAGE="rgeos")
     } else {
         x <- .Call(func, .RGEOS_HANDLE, spgeom1, spgeom2, byid, PACKAGE="rgeos")
@@ -74,21 +74,21 @@ gWithin = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
 gOverlaps = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_overlaps") )
 }
-gEquals = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
-    return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_equals") )
-}
-gEqualsExact = function(spgeom1, spgeom2 = NULL, tol=0.0, byid = FALSE) {
-    
-    if ( is.null(tol) ) 
-        tol <- 0.0
-    
-    tol <- as.numeric(tol)
-    if ( is.na(tol) ) 
-        stop("Invalid value for tolerance, must be numeric")
+gEquals = function(spgeom1, spgeom2 = NULL, byid = FALSE, tol=NULL) {
+	
+	
+    if ( is.null(tol) ) {
+        return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_equals") )
+    } else {
+	    tol <- as.numeric(tol)
+	    if ( is.na(tol) ) 
+	        stop("Invalid value for tolerance, must be numeric")
 
-    return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_equalsexact", tol) )
+	    return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_equalsexact", tol) )
+	} 
 }
-gRelate = function(spgeom1, spgeom2 = NULL, pattern = NULL, byid = FALSE) {
+
+gRelate = function(spgeom1, spgeom2 = NULL, byid = FALSE, pattern = NULL) {
     
 	if (is.null(pattern)) {
 		return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_relate") )
@@ -103,7 +103,7 @@ gRelate = function(spgeom1, spgeom2 = NULL, pattern = NULL, byid = FALSE) {
 	    if (nchar(pattern) != 9 || !grepl("[0-2TF\\*]{9}",pattern) )
 	        stop("Invalid pattern, see documentation for proper format")
     
-	    return( gRelate(spgeom1, spgeom2, NULL,byid ) == pattern )
+		return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_relatepattern",pattern) )
 	}
 }
 
@@ -144,8 +144,8 @@ RGEOSEquals = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( gEquals(spgeom1,spgeom2, byid) )
 }
 RGEOSEqualsExact = function(spgeom1, spgeom2 = NULL, tol=0.0, byid = FALSE) {
-    .Deprecated("gEqualsexact")
-    return( gEqualsExact(spgeom1,spgeom2,tol, byid) )
+    .Deprecated("gEquals")
+    return( gEquals(spgeom1,spgeom2,tol, byid) )
 }
 RGEOSRelate = function(spgeom1, spgeom2 = NULL, pattern = NULL, byid = FALSE) {
     .Deprecated("gRelate")

@@ -134,6 +134,8 @@ SEXP rgeos_binpredfunc( SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid,
                         char (*binpredfunc)(GEOSContextHandle_t, const GEOSGeom, const GEOSGeom));
 
 SEXP rgeos_equalsexact(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP tol, SEXP byid);
+SEXP rgeos_relatepattern(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP pattern, SEXP byid);
+SEXP rgeos_binpredfunc_opt(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP opt, SEXP byid, int relpat);
 
 
 // Unary Predicate Functions - rgeos_predicate_unary.c
