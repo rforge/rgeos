@@ -5,30 +5,51 @@ library(rgeos)
 
 
 # Some functions have different names between GEOS and JTS
-funcTranslate=list( "getboundary"		= list(func=gBoundary,res=readWKT,arg1=readWKT),
-					"getCentroid"		= list(func=gCentroid,res=readWKT,arg1=readWKT),
-					"convexhull"		= list(func=gConvexHull,res=readWKT,arg1=readWKT),
-					"getInteriorPoint"	= list(func=gPointOnSurface,res=readWKT,arg1=readWKT),
-					
-					"isSimple"			= list(func=gIsSimple,res=as.logical,arg1=readWKT),
-					"isValid" 			= list(func=gIsValid,res=as.logical,arg1=readWKT),
-					
-					"isWithinDistance"	= list(func=gWithinDistance,res=as.logical,arg1=readWKT,arg2=readWKT,arg3=as.numeric),
-					"intersects"		= list(func=gIntersects,res=as.logical,arg1=readWKT,arg2=readWKT),
-					"contains"			= list(func=gContains,res=as.logical,arg1=readWKT,arg2=readWKT),
-					"within" 			= list(func=gWithin,res=as.logical,arg1=readWKT,arg2=readWKT),
-					
-					
-					"intersection" 		= list(func=gIntersection,res=readWKT,arg1=readWKT,arg2=readWKT),
-					"union"				= list(func=gUnion,res=readWKT,arg1=readWKT,arg2=readWKT),
-					"difference"		= list(func=gDifference,res=readWKT,arg1=readWKT,arg2=readWKT),
-					"symdifference"		= list(func=gSymdifference,res=readWKT,arg1=readWKT,arg2=readWKT),
-					
-					"relate" 			= list(func=gRelate,res=as.logical,arg1=readWKT,arg2=readWKT,arg3=as.character),
-					
-					"covers"			= list(func=gCovers,res=as.logical,arg1=readWKT,arg2=readWKT),
-					"coveredBy"			= list(func=gCoveredBy,res=as.logical,arg1=readWKT,arg2=readWKT))
+funcTranslate=list( "getboundary"       = list(func=gBoundary,res=readWKT,arg1=readWKT),
+                    "getCentroid"       = list(func=gCentroid,res=readWKT,arg1=readWKT),
+                    "convexhull"        = list(func=gConvexHull,res=readWKT,arg1=readWKT),
+                    "getInteriorPoint"	= list(func=gPointOnSurface,res=readWKT,arg1=readWKT),
 
+                    "isSimple"          = list(func=gIsSimple,res=as.logical,arg1=readWKT),
+                    "isValid"           = list(func=gIsValid,res=as.logical,arg1=readWKT),
+
+                    "isWithinDistance"  = list(func=gWithinDistance,res=as.logical,arg1=readWKT,arg2=readWKT,arg3=as.numeric),
+                    "intersects"        = list(func=gIntersects,res=as.logical,arg1=readWKT,arg2=readWKT),
+                    "contains"          = list(func=gContains,res=as.logical,arg1=readWKT,arg2=readWKT),
+                    "within"            = list(func=gWithin,res=as.logical,arg1=readWKT,arg2=readWKT),
+
+
+                    "intersection"      = list(func=gIntersection,res=readWKT,arg1=readWKT,arg2=readWKT),
+                    "union"             = list(func=gUnion,res=readWKT,arg1=readWKT,arg2=readWKT),
+                    "difference"        = list(func=gDifference,res=readWKT,arg1=readWKT,arg2=readWKT),
+                    "symdifference"     = list(func=gSymdifference,res=readWKT,arg1=readWKT,arg2=readWKT),
+
+                    "relate"            = list(func=gRelate,res=as.logical,arg1=readWKT,arg2=readWKT,arg3=as.character),
+
+                    "covers"            = list(func=gCovers,res=as.logical,arg1=readWKT,arg2=readWKT),
+                    "coveredBy"         = list(func=gCoveredBy,res=as.logical,arg1=readWKT,arg2=readWKT))
+
+# xml files to skip
+fileSkip = c("ExternalRobustness.xml","TestRobustOverlayFloat.xml","TestRobustOverlayFixed.xml")
+
+# tests to skip
+descSkip = c(# TestFunctionLAPrec.xml
+             "LA - line and sliver intersecting, dimensional collapse",
+             # TestFunctionAAPrec.xml
+             "AA - intersecting slivers, dimensional collapse",
+             "AA - sliver triangle with multiple intersecting boxes",
+             "AA - sliver triangles, at angle to each other",
+             "AA - B sliver crossing A triangle in line segment with length < 1",
+             "AA - A hole close to shell, B coincident with A",
+             "AA - hole close to shell, B coincident with A",
+             "AA - sliver triangle, cut by polygon",
+             "AA - polygon with outward sliver, cut by polygon",
+             "AA - hole close to shell",
+             "AA - A sliver triangle cutting all the way across B",
+             "AA - A polygon with sliver cutting all the way across B",
+             "AA - B hole close to shell, A coincident with B",
+             # TestInteriorPoint.xml
+             "L - linestring with single segment")
 
 xmldir = 'tests/testxml'
 testdirs = list.files(system.file(xmldir,package="rgeos"))
@@ -37,14 +58,14 @@ for (d in testdirs) {
     testfiles = list.files(system.file(file.path(xmldir,d),package="rgeos")) 
     
     for (f in testfiles)  {
-	
-		# files to skip
-		if (f=="TestValid2.xml" | f=="ExternalRobustness.xml")
-			next
-			
+
+        # files to skip
+        if (f %in% fileSkip)
+            next
+
         xmlfile =  system.file(file.path(xmldir,d,f),package="rgeos")
-		
-		context(paste('(',which(f==testfiles),'/',length(testfiles),')',f))
+
+        context(paste('(',which(f==testfiles),'/',length(testfiles),')',f))
         x = xmlRoot(xmlTreeParse(xmlfile,ignoreBlanks=TRUE))
         nodes = xmlSApply(x,xmlName)
 
@@ -78,6 +99,9 @@ for (d in testdirs) {
             whichTests = which(caseNodes == "test")
 
             desc = xmlValue( x[[i]][[ whichDesc[1] ]] )
+            
+            if (desc %in% descSkip)
+                next
 
             whichArgs = which(caseNodes != "desc" & caseNodes != "test")
             
