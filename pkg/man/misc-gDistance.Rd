@@ -3,6 +3,7 @@
 \alias{RGEOSDistance}
 \alias{gWithinDistance}
 \alias{RGEOSisWithinDistance}
+\alias{RGEOSHausdorffDistance}
 
 \title{Distance between geometries}
 \description{Calculates the distance between the given geometries}

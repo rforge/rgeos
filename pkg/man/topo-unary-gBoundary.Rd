@@ -2,8 +2,8 @@
 \alias{gBoundary}
 \alias{RGEOSBoundary}
 
-\title{Geometry Boundary}
-\description{Returns the Boundary of the given geometry as defined by SFS Section 2.1.13.1}
+\title{Boundary of Geometry}
+\description{Function for determinging the Boundary of the given geometry as defined by SFS Section 2.1.13.1}
 \usage{
 gBoundary(spgeom, byid=FALSE, id = NULL)
 }
@@ -14,7 +14,7 @@ gBoundary(spgeom, byid=FALSE, id = NULL)
   \item{id}{Character vector defining id labels for the resulting geometries, if unspecified returned geometries will be labeled based on their parent geometries' labels.}
 }
 
-\details{Depending of the class of the spgeom the returned results will differ.
+\value{Depending of the class of the spgeom the returned results will differ.
 
 Based on the documentation of JTS (on which GEOS is based) the following outputs are expected:
 \tabular{ll}{

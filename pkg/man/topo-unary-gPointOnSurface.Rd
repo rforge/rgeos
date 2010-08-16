@@ -1,7 +1,9 @@
 \name{gPointOnSurface}
 \alias{gPointOnSurface}
+\alias{RGEOSPointOnSurface}
+
 \title{Point on Surface of Geometry}
-\description{This function returns a point on the surface of the given geometry}
+\description{Function returns a point on the surface of the given geometry}
 \usage{
 gPointOnSurface(spgeom, byid=FALSE, id = NULL)
 }

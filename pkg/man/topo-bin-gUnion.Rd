@@ -3,9 +3,10 @@
 \alias{gUnionCascaded}
 \alias{RGEOSUnionCascaded}
 \alias{gLineMerge}
+\alias{RGEOSLineMerge}
 
 \title{Geometry Union}
-\description{These functions join intersecting geometries.}
+\description{Functions for joining intersecting geometries.}
 \usage{
 gUnion(spgeom1, spgeom2, byid=FALSE, id=NULL)
 gUnionCascaded(spgeom, id = NULL)

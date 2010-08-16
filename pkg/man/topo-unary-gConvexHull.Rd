@@ -2,8 +2,8 @@
 \alias{gConvexHull}
 \alias{RGEOSConvexHull}
 
-\title{Geometry Convex Hull}
-\description{Calculates the Convex Hull, the smallest convex polygon that contains all subgeometries, of the given geometry}
+\title{Convex Hull of Geometry}
+\description{Function produces the Convex Hull of the given geometry, the smallest convex polygon that contains all subgeometries}
 \usage{
 gConvexHull(spgeom, byid=FALSE, id = NULL)
 }

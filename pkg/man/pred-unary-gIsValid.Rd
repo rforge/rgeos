@@ -3,7 +3,7 @@
 \alias{RGEOSisValid}
 
 \title{Is Geometry Valid?}
-\description{Tests if the given geometry is valid}
+\description{Function tests if the given geometry is valid}
 \usage{
 gIsValid(spgeom, byid = FALSE, reason=FALSE)
 }
@@ -23,11 +23,13 @@ A LINEARRING is valid if it does not intersect itself.
 A POLYGON is valid if no two rings in the boundary (made up of an exterior ring and interior rings) cross. The boundary of a POLYGON may intersect at a POINT but only as a tangent (i.e. not on a line). A POLYGON may not have cut lines or spikes and the interior rings must be contained entirely within the exterior ring.
 
 A MULTIPOLYGON is valid if and only if all of its elements are valid and the interiors of no two elements intersect. The boundaries of any two elements may touch, but only at a finite number of POINTs.
+
+Many of the functions in rgeos expect simple/valid geometries and may exhibit unpredictable behavior if given an invalid geometry. Checking of validity/simplicity can be computationally expensive for complex geometries and so is not done by default, any new geometries should be checked.
 }
 
-\note{Many of the functions in rgeos expect simple/valid geometries and may exhibit unpredictable behavior if given an invalid geometry. Checking of validity/simplicity can be computationally expensive for complex geometries and so is not done by default, any new geometries should be checked.}
 
 \references{
+Validity Details:
 \url{http://postgis.refractions.net/docs/ch04.html#OGC_Validity}
 }
 

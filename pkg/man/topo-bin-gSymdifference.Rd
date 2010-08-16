@@ -1,7 +1,7 @@
 \name{gSymdifference}
 \alias{gSymdifference}
 \title{Geometry Symmetric Difference}
-\description{The function returns the symmetric difference between geometries }
+\description{Function for determining the symmetric difference between the two given geometries }
 \usage{
 gSymdifference(spgeom1, spgeom2, byid=FALSE, id=NULL)
 }

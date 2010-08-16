@@ -3,7 +3,7 @@
 \alias{RGEOSisSimple}
 
 \title{Is Geometry Simple?}
-\description{Tests if the given geometry is simple}
+\description{Function tests if the given geometry is simple}
 \usage{
 gIsSimple(spgeom, byid = FALSE) 
 }
@@ -26,12 +26,13 @@ A LINESTRING is simple if it does not pass through the same point twice (self in
 A MULTILINESTRING is simple if all of its subgeometries are simple and none of the subgeometries intersect except at end points.
 
 A [MULTI]POLYGON is simple by definition.
+
+Many of the functions in rgeos expect simple/valid geometries and may exhibit unpredictable behavior if given an invalid geometry. Checking of validity/simplicity can be computationally expensive for complex geometries and so is not done by default, any new geometries should be checked.
 }
 
-\note{Many of the functions in rgeos expect simple/valid geometries and may exhibit unpredictable behavior if given an invalid geometry. Checking of validity/simplicity can be computationally expensive for complex geometries and so is not done by default, any new geometries should be checked.
-}
 
 \references{
+Validity Details:
 \url{http://postgis.refractions.net/docs/ch04.html#OGC_Validity}
 }
 

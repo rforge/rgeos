@@ -2,8 +2,8 @@
 \alias{gEnvelope}
 \alias{RGEOSEnvelope}
 
-\title{Geometry Envelope}
-\description{Calculates the rectangular bounding box for the given geometry}
+\title{Envelope of Geometry}
+\description{Function calculates the rectangular bounding box for the given geometry}
 \usage{
 gEnvelope(spgeom, byid=FALSE, id = NULL)
 }

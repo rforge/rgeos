@@ -2,8 +2,8 @@
 \alias{gCentroid}
 \alias{RGEOSGetCentroid}
 
-\title{Geometry Centroid}
-\description{This function calculates the centroid of the given geometry.}
+\title{Centroid of Geometry}
+\description{Function calculates the centroid of the given geometry.}
 \usage{
 gCentroid(spgeom, byid=FALSE, id = NULL)
 }

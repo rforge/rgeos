@@ -1,7 +1,7 @@
 \name{gIntersection}
 \alias{gIntersection}
 \title{Geometry Intersections}
-\description{The function returns intersection points (or lines or polygons) between geometries}
+\description{Function for determining the intersection between the two given geometries}
 \usage{
 gIntersection(spgeom1, spgeom2, byid=FALSE, id=NULL)
 }

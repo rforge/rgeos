@@ -1,7 +1,7 @@
 \name{gDifference}
 \alias{gDifference}
 \title{Geometry Difference}
-\description{The function returns the difference between geometries.}
+\description{Function for determining the difference between the two given geometries.}
 \usage{
 gDifference(spgeom1, spgeom2, byid=FALSE, id=NULL)
 }
