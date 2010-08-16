@@ -1,28 +1,12 @@
-gSimplify = function(spgeom, tol, id=NULL, byid=FALSE, topologyPreserve=FALSE) {
+gSimplify = function(spgeom, tol, topologyPreserve=FALSE) {
 
 	getCutEdges = as.logical(topologyPreserve)
 	if (is.na(topologyPreserve))
 		stop("Invalid value for topologyPreserve, must be logical")
 	
-    byid = as.logical(byid)
-    if (is.na(byid)) 
-        stop("Invalid value for byid, must be logical")
-
-    curids = unique(row.names(spgeom))
-    if (is.null(id)) {
-        if (byid)   id = curids
-        else        id = "1"
-    }
-    id = as.character(id)
-
-    if ( length(id) != length(unique(id)) )
-        stop("Non-unique values for id ")
-
-    if ( !(!byid && length(id) == 1) && !(byid && length(id) == length(curids)) )
-        stop("Invalid number of values in id" ) 
-
+    id = row.names(spgeom)
     return( .Call("rgeos_simplify", .RGEOS_HANDLE, spgeom, tol, id, 
-									byid, topologyPreserve, PACKAGE="rgeos") )
+									FALSE, topologyPreserve, PACKAGE="rgeos") )
 }
 
 gPolygonize = function( splist, getCutEdges=FALSE) {
