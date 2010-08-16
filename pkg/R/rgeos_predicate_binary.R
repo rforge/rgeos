@@ -77,7 +77,7 @@ gOverlaps = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
 gEquals = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_equals") )
 }
-gEqualsExact = function(spgeom1, spgeom2 = NULL, byid = FALSE, tol=0.0) {
+gEqualsExact = function(spgeom1, spgeom2 = NULL, tol=0.0, byid = FALSE) {
     tol <- as.numeric(tol)
     if ( is.na(tol) ) 
         stop("Invalid value for tolerance, must be numeric")
@@ -85,7 +85,7 @@ gEqualsExact = function(spgeom1, spgeom2 = NULL, byid = FALSE, tol=0.0) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_equalsexact", tol) )
 }
 
-gRelate = function(spgeom1, spgeom2 = NULL, byid = FALSE, pattern = NULL) {
+gRelate = function(spgeom1, spgeom2 = NULL, pattern = NULL, byid = FALSE) {
     
 	if (is.null(pattern)) {
 		return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_relate") )

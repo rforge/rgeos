@@ -2,14 +2,14 @@
 \alias{gSimplify}
 
 \title{Simplify Geometry}
-\description{Function simplifies given geometry using the Douglas-Peuker algorithm}
+\description{Function simplifies the given geometry using the Douglas-Peuker algorithm}
 \usage{
 	gSimplify(spgeom, tol, topologyPreserve=FALSE)
 }
 
 \arguments{
   \item{spgeom}{sp object as defined in package sp}
-  \item{tol}{Numerical tolerance value to be used by the Douglas-Peuker algorithm }
+  \item{tol}{Numerical tolerance value to be used by the Douglas-Peuker algorithm}
   \item{topologyPreserve}{Logical determining if the algorithm should attempt to preserve the topology of the original geometry}
 }
 
@@ -21,7 +21,7 @@
 
 \references{
 Douglas-Peuker Algorithm:
-\url{http://en.wikipedia.org/wiki/Ramer–Douglas–Peucker_algorithm}
+\url{http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm}
 }
 
 

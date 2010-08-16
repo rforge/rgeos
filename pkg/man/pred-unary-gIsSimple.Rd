@@ -15,13 +15,13 @@ gIsSimple(spgeom, byid = FALSE)
 
 \value{Returns TRUE if the given geometry does not contain anomalous points, such as self intersection or self tangency.}
 
-\description{Simplicity is used in reference to 0 and 1-dimensional geometries ([MULTI]POINT and [MULTI]LINESTRING) whereas Validity (\link{gIsValid}) is used in reference to 2-dimensional geometries ([MULTI]POLYGON). 
+\details{Simplicity is used in reference to 0 and 1-dimensional geometries ([MULTI]POINT and [MULTI]LINESTRING) whereas Validity (\code{\link{gIsValid}}) is used in reference to 2-dimensional geometries ([MULTI]POLYGON). 
 
 A POINT is always simple.
 
 A MULTIPOINT is simple if no two points are identical.
 
-A LINESTRING is simple if it does not pass through the same point twice (self intersection) except at the end points, in which case it is a ring (\link{gIsRing}).
+A LINESTRING is simple if it does not pass through the same point twice (self intersection) except at the end points, in which case it is a ring (\code{\link{gIsRing}}).
 
 A MULTILINESTRING is simple if all of its subgeometries are simple and none of the subgeometries intersect except at end points.
 

@@ -8,7 +8,7 @@
 \description{Function for testing equivalence of the given geometries}
 \usage{
 	gEquals(spgeom1, spgeom2 = NULL, byid = FALSE)
-	gEqualsExact(spgeom1, spgeom2 = NULL, byid = FALSE, tol=0.0)
+	gEqualsExact(spgeom1, spgeom2 = NULL, tol=0.0, byid = FALSE, )
 }
 
 \arguments{

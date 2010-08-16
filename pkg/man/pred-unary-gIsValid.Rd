@@ -16,7 +16,7 @@ gIsValid(spgeom, byid = FALSE, reason=FALSE)
 
 \value{By default will return TRUE if the given geometry is well formed, FALSE otherwise. If reason is set to TRUE then a character string is returned describing the geometry, "Valid Geometry" if it is valid or details of the specific issue. Any given geometry may have multiple issues that make it invalid, gIsValid will only return the first, once it has been corrected additionally checking is necessary to confirm that additional issues do not remain.}
 
-\description{Validity is used in reference to 2-dimensional geometries (LINEARRING and [MULTI]POLYGON) whereas Simplicity (\link{gIsSimple}) is used in reference to 0 and 1-dimensional geometries ([MULTI]POINT and [MULTI]LINESTRING).
+\details{Validity is used in reference to 2-dimensional geometries (LINEARRING and [MULTI]POLYGON) whereas Simplicity (\code{\link{gIsSimple}}) is used in reference to 0 and 1-dimensional geometries ([MULTI]POINT and [MULTI]LINESTRING).
 
 A LINEARRING is valid if it does not intersect itself.
 
