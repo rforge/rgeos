@@ -74,18 +74,15 @@ gWithin = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
 gOverlaps = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_overlaps") )
 }
-gEquals = function(spgeom1, spgeom2 = NULL, byid = FALSE, tol=NULL) {
-	
-	
-    if ( is.null(tol) ) {
-        return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_equals") )
-    } else {
-	    tol <- as.numeric(tol)
-	    if ( is.na(tol) ) 
-	        stop("Invalid value for tolerance, must be numeric")
+gEquals = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
+    return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_equals") )
+}
+gEqualsExact = function(spgeom1, spgeom2 = NULL, byid = FALSE, tol=0.0) {
+    tol <- as.numeric(tol)
+    if ( is.na(tol) ) 
+        stop("Invalid value for tolerance, must be numeric")
 
-	    return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_equalsexact", tol) )
-	} 
+    return( RGEOSBinPredFunc(spgeom1,spgeom2,byid,"rgeos_equalsexact", tol) )
 }
 
 gRelate = function(spgeom1, spgeom2 = NULL, byid = FALSE, pattern = NULL) {
@@ -144,10 +141,10 @@ RGEOSEquals = function(spgeom1, spgeom2 = NULL, byid = FALSE) {
     return( gEquals(spgeom1,spgeom2, byid) )
 }
 RGEOSEqualsExact = function(spgeom1, spgeom2 = NULL, tol=0.0, byid = FALSE) {
-    .Deprecated("gEquals")
-    return( gEquals(spgeom1,spgeom2,tol, byid) )
+    .Deprecated("gEqualsExact")
+    return( gEqualsExact(spgeom1, spgeom2, byid, tol) )
 }
 RGEOSRelate = function(spgeom1, spgeom2 = NULL, pattern = NULL, byid = FALSE) {
     .Deprecated("gRelate")
-    return( gRelate(spgeom1,spgeom2,pattern, byid) )
+    return( gRelate(spgeom1,spgeom2, byid, pattern) )
 }

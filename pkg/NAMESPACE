@@ -18,7 +18,7 @@ export(SpatialCollections)
 exportMethods(row.names)
 
 # Utility Functions
-export(getScale,setScale,translate,groupID,checkP4S)
+export(getScale,setScale,translate,checkP4S) #,groupID)
 
 # WKT Functions
 export(readWKT, writeWKT)
@@ -33,7 +33,7 @@ export(gIsEmpty, gIsValid, gIsSimple, gIsRing)#, gHasZ)
 export( RGEOSRelate, RGEOSDisjoint, RGEOSTouches, RGEOSIntersects, RGEOSCrosses,
 		RGEOSWithin, RGEOSContains, RGEOSOverlaps, RGEOSEquals, RGEOSEqualsExact)
 export( gRelate, gDisjoint, gTouches, gIntersects, gCrosses,
-		gWithin, gContains, gOverlaps, gEquals,
+		gWithin, gContains, gOverlaps, gEquals, gEqualsExact,
 		gContainsProperly, gCovers, gCoveredBy)
 
 # GEOS misc functions
