@@ -5,7 +5,7 @@
 \title{Geometry Relationships - Intersection Matrix Pattern (DE-9IM)}
 \description{Determines the relationships between two geometries by comparing the intersection of Interior, Boundary and Exterior  of both geometries to each other. The results are summarized by the Dimensionally Extended 9-Intersection Matrix or DE-9IM.}
 \usage{
-	gRelate(spgeom1, spgeom2 = NULL, pattern = NULL, byid = FALSE, )
+	gRelate(spgeom1, spgeom2 = NULL, pattern = NULL, byid = FALSE)
 }
 	
 \arguments{
