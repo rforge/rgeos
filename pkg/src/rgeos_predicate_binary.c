@@ -49,7 +49,7 @@ SEXP rgeos_binpredfunc_prepared(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid,
         if (curgeom1 == NULL) 
             error("rgeos_binpredfunc: unable to get subgeometries from geometry 1");
 		
-		GEOSPreparedGeometry *prepgeom = GEOSPrepare_r(GEOShandle, curgeom1);
+		const GEOSPreparedGeometry *prepgeom = GEOSPrepare_r(GEOShandle, curgeom1);
 
         for(int j=0; j<n; j++) {
             if(sym_ans && j > i)
