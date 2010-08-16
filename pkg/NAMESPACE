@@ -5,7 +5,7 @@ import(sp)
 
 
 export(checkPolygonsGEOS)
-export(poly_findInBoxGEOS)
+#export(poly_findInBoxGEOS)
 export(checkHolesGPC)
 
 # sp extension classes
