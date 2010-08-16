@@ -86,6 +86,11 @@ setMethod("coordinates", "SpatialRings", function(obj) lapply(obj@rings, coordin
 #    invisible(lapply(x@rings, f, ...))
 #})
 
+if (!isGeneric("row.names"))
+	setGeneric("row.names", function(x) standardGeneric("row.names"))
+if (!isGeneric("row.names<-")) 
+	setGeneric("row.names<-", function(x, value) standardGeneric("row.names<-"))
+
 setMethod("row.names", "SpatialRings", function(x) sapply(slot(x, "rings"), slot, "ID"))
 setReplaceMethod("row.names", signature(x = "SpatialRings", value = "character"),
                  function(x, value) spChFIDs(x, value))
