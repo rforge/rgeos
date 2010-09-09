@@ -288,14 +288,22 @@ GEOSGeom rgeos_Polygons2geospolygon(SEXP env, SEXP obj) {
 
         GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
 
+		int warned = FALSE;
+		int n = 0;
+		
         for (int i=0; i<npls; i++) {
             SEXP crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
             
-            int hole = LOGICAL_POINTER( GET_SLOT(VECTOR_ELT(pls, i), install("hole")) );
+            int *hole = LOGICAL_POINTER( GET_SLOT(VECTOR_ELT(pls, i), install("hole")) );
             if (hole) {
-                error("Encountered Polygons object that contains holes and lacks a comment attribute. rgeos requires that all Polygons with holes must also have a comment assigning holes to parent polygons. See function createSPComment.");
-            }
-            
+				if (!warned) {
+                	warning("Polygons object missing comment attribute ignoring hole(s). See function createSPComment.");
+					warned = TRUE;
+				}
+				continue;
+			}
+			n++;
+
             if (crdMat == R_NilValue) {
                 geoms[i] = GEOSGeom_createPolygon_r(GEOShandle, NULL, NULL, (unsigned int) 0);
             } else {
@@ -304,8 +312,8 @@ GEOSGeom rgeos_Polygons2geospolygon(SEXP env, SEXP obj) {
         }
         
         GC = geoms[0];
-        if (npls != 1)
-            GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, npls);
+        if (n != 1)
+            GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, n);
         
         if (GC == NULL) error("Polygons2GC: collection not created");
         
