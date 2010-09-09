@@ -33,6 +33,7 @@ double rgeos_round(double val);
 
 SEXP rgeos_double_translate(SEXP env, SEXP obj, SEXP id);
 
+SEXP rgeos_PolyCreateComment(SEXP env, SEXP pls);
 
 // Bounding Box functions - rgeos_bbox.c
 SEXP rgeos_geom2bbox(SEXP env, GEOSGeom geom);

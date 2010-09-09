@@ -1,5 +1,98 @@
 #include "rgeos.h"
 
+SEXP rgeos_PolyCreateComment(SEXP env, SEXP pls) {
+    
+    GEOSContextHandle_t GEOShandle = getContextHandle(env);
+    
+    int npls = length(pls);
+    
+    GEOSGeom *polys = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
+    GEOSGeom *holes = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
+    
+    int *polyindex = (int *) R_alloc((size_t) npls, sizeof(int));
+    int *holeindex = (int *) R_alloc((size_t) npls, sizeof(int));
+    
+    int nholes = 0;
+    int npolys = 0;
+    
+    for(int i=0; i<npls; i++) {
+        
+        SEXP crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
+        GEOSGeom geom;
+        if (crdMat == R_NilValue) {
+            geom = GEOSGeom_createPolygon_r(GEOShandle, NULL, NULL, (unsigned int) 0);
+        } else {
+            geom = rgeos_crdMat2Polygon(env, crdMat, getAttrib(crdMat, R_DimSymbol));
+        }
+        
+        int hole = LOGICAL_POINTER(GET_SLOT(VECTOR_ELT(pls, i), install("hole")))[0];
+        if (hole) {
+            holes[nholes] = geom;
+            holeindex[nholes] = i;
+            nholes++;
+        } else {
+            polys[npolys] = geom;
+            polyindex[npolys] = i;
+            npolys++;
+        }
+    }
+    
+    if (npolys == 0) error("Polygons object contains only holes and no polygons");
+    
+    int pc = 0;
+    SEXP commentvec;
+    PROTECT(commentvec = NEW_INTEGER(npls)); pc++;
+    
+    for(int i=0; i<npls; i++) {
+        INTEGER_POINTER(commentvec)[i] = 0;
+    }
+    
+    if (nholes != 0) {
+    
+        int *containsindex = (int *) R_alloc((size_t) npolys, sizeof(int));
+        for(int i=0; i<nholes; i++) {
+            int total = 0;
+        
+            for(int j=0; j<npolys; j++) {
+                // FIXME - Not sure this is the best predicate to use in all cases
+                int contains = GEOSContains_r(GEOShandle, polys[j], holes[i]);
+            
+                if (contains) {
+                    containsindex[total] = j;
+                    total++;
+                }
+            }
+        
+            if (total == 0) {
+                error("rgeos_PolyCreateComment: orphaned hole, cannot find containing polygon for hole at index %d", 
+                        holeindex[i]+1);
+            } else if (total == 1) { // If only one polygon contains the hole we're done
+                INTEGER_POINTER(commentvec)[ holeindex[i] ] = polyindex[ containsindex[0] ]+1;
+            } else {
+                // If multiple polys contain the hole then our best guess is the smallest
+                // containing polygon 
+            
+                int best = 0;
+                double bestarea, curarea;
+                
+                GEOSArea_r(GEOShandle, polys[containsindex[0]], &bestarea);
+            
+                for(int k=1; k<total; k++) {
+                    GEOSArea_r(GEOShandle, polys[containsindex[k]], &curarea);
+                    if (curarea < bestarea) {
+                        bestarea = curarea;
+                        best = k;
+                    }
+                }
+            
+                INTEGER_POINTER(commentvec)[ holeindex[i] ] = polyindex[ containsindex[best] ]+1;
+            }
+        }
+    }
+    
+    UNPROTECT(pc);
+    return(commentvec);
+}
 
 SEXP GC_Contains(SEXP env, GEOSGeom GC) {
 
@@ -67,10 +160,8 @@ SEXP GC_Contains(SEXP env, GEOSGeom GC) {
 
 SEXP rgeos_PolygonsContain(SEXP env, SEXP obj) {
 
-    GEOSGeom GC;
-    GC = rgeos_Polygons2geospolygon(env, obj);
+    GEOSGeom GC = rgeos_convert_R2geos(env, obj);
 
     return(GC_Contains(env, GC));
-
 }
 

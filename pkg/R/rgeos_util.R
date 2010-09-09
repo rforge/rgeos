@@ -1,3 +1,36 @@
+createSPComment = function(sppoly,which=NULL,overwrite=TRUE) {
+    if (!inherits(sppoly, "SpatialPolygons")) 
+        stop("not a SpatialPolygons object")
+    
+    if (is.null(which))
+        which = 1:length(sppoly@polygons)
+    
+    sppoly@polygons[which] = lapply(sppoly@polygons[which], function(p) {
+
+        if (!overwrite & !is.null(attr(p,"comment")))
+            return(p)
+            
+        attr(p, "comment") = createPolygonsComment(p)
+        return(p)
+    })
+
+    return(sppoly)
+}
+
+createPolygonsComment = function(poly) {
+    if (!is(poly, "Polygons")) 
+        stop("not a Polygons object")
+
+    holes = sapply(poly@Polygons, function(x) x@hole)
+    if (!any(holes)) {
+        comm = rep(0,length(poly@Polygons))
+    } else {
+        comm = .Call("rgeos_PolyCreateComment", .RGEOS_HANDLE, poly@Polygons, PACKAGE="rgeos")    
+    }
+    
+    return(paste(comm,collapse=" "))
+}
+
 getScale <- function() {
     return( mget("scale",.RGEOS_HANDLE)$scale )
 }

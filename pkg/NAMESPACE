@@ -3,10 +3,11 @@ useDynLib(rgeos)
 import(methods)
 import(sp)
 
+export(createPolygonsComment,createSPComment)
 
-export(checkPolygonsGEOS)
+#export(checkPolygonsGEOS)
+#export(checkHolesGPC)
 #export(poly_findInBoxGEOS)
-export(checkHolesGPC)
 
 # sp extension classes
 exportClasses(Ring,SpatialRings, SpatialRingsDataFrame)

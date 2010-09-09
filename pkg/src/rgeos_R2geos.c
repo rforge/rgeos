@@ -291,6 +291,11 @@ GEOSGeom rgeos_Polygons2geospolygon(SEXP env, SEXP obj) {
         for (int i=0; i<npls; i++) {
             SEXP crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
             
+            int hole = LOGICAL_POINTER( GET_SLOT(VECTOR_ELT(pls, i), install("hole")) );
+            if (hole) {
+                error("Encountered Polygons object that contains holes and lacks a comment attribute. rgeos requires that all Polygons with holes must also have a comment assigning holes to parent polygons. See function createSPComment.");
+            }
+            
             if (crdMat == R_NilValue) {
                 geoms[i] = GEOSGeom_createPolygon_r(GEOShandle, NULL, NULL, (unsigned int) 0);
             } else {

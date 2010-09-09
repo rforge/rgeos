@@ -7,21 +7,7 @@
 // TODO - do any of these functions need to be called from R?
 
 static const R_CMethodDef CEntries[] = {
-    /*
-    {"rgeos_crdMat2CoordSeq", (DL_FUNC) &rgeos_crdMat2CoordSeq, 3},
-    {"rgeos_xy2Pt", (DL_FUNC) &rgeos_xy2Pt, 3},
-    {"rgeos_crdMat2LineString", (DL_FUNC) &rgeos_crdMat2LineString, 3},
-    {"rgeos_crdMat2LinearRing", (DL_FUNC) &rgeos_crdMat2LinearRing, 3},
-    {"rgeos_crdMat2Polygon", (DL_FUNC) &rgeos_crdMat2Polygon, 3},
-    {"rgeos_SPoints2MP", (DL_FUNC) &rgeos_SPoints2MP, 2},
-    {"rgeos_SpatialPolygons2geospolygon", (DL_FUNC) &rgeos_SpatialPolygons2geospolygon, 2},
-    {"rgeos_Polygons2geospolygon", (DL_FUNC) &rgeos_Polygons2geospolygon, 2},
-    {"rgeos_Lines2geosline", (DL_FUNC) &rgeos_Lines2geosline, 2},
-    {"rgeos_Polygons_i_2Polygon", (DL_FUNC) &rgeos_Polygons_i_2Polygon, 3},
-    {"rgeos_csArea", (DL_FUNC) &rgeos_csArea, 3},
-    {"rgeos_plsbufUnion", (DL_FUNC) &rgeos_plsbufUnion, 3}, RSB FIXME   */
     {NULL, NULL, 0} 
-/* if R_CMethodDef not NULL in R_registerRoutines, must retain this line */
 };
 
 
@@ -32,6 +18,7 @@ static R_CallMethodDef CallEntries[] = {
     {"rgeos_finish", (DL_FUNC) &rgeos_finish, 1},
     {"rgeos_GEOSversion", (DL_FUNC) &rgeos_GEOSversion, 0},
     {"rgeos_double_translate", (DL_FUNC) &rgeos_double_translate, 4},
+    {"rgeos_PolyCreateComment", (DL_FUNC) &rgeos_PolyCreateComment, 2},
     
     //WKT Functions
     {"rgeos_readWKT", (DL_FUNC) &rgeos_readWKT,4}, 
