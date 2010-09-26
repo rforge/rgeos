@@ -66,20 +66,20 @@ checkP4S = function(p4s) {
 
 translate = function(spgeom) {
     
-	rn = row.names(spgeom)
-	if (!is.list(rn))
-		rn = list(rn)
-	
-    ids = unlist( sapply(rn, unique) )
+    rn = row.names(spgeom)
+    if (!is.list(rn))
+        rn = list(rn)
+    
+    ids = as.character( unlist( sapply(rn, unique) ) )
     x = .Call("rgeos_double_translate", .RGEOS_HANDLE, spgeom, ids, 0, PACKAGE="rgeos")
     return(x)
 }
 
 groupID = function(spgeom, ids) {
     
-	if (inherits(spgeom,"SpatialCollections"))
-		stop("groupID does not work with SpatialCollections objects")
-		
+    if (inherits(spgeom,"SpatialCollections"))
+        stop("groupID does not work with SpatialCollections objects")
+        
     if (length(row.names(spgeom)) != length(ids)) 
         stop("length of ids does not match number of geometries")
     

@@ -29,8 +29,12 @@ colouriseFix <- function(text, fg = "black", bg = NULL) {
     reset <- col_escape("0")
     paste(init, text, reset, sep = "")
 }
+#assign("colourise", colouriseFix, envir = as.environment("package:testthat"))
 
-SummaryByContextReporter <- Reporter$clone()
+if (!exists("SummaryByContextReporter")) {
+    SummaryByContextReporter <- mutatr::Object$clone()
+}
+
 SummaryByContextReporter$do({
     labels <- c(1:9, letters, LETTERS)
   
@@ -98,5 +102,4 @@ SummaryByContextReporter$do({
     self$end_reporter <- function() { self$end_context() }  
 })
 
-#assign("colourise", colouriseFix, envir = as.environment("package:testthat"))
 test_dir(system.file("tests", package = "rgeos"), StopReporter)#SummaryByContextReporter)
