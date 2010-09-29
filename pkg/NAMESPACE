@@ -7,7 +7,7 @@ export(createPolygonsComment,createSPComment)
 
 #export(checkPolygonsGEOS)
 #export(checkHolesGPC)
-#export(poly_findInBoxGEOS)
+export(poly_findInBoxGEOS)
 
 # sp extension classes
 exportClasses(Ring,SpatialRings, SpatialRingsDataFrame)
