@@ -294,7 +294,7 @@ GEOSGeom rgeos_Polygons2geospolygon(SEXP env, SEXP obj) {
         for (int i=0; i<npls; i++) {
             SEXP crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
             
-            int *hole = LOGICAL_POINTER( GET_SLOT(VECTOR_ELT(pls, i), install("hole")) );
+            int hole = LOGICAL_POINTER( GET_SLOT(VECTOR_ELT(pls, i), install("hole")) )[0];
             if (hole) {
                 if (!warned) {
                     warning("Polygons object missing comment attribute ignoring hole(s). See function createSPComment.");

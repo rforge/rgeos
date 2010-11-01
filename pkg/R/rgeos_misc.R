@@ -40,11 +40,13 @@ RGEOSDistanceFunc = function(spgeom1, spgeom2, byid, func, densifyFrac = 1) {
     
     if(any(byid)) {
         id1 = row.names(spgeom1) 
-        if (is.null(spgeom2)) id2 = id1
-        else id2 = row.names(spgeom2)
+        if (is.null(spgeom2))
+            id2 = id1
+        else 
+            id2 = row.names(spgeom2)
         
-		colnames(x) <- id1
-        rownames(x) <- id2
+        colnames(x) = id1
+        rownames(x) = id2
     }
 
     return(x)
