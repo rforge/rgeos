@@ -1,5 +1,3 @@
-include Makeconf.win
-
 GEOS_INC_DIR=${GEOS_HOME}/include
 GEOS_LIB_DIR=${GEOS_HOME}/lib
 
