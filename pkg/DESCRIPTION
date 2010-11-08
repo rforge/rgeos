@@ -4,7 +4,7 @@ Version: 0.0-10
 Date: 2010-06-07
 Depends: R (>= 2.10.0), methods, sp (>= 0.9-57)
 LinkingTo: sp
-Suggests: maptools, testthat, plyr, stringr
+Suggests: maptools, testthat, plyr, stringr, XML
 LazyLoad: yes
 Description: Interface to Geometry Engine - Open Source (GEOS) using the C API for topology operations on geometries. 
 Author: Roger Bivand and Colin Rundel

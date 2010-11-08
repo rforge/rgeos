@@ -8,7 +8,7 @@ library(rgeos)
 funcTranslate=list( "getboundary"       = list(func=gBoundary,res=readWKT,arg1=readWKT),
                     "getCentroid"       = list(func=gCentroid,res=readWKT,arg1=readWKT),
                     "convexhull"        = list(func=gConvexHull,res=readWKT,arg1=readWKT),
-                    "getInteriorPoint"	= list(func=gPointOnSurface,res=readWKT,arg1=readWKT),
+                    "getInteriorPoint"  = list(func=gPointOnSurface,res=readWKT,arg1=readWKT),
 
                     "isSimple"          = list(func=gIsSimple,res=as.logical,arg1=readWKT),
                     "isValid"           = list(func=gIsValid,res=as.logical,arg1=readWKT),
@@ -30,7 +30,7 @@ funcTranslate=list( "getboundary"       = list(func=gBoundary,res=readWKT,arg1=r
                     "coveredBy"         = list(func=gCoveredBy,res=as.logical,arg1=readWKT,arg2=readWKT))
 
 # xml files to skip
-fileSkip = c("ExternalRobustness.xml","TestRobustOverlayFloat.xml","TestRobustOverlayFixed.xml")
+fileSkip = c("TestValid2.xml","ExternalRobustness.xml","TestRobustOverlayFloat.xml","TestRobustOverlayFixed.xml")
 
 # tests to skip
 descSkip = c(# TestFunctionLAPrec.xml
@@ -132,45 +132,45 @@ for (d in testdirs) {
                     opReturn = xmlValue( x[[i]][[j]][[1]] )
                     opNArgs = length(opAttrs)-1
 
-					# some ops seem to have a pattern argument that is not used
+                    # some ops seem to have a pattern argument that is not used
                     if ( 'pattern' %in% names(opAttrs) )
-						opNArgs = opNArgs-1
+                        opNArgs = opNArgs-1
 
                     opName = opAttrs[['name']]
                     
-                   	
+                       
                     
                     test_that(paste(desc,'-',opName), {
                         
-						funcdetails = funcTranslate[[opName]]
-						expect_that( is.null(funcdetails), is_false() )
+                        funcdetails = funcTranslate[[opName]]
+                        expect_that( is.null(funcdetails), is_false() )
                     
                         if ( !is.null(funcdetails) ) {
                             funcNArgs = length( funcdetails )-2
                             expect_that(funcNArgs==opNArgs, is_true())
-							
-							funcArgs = list()
+                            
+                            funcArgs = list()
                             for (k in 1:funcNArgs) {
                                 argName = paste("arg",k,sep='')
 
-								argVal = tolower(opAttrs[[argName]])
-								if (argVal %in% names(args))
-									argVal = args[[ argVal ]]
-								funcArgs[k] =  funcdetails[[argName]](argVal)	
+                                argVal = tolower(opAttrs[[argName]])
+                                if (argVal %in% names(args))
+                                    argVal = args[[ argVal ]]
+                                funcArgs[k] =  funcdetails[[argName]](argVal)    
                             }
-							
-							funcReturn = do.call(funcdetails[["func"]], funcArgs)
-							expectedReturn = funcdetails[["res"]](opReturn)
-							
-							if (is.logical(funcReturn)) {
-								expect_that(funcReturn == expectedReturn, is_true())
-							} else if (is.null(funcReturn)) {
-								expect_that(is.null(funcReturn) & is.null(expectedReturn), is_true())
-							} else if (gIsEmpty(expectedReturn)) {
-								expect_that(identical(funcReturn,expectedReturn), is_true())
-							} else { # if it isn't logical or NULL it should be a geometry
-								expect_that(gEquals(funcReturn,expectedReturn),is_true())
-							}
+                            
+                            funcReturn = do.call(funcdetails[["func"]], funcArgs)
+                            expectedReturn = funcdetails[["res"]](opReturn)
+                            
+                            if (is.logical(funcReturn)) {
+                                expect_that(funcReturn == expectedReturn, is_true())
+                            } else if (is.null(funcReturn)) {
+                                expect_that(is.null(funcReturn) & is.null(expectedReturn), is_true())
+                            } else if (gIsEmpty(expectedReturn)) {
+                                expect_that(identical(funcReturn,expectedReturn), is_true())
+                            } else { # if it isn't logical or NULL it should be a geometry
+                                expect_that(gEquals(funcReturn,expectedReturn),is_true())
+                            }
                         }
                     }) 
                 }                
