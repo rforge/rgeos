@@ -1,3 +1,24 @@
+2010-11-08 20:05  crundel
+
+	* inst/poly-ex-gpc, inst/poly-ex-gpc/ex-poly1.txt,
+	  inst/poly-ex-gpc/ex-poly2.txt, inst/poly-ex-gpc/hole-poly.txt:
+	  Added gpc polygon example data files
+
+2010-11-08 20:02  crundel
+
+	* data, man/class-gpc.poly.Rd, man/experimental-functions.Rd: More
+	  clean up
+
+2010-11-08 19:44  crundel
+
+	* DESCRIPTION, inst/tests/test-jts-xml.R, man,
+	  man/class-gpc.poly.Rd, tests, tests/test-all.R: Package clean up
+	  for release
+
+2010-11-07 19:38  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2010-11-07 19:18  rsbivand
 
 	* configure.win, src/Makevars.win: Windows static build
