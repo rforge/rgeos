@@ -99,8 +99,8 @@ b <- cbind(rnorm(100), rnorm(100))
 b <- as(b[chull(b), ], "gpc.poly")
 
 ## More complex polygons with an intersection
-p1 <- read.polyfile(system.file("poly-ex/ex-poly1.txt", package = "rgeos"))
-p2 <- read.polyfile(system.file("poly-ex/ex-poly2.txt", package = "rgeos"))
+p1 <- read.polyfile(system.file("poly-ex-gpc/ex-poly1.txt", package = "rgeos"))
+p2 <- read.polyfile(system.file("poly-ex-gpc/ex-poly2.txt", package = "rgeos"))
 
 ## Plot both polygons and highlight their intersection in red
 plot(append.poly(p1, p2))
