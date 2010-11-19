@@ -79,6 +79,7 @@ GEOSGeom rgeos_SpatialRings2geosring(SEXP env, SEXP obj);
 GEOSGeom rgeos_SpatialPolygons2geospolygon(SEXP env, SEXP obj);
 GEOSGeom rgeos_Polygons2geospolygon(SEXP env, SEXP obj);
 GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj);
+GEOSGeom rgeos_Lines2MP(SEXP env, SEXP obj);
 GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec);
 
 
@@ -192,6 +193,10 @@ SEXP rgeos_PolygonsContain(SEXP env, SEXP obj);
 SEXP GC_Contains(SEXP env, GEOSGeom GC);
 SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points);
 
+// STRtree functions
+
+SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2);
+SEXP rgeos_unary_STRtree_query(SEXP env, SEXP obj);
 
 #endif
 

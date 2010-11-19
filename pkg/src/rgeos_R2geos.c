@@ -383,7 +383,7 @@ GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec) {
 
 
 
-// Spatial polygons to fish soup geometry collection (multipoint) 
+// sp Polygons to fish soup geometry collection (multipoint) 
 GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj) {
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
@@ -416,6 +416,45 @@ GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj) {
     GEOSGeom GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOINT, geoms, nn);
     if (GC == NULL) {
         error("rgeos_Polygons2MP: collection not created");
+    }
+
+    UNPROTECT(pc);
+    return(GC);
+}
+
+// sp Lines to fish soup geometry collection (multipoint) 
+GEOSGeom rgeos_Lines2MP(SEXP env, SEXP obj) {
+    
+    GEOSContextHandle_t GEOShandle = getContextHandle(env);
+    
+    int pc=0;
+    SEXP pls;
+    PROTECT(pls = GET_SLOT(obj, install("Lines"))); pc++;
+    int npls = length(pls);
+    
+    int nn = 0;
+    for (int i=0; i<npls; i++) {
+        SEXP crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
+        SEXP dim = getAttrib(crdMat, R_DimSymbol);
+        nn += (INTEGER_POINTER(dim)[0]-1);
+    }
+
+    GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) nn, sizeof(GEOSGeom));
+
+    for (int i=0, ii=0; i<npls; i++) {
+        SEXP crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
+        SEXP dim = getAttrib(crdMat, R_DimSymbol);
+        int n = INTEGER_POINTER(dim)[0];
+        for (int j=0; j<(n-1); j++) {
+            GEOSGeom pt = rgeos_xy2Pt(env, NUMERIC_POINTER(crdMat)[j],NUMERIC_POINTER(crdMat)[j+n]);
+            geoms[ii] = pt;
+            ii++;
+        }
+    }
+
+    GEOSGeom GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOINT, geoms, nn);
+    if (GC == NULL) {
+        error("rgeos_Lines2MP: collection not created");
     }
 
     UNPROTECT(pc);
