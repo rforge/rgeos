@@ -174,7 +174,6 @@ SEXP rgeos_unary_STRtree_query(SEXP env, SEXP obj) {
     char classbuf[BUFSIZ];
 
     strcpy(classbuf, CHAR(STRING_ELT(GET_CLASS(VECTOR_ELT(obj, 0)), 0)));
-Rprintf("classbuf is %s, %d\n", classbuf, !strcmp(classbuf, "Polygons"));
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
     str = (GEOSSTRtree *) GEOSSTRtree_create_r(GEOShandle, (size_t) 10);

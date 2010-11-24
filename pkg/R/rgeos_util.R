@@ -7,6 +7,31 @@ poly_findInBoxGEOS <- function(spl, as_points=TRUE) {
        PACKAGE="rgeos")
 }
 
+gUnarySTRtreeQuery <- function(obj) {
+    if(inherits(obj, "SpatialLines")) type <- "line"
+    else if(inherits(obj, "SpatialPolygons")) type <- "poly"
+    else stop(paste("unsupported class:", class(obj)))
+    if (type == "line") lst <- slot(obj, "lines")
+    else lst <- slot(obj, "polygons")
+    .Call("rgeos_unary_STRtree_query", .RGEOS_HANDLE, lst, PACKAGE="rgeos")
+}
+
+gBinarySTRtreeQuery <- function(obj1, obj2) {
+    if(inherits(obj1, "SpatialLines")) type1 <- "line"
+    else if(inherits(obj1, "SpatialPolygons")) type1 <- "poly"
+    else stop(paste("unsupported class:", class(obj1)))
+    if(inherits(obj2, "SpatialLines")) type2 <- "line"
+    else if(inherits(obj2, "SpatialPolygons")) type2 <- "poly"
+    else stop(paste("unsupported class:", class(obj2)))
+    if (type1 == "line") lst1 <- slot(obj1, "lines")
+    else lst1 <- slot(obj1, "polygons")
+    if (type2 == "line") lst2 <- slot(obj2, "lines")
+    else lst2 <- slot(obj2, "polygons")
+    .Call("rgeos_binary_STRtree_query", .RGEOS_HANDLE, lst1, lst2,
+        PACKAGE="rgeos")
+}
+
+
 createSPComment = function(sppoly,which=NULL,overwrite=TRUE) {
     if (!inherits(sppoly, "SpatialPolygons")) 
         stop("not a SpatialPolygons object")
