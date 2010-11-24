@@ -26,6 +26,7 @@
 
 \examples{
 library(maptools)
+assign("rgeos", TRUE, envir=maptools:::.MAPTOOLS_CACHE)
 xx <- readShapeSpatial(system.file("shapes/fylk-val-ll.shp",
  package="maptools")[1], proj4string=CRS("+proj=longlat +datum=WGS84"))
 a0 <- gUnarySTRtreeQuery(xx)
