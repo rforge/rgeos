@@ -16,7 +16,7 @@ gLineMerge(spgeom, byid=FALSE, id = NULL)
 \arguments{
   \item{spgeom1, spgeom2}{sp objects as defined in package sp}
   \item{byid}{Logical vector determining if the function should be applied across ids (TRUE) or the entire object (FALSE) for spgeom1 and spgeom2}
-  \item{id}{Character vector defining id labels for the resulting geometries, if unspecified returned geometries will be labeled based on their parent geometries' labels}
+  \item{id}{Character vector defining id labels for the resulting geometries, if unspecified returned geometries will be labeled based on their parent geometries' labels; it may contain NA values for input objects not included in the union}
   \item{spgeom}{sp Polygon(s) or Line(s) depending on the function used}
 }
 

@@ -88,7 +88,7 @@ gUnionCascaded = function(spgeom, id = NULL) {
     if (is.null(id))
         id = rep("1",length(row.names(spgeom)))
 
-    return( TopologyFunc(groupID(spgeom,id),unique(id),TRUE,"rgeos_unioncascaded") ) 
+    return( TopologyFunc(groupID(spgeom,id),unique(na.omit(id)),TRUE,"rgeos_unioncascaded") ) 
 }
 
 

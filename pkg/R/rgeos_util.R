@@ -116,6 +116,7 @@ groupID = function(spgeom, ids) {
         
     if (length(row.names(spgeom)) != length(ids)) 
         stop("length of ids does not match number of geometries")
+    if (storage.mode(ids) != "character") ids <- as.character(ids)
     
     newids = unique(ids)
     
@@ -132,6 +133,8 @@ groupID = function(spgeom, ids) {
         lineslist = list()
         k=1
         for (curid in newids) {
+
+            if (is.na(curid)) next # RSB 101124
             
             linelist = list()
             l = 1
@@ -153,7 +156,9 @@ groupID = function(spgeom, ids) {
         polyslist = list()
         k=1
         for (curid in newids) {
-            
+
+            if (is.na(curid)) next # RSB 101124
+
             comment = c()
             polylist = list()
             l = 1
