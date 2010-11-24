@@ -1,3 +1,31 @@
+2010-11-24 10:39  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/rgeos_util.R,
+	  man/experimental-functions.Rd, src/rgeos_poly2nb.c:
+	  g*STRtreeQuery added to experimental
+
+2010-11-19 21:56  rsbivand
+
+	* .Rbuildignore: add rgeos_unary_STRtree_query and
+	  rgeos_binary_STRtree_query
+
+2010-11-19 21:54  rsbivand
+
+	* src/init.c, src/rgeos.h, src/rgeos_R2geos.c, src/rgeos_poly2nb.c:
+	  add rgeos_unary_STRtree_query and rgeos_binary_STRtree_query
+
+2010-11-19 13:18  rsbivand
+
+	* src/rgeos_poly2nb.c: STRtree attempts
+
+2010-11-18 23:07  crundel
+
+	* inst/tests/testxml/vivid: Removing empty folder
+
+2010-11-08 20:43  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2010-11-08 20:42  rsbivand
 
 	* DESCRIPTION: tidy
