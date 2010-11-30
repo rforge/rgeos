@@ -1,3 +1,17 @@
+2010-11-24 12:31  rsbivand
+
+	* R/rgeos_topology.R, R/rgeos_util.R, man/topo-bin-gUnion.Rd:
+	  g*STRtreeQuery added to experimental
+
+2010-11-24 10:44  rsbivand
+
+	* man/experimental-functions.Rd: g*STRtreeQuery added to
+	  experimental
+
+2010-11-24 10:39  rsbivand
+
+	* ChangeLog, inst/ChangeLog: g*STRtreeQuery added to experimental
+
 2010-11-24 10:39  rsbivand
 
 	* DESCRIPTION, NAMESPACE, R/rgeos_util.R,
