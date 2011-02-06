@@ -16,8 +16,10 @@
   } else {
     svn_version <- "(unknown)"
   }
-  cat("rgeos: (SVN revision ", svn_version, ")\n", sep="")
-  cat("GEOS runtime version:", .Call("rgeos_GEOSversion", PACKAGE="rgeos"),"\n")
+  Smess <- paste("rgeos: (SVN revision ", svn_version, ")\n", sep="")
+  Smess <- paste(Smess, "GEOS runtime version:",
+    .Call("rgeos_GEOSversion", PACKAGE="rgeos"),"\n")
+  packageStartupMessage(Smess, appendLF = TRUE)
 }
 
 .onUnload <- function(libpath) {
