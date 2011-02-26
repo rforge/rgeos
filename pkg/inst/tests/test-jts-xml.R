@@ -66,7 +66,7 @@ for (d in testdirs) {
         xmlfile =  system.file(file.path(xmldir,d,f),package="rgeos")
 
         context(paste('(',which(f==testfiles),'/',length(testfiles),')',f))
-        x = xmlRoot(xmlTreeParse(xmlfile,ignoreBlanks=TRUE))
+        x = xmlRoot(xmlTreeParse(I(readLines(xmlfile)),ignoreBlanks=TRUE))
         nodes = xmlSApply(x,xmlName)
 
         test_that("valid node types",{
