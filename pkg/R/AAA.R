@@ -9,6 +9,7 @@
   GEOSptr <- .Call('rgeos_Init', PACKAGE="rgeos")
   assign("GEOSptr", GEOSptr, envir=.RGEOS_HANDLE)
   assign("scale", 100000000, envir=.RGEOS_HANDLE)
+  assign("do_poly_check", TRUE, envir=.RGEOS_HANDLE)
   fn <- system.file("SVN_VERSION", package="rgeos")
   if (file.exists(fn)) {
     svn_version <- scan(system.file("SVN_VERSION", package="rgeos"),

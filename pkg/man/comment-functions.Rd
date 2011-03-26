@@ -1,12 +1,15 @@
 \name{RGEOS Polygon Hole Comment Functions}
 \alias{createSPComment}
 \alias{createPolygonsComment}
-
+\alias{get_do_poly_check}
+\alias{set_do_poly_check}
 \title{RGEOS Polygon Hole Comment Functions}
 \description{Utility functions for assigning ownership of holes to parent polygons}
 \usage{
 	createSPComment(sppoly,which=NULL,overwrite=TRUE)
 	createPolygonsComment(poly)
+        set_do_poly_check(value)
+        get_do_poly_check()
 }
 
 \arguments{
@@ -14,6 +17,7 @@
   \item{which}{Vector, which subset of geometries in sppoly should comment attributes be generated}
   \item{overwrite}{Logical, if a comment attribute already exists should it be overwritten}
   \item{poly}{Object of class \code{Polygons}}
+  \item{value}{logical value to set \dQuote{do_poly_check} option, default TRUE}
 }
 
 \details{In order for rgeos to function properly it is necessary that all holes within a given POLYGON or MULTIPOLYGON geometry must belong to a specific polygon. The \code{SpatialPolygons} class implementation does not currently include this information. To work around this limitation rgeos uses an additional comment attribute on the \code{Polygons} class that indicates which hole belongs to which polygon.
