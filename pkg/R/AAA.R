@@ -19,7 +19,9 @@
   }
   Smess <- paste("rgeos: (SVN revision ", svn_version, ")\n", sep="")
   Smess <- paste(Smess, "GEOS runtime version:",
-    .Call("rgeos_GEOSversion", PACKAGE="rgeos"),"\n")
+    .Call("rgeos_GEOSversion", PACKAGE="rgeos"), "\n")
+  Smess <- paste(Smess, "Polygon checking:", get_do_poly_check(), "\n")
+  Smess <- paste(Smess, "WARNING! if you turn polygon checking off, and polygons are\n not valid in GEOS, you risk losing data as your R session may crash!", "\n")
   packageStartupMessage(Smess, appendLF = TRUE)
 }
 
