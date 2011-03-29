@@ -189,6 +189,7 @@ SEXP rgeos_unary_STRtree_query(SEXP env, SEXP obj) {
         pl = VECTOR_ELT(obj, i);
         if (!strcmp(classbuf, "Polygons")) GC = rgeos_Polygons2MP(env, pl);
         else if (!strcmp(classbuf, "Lines")) GC = rgeos_Lines2MP(env, pl);
+        else if (!strcmp(classbuf, "Polygon")) GC = rgeos_Polygon2MP(env, pl);
         else error("rgeos_unary_STRtree_query: object class %s unknown",
             classbuf);
         if (GC == NULL) {

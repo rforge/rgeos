@@ -10,9 +10,11 @@ poly_findInBoxGEOS <- function(spl, as_points=TRUE) {
 gUnarySTRtreeQuery <- function(obj) {
     if(inherits(obj, "SpatialLines")) type <- "line"
     else if(inherits(obj, "SpatialPolygons")) type <- "poly"
+    else if(inherits(obj, "Polygons")) type <- "Poly"
     else stop(paste("unsupported class:", class(obj)))
     if (type == "line") lst <- slot(obj, "lines")
-    else lst <- slot(obj, "polygons")
+    else if (type == "poly") lst <- slot(obj, "polygons")
+    else lst <- slot(obj, "Polygons")
     .Call("rgeos_unary_STRtree_query", .RGEOS_HANDLE, lst, PACKAGE="rgeos")
 }
 
