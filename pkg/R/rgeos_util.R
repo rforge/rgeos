@@ -3,8 +3,11 @@ poly_findInBoxGEOS <- function(spl, as_points=TRUE) {
     stopifnot(is.logical(as_points))
     stopifnot(!is.na(as_points))
     pls <- slot(spl, "polygons")
-    .Call("rgeos_poly_findInBox", .RGEOS_HANDLE, pls, as_points,
+    res <- .Call("rgeos_poly_findInBox", .RGEOS_HANDLE, pls, as_points,
        PACKAGE="rgeos")
+    finish_RGEOS()
+    set_RGEOS_HANDLE(init_RGEOS())
+    res
 }
 
 gUnarySTRtreeQuery <- function(obj) {
@@ -15,7 +18,11 @@ gUnarySTRtreeQuery <- function(obj) {
     if (type == "line") lst <- slot(obj, "lines")
     else if (type == "poly") lst <- slot(obj, "polygons")
     else lst <- slot(obj, "Polygons")
-    .Call("rgeos_unary_STRtree_query", .RGEOS_HANDLE, lst, PACKAGE="rgeos")
+    res <- .Call("rgeos_unary_STRtree_query", .RGEOS_HANDLE, lst,
+        PACKAGE="rgeos")
+    finish_RGEOS()
+    set_RGEOS_HANDLE(init_RGEOS())
+    res
 }
 
 gBinarySTRtreeQuery <- function(obj1, obj2) {
@@ -29,8 +36,11 @@ gBinarySTRtreeQuery <- function(obj1, obj2) {
     else lst1 <- slot(obj1, "polygons")
     if (type2 == "line") lst2 <- slot(obj2, "lines")
     else lst2 <- slot(obj2, "polygons")
-    .Call("rgeos_binary_STRtree_query", .RGEOS_HANDLE, lst1, lst2,
+    res <- .Call("rgeos_binary_STRtree_query", .RGEOS_HANDLE, lst1, lst2,
         PACKAGE="rgeos")
+    finish_RGEOS()
+    set_RGEOS_HANDLE(init_RGEOS())
+    res
 }
 
 
