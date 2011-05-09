@@ -1,5 +1,9 @@
 overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ...) {
 	stopifnot(identical(proj4string(x), proj4string(y)))
+	if (gridded(x))
+		by = as(x, "SpatialPolygons")
+	if (gridded(y))
+		by = as(y, "SpatialPolygons")
 	gI = gIntersects(y, x, byid = TRUE)
 	if (returnList) {
 		ret = apply(gI, 1, which)
@@ -21,18 +25,18 @@ overGeomGeomDF = function(x, y, returnList = FALSE, fn = NULL, ...) {
     ret
 }
 
-setMethod("over",
-    signature(x = "SpatialPoints", y = "SpatialPolygons"),
-	        overGeomGeom)
+#setMethod("over",
+#    signature(x = "SpatialPoints", y = "SpatialPolygons"),
+#	        overGeomGeom)
 setMethod("over",
     signature(x = "SpatialPoints", y = "SpatialLines"),
 	        overGeomGeom)
-setMethod("over",
-    signature(x = "SpatialPoints", y = "SpatialPoints"),
-	        overGeomGeom)
-setMethod("over",
-    signature(x = "SpatialPolygons", y = "SpatialPoints"),
-	        overGeomGeom)
+#setMethod("over",
+#    signature(x = "SpatialPoints", y = "SpatialPoints"),
+#	        overGeomGeom)
+#setMethod("over",
+#    signature(x = "SpatialPolygons", y = "SpatialPoints"),
+#	        overGeomGeom)
 setMethod("over",
     signature(x = "SpatialPolygons", y = "SpatialLines"),
 	        overGeomGeom)
@@ -50,18 +54,18 @@ setMethod("over",
 	        overGeomGeom)
 
 # all with DataFrame:
-setMethod("over",
-    signature(x = "SpatialPoints", y = "SpatialPolygonsDataFrame"),
-	        overGeomGeomDF)
+#setMethod("over",
+#    signature(x = "SpatialPoints", y = "SpatialPolygonsDataFrame"),
+#	        overGeomGeomDF)
 setMethod("over",
     signature(x = "SpatialPoints", y = "SpatialLinesDataFrame"),
 	        overGeomGeomDF)
-setMethod("over",
-    signature(x = "SpatialPoints", y = "SpatialPointsDataFrame"),
-	        overGeomGeomDF)
-setMethod("over",
-    signature(x = "SpatialPolygons", y = "SpatialPointsDataFrame"),
-	        overGeomGeomDF)
+#setMethod("over",
+#    signature(x = "SpatialPoints", y = "SpatialPointsDataFrame"),
+#	        overGeomGeomDF)
+#setMethod("over",
+#    signature(x = "SpatialPolygons", y = "SpatialPointsDataFrame"),
+#	        overGeomGeomDF)
 setMethod("over",
     signature(x = "SpatialPolygons", y = "SpatialLinesDataFrame"),
 	        overGeomGeomDF)
@@ -76,4 +80,24 @@ setMethod("over",
 	        overGeomGeomDF)
 setMethod("over",
     signature(x = "SpatialLines", y = "SpatialLinesDataFrame"),
+	        overGeomGeomDF)
+
+# lines & grids:
+setMethod("over",
+    signature(x = "SpatialLines", y = "SpatialPixels"),
+	        overGeomGeomDF)
+setMethod("over",
+    signature(x = "SpatialLines", y = "SpatialGrid"),
+	        overGeomGeomDF)
+setMethod("over",
+    signature(x = "SpatialLines", y = "SpatialPixelsDataFrame"),
+	        overGeomGeomDF)
+setMethod("over",
+    signature(x = "SpatialLines", y = "SpatialGridDataFrame"),
+	        overGeomGeomDF)
+setMethod("over",
+    signature(x = "SpatialPixels", y = "SpatialLines"),
+	        overGeomGeom)
+setMethod("over",
+    signature(x = "SpatialGrid", y = "SpatialLinesDataFrame"),
 	        overGeomGeomDF)
