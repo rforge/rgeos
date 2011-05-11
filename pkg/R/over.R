@@ -1,9 +1,9 @@
 overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ...) {
 	stopifnot(identical(proj4string(x), proj4string(y)))
 	if (gridded(x))
-		by = as(x, "SpatialPolygons")
+		x = as(x, "SpatialPolygons")
 	if (gridded(y))
-		by = as(y, "SpatialPolygons")
+		y = as(y, "SpatialPolygons")
 	gI = gIntersects(y, x, byid = TRUE)
 	if (returnList) {
 		ret = apply(gI, 1, which)
@@ -16,9 +16,10 @@ overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ...) {
 	ret
 }
 
-# from: overDFGeneric in sp:
+# taken from: overDFGeneric in sp; 
+# if modified here, consider modifying there as well!
 overGeomGeomDF = function(x, y, returnList = FALSE, fn = NULL, ...) {
-    r = over(x, geometry(y), returnList = TRUE)
+    r = overGeomGeom(x, y, returnList = TRUE)
     ret = sp:::.overDF(r, y@data, length(x), returnList, fn, ...)
     if (!returnList)
         row.names(ret) = row.names(x)
@@ -85,10 +86,10 @@ setMethod("over",
 # lines & grids:
 setMethod("over",
     signature(x = "SpatialLines", y = "SpatialPixels"),
-	        overGeomGeomDF)
+	        overGeomGeom)
 setMethod("over",
     signature(x = "SpatialLines", y = "SpatialGrid"),
-	        overGeomGeomDF)
+	        overGeomGeom)
 setMethod("over",
     signature(x = "SpatialLines", y = "SpatialPixelsDataFrame"),
 	        overGeomGeomDF)
