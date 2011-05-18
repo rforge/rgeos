@@ -8,6 +8,9 @@ RGEOSBinPredFunc = function(spgeom1, spgeom2, byid, func, optparam=NULL) {
     if (length(byid) == 1)
         byid <- rep(byid,2)
 
+    if (is.null(spgeom2) && inherits(spgeom1, "SpatialPolygons")) 
+        spgeom1 <- createSPComment(spgeom1)
+
     if(!is.null(spgeom1) & !is.null(spgeom2)) {
         if(!identical(spgeom1@proj4string,spgeom2@proj4string))
             warning("spgeom1 and spgeom2 have different proj4 strings")
