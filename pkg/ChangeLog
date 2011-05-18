@@ -1,3 +1,23 @@
+2011-05-18 21:06  rsbivand
+
+	* R/rgeos_predicate_binary.R,
+	  R/rgeos_predicate_unary.R,
+	  R/rgeos_topology.R,
+	  R/rgeos_topology_binary.R:
+	  RGEOSBinPredFunc
+	  single
+	  argument
+	  fix
+
+2011-05-18 20:53  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog:
+	  RGEOSBinPredFunc
+	  single
+	  argument
+	  fix
+
 2011-05-18 20:49  rsbivand
 
 	* DESCRIPTION,
