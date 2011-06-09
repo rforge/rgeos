@@ -110,7 +110,8 @@ gUnionCascaded = function(spgeom, id = NULL, bound = 1000L) {
     if (any(sl > bound)) {
         stop(paste("Too many polygons in group to dissolve:",
             paste(sl, collapse=","), "greater than", bound,
-            "- see help page"))
+            "- see help page", ifelse(version_GEOS0() < "3.3.0", "",
+            "- consider using gUnaryUnion instead")))
     }
     out <- vector(mode="list", length=length(ids))
     for (i in seq(along=ids)) {

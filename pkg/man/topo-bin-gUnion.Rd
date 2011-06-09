@@ -25,7 +25,7 @@ gLineMerge(spgeom, byid=FALSE, id = NULL)
 
 \details{Returns an sp object with intersecting geometries merged. If geometries do not intersect then both are returned as distinct subgeometries.
 
-gUnionCascaded expects a single sp object of class SpatialPolygons with subgeometries which it unions together. Because gUnionCascaded can only dissolve MultiPolygon objects, the number that can be handled per id group appears to be limited by the length of the Polygons comment string. If gUnionCascaded exits reporting that \dQuote{too many polygons in group to dissolve}, use some subgouping first on groups that are too large to reduce the number in each group. The critical bound beyond which a crash may occur is unknown, the default bound may be conservative.
+gUnionCascaded expects a single sp object of class SpatialPolygons with subgeometries which it unions together. Because gUnionCascaded can only dissolve MultiPolygon objects, the number that can be handled per id group appears to be limited by the length of the Polygons comment string. If gUnionCascaded exits reporting that \dQuote{too many polygons in group to dissolve}, use some subgouping first on groups that are too large to reduce the number in each group. The critical bound beyond which a crash may occur is unknown, the default bound may be conservative. If GEOS version 3.3.0 is available, use gUnaryUnion.
 
 gUnaryUnion expects a single sp object of class SpatialPolygons with subgeometries which it unions together; introduced in GEOS version 3.3.0, and handles GeometryCollection objects.
 
