@@ -92,7 +92,7 @@ gLineMerge = function(spgeom, byid=FALSE, id = NULL) {
     return( TopologyFunc(spgeom,id,byid,"rgeos_linemerge") ) 
 }
 
-gUnionCascaded = function(spgeom, id = NULL, bound = 1000L) {
+gUnionCascaded = function(spgeom, id = NULL) {
     
     if (!inherits(spgeom,"SpatialPolygons"))
         stop("Invalid geometry, may only be applied to polygons")
@@ -107,12 +107,6 @@ gUnionCascaded = function(spgeom, id = NULL, bound = 1000L) {
 
     ids <- split(1:length(id), id)
     sl <- sapply(ids, length)
-    if (any(sl > bound)) {
-        stop(paste("Too many polygons in group to dissolve:",
-            paste(sl, collapse=","), "greater than", bound,
-            "- see help page", ifelse(version_GEOS0() < "3.3.0", "",
-            "- consider using gUnaryUnion instead")))
-    }
     out <- vector(mode="list", length=length(ids))
     for (i in seq(along=ids)) {
         out[[i]] <- TopologyFunc(groupID(spgeom[ids[[i]]], id[ids[[i]]]),
