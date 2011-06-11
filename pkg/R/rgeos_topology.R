@@ -101,7 +101,7 @@ gUnionCascaded = function(spgeom, id = NULL) {
     if (is.null(id))
         id = rep("1",length(row.names(spgeom)))
 
-    if (any(is.na(id))) stop("No NAs permitted in id")
+#    if (any(is.na(id))) stop("No NAs permitted in id")
 
     if (get_do_poly_check()) spgeom <- createSPComment(spgeom)
 
@@ -128,7 +128,7 @@ gUnaryUnion = function(spgeom, id = NULL) {
     if (is.null(id))
         id = rep("1",length(row.names(spgeom)))
 
-    if (any(is.na(id))) stop("No NAs permitted in id")
+#    if (any(is.na(id))) stop("No NAs permitted in id")
 
     if (get_do_poly_check()) spgeom <- createSPComment(spgeom)
 
