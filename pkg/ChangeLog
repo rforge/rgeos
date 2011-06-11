@@ -1,3 +1,13 @@
+2011-06-11 06:59  rsbivand
+
+	* src/local_stubs.c:
+	  touch local_stubs.c
+
+2011-06-11 05:26  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: permit NA IDs in union
+
 2011-06-11 05:25  rsbivand
 
 	* R/rgeos_topology.R:
