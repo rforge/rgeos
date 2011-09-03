@@ -59,7 +59,7 @@ SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points) {
     for (i=0; i<(npls-1); i++) {
         UD.count = 0;
         GEOSSTRtree_query_r(GEOShandle, str, bbs[i],
-            (GEOSQueryCallback *) cb, &UD);
+            (GEOSQueryCallback) cb, &UD);
         for (j=0, jj=0; j<UD.count; j++) if (UD.ids[j] > i) jj++;
         icard[i] = jj;
         if (icard[i] > 0) SET_VECTOR_ELT(bblist, i, NEW_INTEGER(icard[i]));
@@ -148,7 +148,7 @@ SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
     for (i=0; i<nobj2; i++) {
         UD.count = 0;
         GEOSSTRtree_query_r(GEOShandle, str, bbs2[i],
-            (GEOSQueryCallback *) cb, &UD);
+            (GEOSQueryCallback) cb, &UD);
 
         icard[i] = UD.count;
 
@@ -219,7 +219,7 @@ SEXP rgeos_unary_STRtree_query(SEXP env, SEXP obj) {
     for (i=0; i<(nobj-1); i++) {
         UD.count = 0;
         GEOSSTRtree_query_r(GEOShandle, str, bbs[i],
-            (GEOSQueryCallback *) cb, &UD);
+            (GEOSQueryCallback) cb, &UD);
         for (j=0, jj=0; j<UD.count; j++) if (UD.ids[j] > i) jj++;
         icard[i] = jj;
         if (icard[i] > 0) {
