@@ -8,7 +8,8 @@ struct ud {
 void cb(void *item, void *userdata) {
     struct ud *my_UD;
     my_UD = userdata;
-    my_UD->ids[my_UD->count] = (int) item;
+    my_UD->ids[my_UD->count] = *((int *) item);
+// 110904 EJP
     my_UD->count++;
 }
 
@@ -29,7 +30,7 @@ SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points) {
     str = (GEOSSTRtree *) GEOSSTRtree_create_r(GEOShandle, (size_t) 10);
 
     npls = length(pls);
-    bbs = (GEOSGeom *) R_Calloc((size_t) npls, GEOSGeom);
+    bbs = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
     ids = (int *) R_alloc((size_t) npls, sizeof(int));
     UD.ids = (int *) R_alloc((size_t) npls, sizeof(int));
     oids = (int *) R_alloc((size_t) npls, sizeof(int));
@@ -50,7 +51,9 @@ SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points) {
             error("rgeos_poly2nb: envelope [%d] not created", i);
         }
         bbs[i] = bb;
-        GEOSSTRtree_insert_r(GEOShandle, str, bb, (int *) ids[i]);
+        GEOSSTRtree_insert_r(GEOShandle, str, bb, &(ids[i]));
+// 110904 EJP
+        GEOSGeom_destroy_r(GEOShandle, GC);
     }
 
     icard = (int *) R_alloc((size_t) npls, sizeof(int));
@@ -76,11 +79,12 @@ SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points) {
         }
     }
 
-    GEOSSTRtree_destroy_r(GEOShandle, str);
     for (i=0; i<npls; i++) {
+        GEOSSTRtree_remove_r(GEOShandle, str, bbs[i], &(ids[i]));
+// 110904 EJP
         GEOSGeom_destroy_r(GEOShandle, bbs[i]);
     }
-    R_Free(bbs);
+    GEOSSTRtree_destroy_r(GEOShandle, str);
 
     UNPROTECT(pc);
     return(bblist);
@@ -124,7 +128,9 @@ SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
         if ((bb = GEOSEnvelope_r(GEOShandle, GC)) == NULL) {
             error("rgeos_binary_STRtree_query: envelope [%d] not created", i);
         }
-        GEOSSTRtree_insert_r(GEOShandle, str, bb, (int *) ids[i]);
+        GEOSGeom_destroy_r(GEOShandle, GC);
+        GEOSSTRtree_insert_r(GEOShandle, str, bb, &(ids[i]));
+// 110904 EJP
     }
 
     for (i=0; i<nobj2; i++) {
@@ -139,6 +145,7 @@ SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
         if ((bb = GEOSEnvelope_r(GEOShandle, GC)) == NULL) {
             error("rgeos_binary_STRtree_query: envelope [%d] not created", i);
         }
+        GEOSGeom_destroy_r(GEOShandle, GC);
         bbs2[i] = bb;
     }
 
@@ -190,7 +197,7 @@ SEXP rgeos_unary_STRtree_query(SEXP env, SEXP obj) {
     str = (GEOSSTRtree *) GEOSSTRtree_create_r(GEOShandle, (size_t) 10);
 
     nobj = length(obj);
-    bbs = (GEOSGeom *) R_Calloc((size_t) nobj, GEOSGeom);
+    bbs = (GEOSGeom *) R_alloc((size_t) nobj, sizeof(GEOSGeom));
     ids = (int *) R_alloc((size_t) nobj, sizeof(int));
     UD.ids = (int *) R_alloc((size_t) nobj, sizeof(int));
     oids = (int *) R_alloc((size_t) nobj, sizeof(int));
@@ -210,7 +217,9 @@ SEXP rgeos_unary_STRtree_query(SEXP env, SEXP obj) {
             error("rgeos_unary_STRtree_query: envelope [%d] not created", i);
         }
         bbs[i] = bb;
-        GEOSSTRtree_insert_r(GEOShandle, str, bb, (int *) ids[i]);
+        GEOSSTRtree_insert_r(GEOShandle, str, bb, &(ids[i]));
+        GEOSGeom_destroy_r(GEOShandle, GC);
+// 110904 EJP
     }
 
     icard = (int *) R_alloc((size_t) nobj, sizeof(int));
@@ -239,11 +248,11 @@ SEXP rgeos_unary_STRtree_query(SEXP env, SEXP obj) {
     }
 
     for (i=0; i<nobj; i++) {
-        GEOSSTRtree_remove_r(GEOShandle, str, bbs[i], (int *) ids[i]);
+        GEOSSTRtree_remove_r(GEOShandle, str, bbs[i], &(ids[i]));
+// 110904 EJP
         GEOSGeom_destroy_r(GEOShandle, bbs[i]);
     }
     GEOSSTRtree_destroy_r(GEOShandle, str);
-    R_Free(bbs);
 
     UNPROTECT(pc);
     return(bblist);
