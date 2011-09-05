@@ -102,9 +102,9 @@ SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
     GEOSGeom (*rgeos_xx2MP)(SEXP, SEXP);
 
     strcpy(classbuf1, CHAR(STRING_ELT(GET_CLASS(VECTOR_ELT(obj1, 0)), 0)));
-    if (!strcmp(classbuf1, "Polygons")) 
+    if (!strncmp(classbuf1, "Polygons", 8)) 
         rgeos_xx2MP = rgeos_Polygons2MP;
-    else if (!strcmp(classbuf1, "Lines")) 
+    else if (!strncmp(classbuf1, "Lines", 5)) 
         rgeos_xx2MP = rgeos_Lines2MP;
     else
         error("rgeos_binary_STRtree_query: object class %s unknown", classbuf1);
@@ -137,9 +137,9 @@ SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
     }
 
     strcpy(classbuf2, CHAR(STRING_ELT(GET_CLASS(VECTOR_ELT(obj2, 0)), 0)));
-    if (!strcmp(classbuf1, "Polygons")) 
+    if (!strncmp(classbuf1, "Polygons", 8)) 
         rgeos_xx2MP = rgeos_Polygons2MP;
-    else if (!strcmp(classbuf1, "Lines")) 
+    else if (!strncmp(classbuf1, "Lines", 5)) 
         rgeos_xx2MP = rgeos_Lines2MP;
     else
         error("rgeos_binary_STRtree_query: object class %s unknown", classbuf2);
@@ -201,11 +201,11 @@ SEXP rgeos_unary_STRtree_query(SEXP env, SEXP obj) {
     GEOSGeom (*rgeos_xx2MP)(SEXP, SEXP);
 
     strcpy(classbuf, CHAR(STRING_ELT(GET_CLASS(VECTOR_ELT(obj, 0)), 0)));
-    if (!strcmp(classbuf, "Polygons")) 
+    if (!strncmp(classbuf, "Polygons", 8)) 
         rgeos_xx2MP = rgeos_Polygons2MP;
-    else if (!strcmp(classbuf, "Lines")) 
+    else if (!strncmp(classbuf, "Lines", 5)) 
         rgeos_xx2MP = rgeos_Lines2MP;
-    else if (!strcmp(classbuf, "Polygon"))
+    else if (!strncmp(classbuf, "Polygon", 7))
         rgeos_xx2MP = rgeos_Polygon2MP;
     else
     error("rgeos_binary_STRtree_query: object class %s unknown", classbuf);
