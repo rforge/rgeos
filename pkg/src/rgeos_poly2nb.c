@@ -99,9 +99,15 @@ SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
     GEOSSTRtree *str;
     int *icard, *ids, *oids;
     char classbuf1[BUFSIZ], classbuf2[BUFSIZ];
+    GEOSGeom (*rgeos_xx2MP)(SEXP, SEXP);
 
     strcpy(classbuf1, CHAR(STRING_ELT(GET_CLASS(VECTOR_ELT(obj1, 0)), 0)));
-    strcpy(classbuf2, CHAR(STRING_ELT(GET_CLASS(VECTOR_ELT(obj2, 0)), 0)));
+    if (!strcmp(classbuf1, "Polygons")) 
+        rgeos_xx2MP = rgeos_Polygons2MP;
+    else if (!strcmp(classbuf1, "Lines")) 
+        rgeos_xx2MP = rgeos_Lines2MP;
+    else
+        error("rgeos_binary_STRtree_query: object class %s unknown", classbuf1);
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
@@ -118,10 +124,7 @@ SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
     for (i=0; i<nobj1; i++) {
         ids[i] = i;
         pl = VECTOR_ELT(obj1, i);
-        if (!strcmp(classbuf1, "Polygons")) GC = rgeos_Polygons2MP(env, pl);
-        else if (!strcmp(classbuf1, "Lines")) GC = rgeos_Lines2MP(env, pl);
-        else error("rgeos_binary_STRtree_query: object class %s unknown",
-            classbuf1);
+        GC = rgeos_xx2MP(env, pl);
         if (GC == NULL) {
             error("rgeos_binary_STRtree_query: MP GC[%d] not created", i);
         }
@@ -133,12 +136,17 @@ SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
 // 110904 EJP
     }
 
+    strcpy(classbuf2, CHAR(STRING_ELT(GET_CLASS(VECTOR_ELT(obj2, 0)), 0)));
+    if (!strcmp(classbuf1, "Polygons")) 
+        rgeos_xx2MP = rgeos_Polygons2MP;
+    else if (!strcmp(classbuf1, "Lines")) 
+        rgeos_xx2MP = rgeos_Lines2MP;
+    else
+        error("rgeos_binary_STRtree_query: object class %s unknown", classbuf2);
+
     for (i=0; i<nobj2; i++) {
         pl = VECTOR_ELT(obj2, i);
-        if (!strcmp(classbuf2, "Polygons")) GC = rgeos_Polygons2MP(env, pl);
-        else if (!strcmp(classbuf2, "Lines")) GC = rgeos_Lines2MP(env, pl);
-        else error("rgeos_binary_STRtree_query: object class %s unknown",
-            classbuf2);
+        GC = rgeos_xx2MP(env, pl);
         if (GC == NULL) {
             error("rgeos_binary_STRtree_query: MP GC[%d] not created", i);
         }
@@ -190,8 +198,18 @@ SEXP rgeos_unary_STRtree_query(SEXP env, SEXP obj) {
     GEOSSTRtree *str;
     int *icard, *ids, *oids;
     char classbuf[BUFSIZ];
+    GEOSGeom (*rgeos_xx2MP)(SEXP, SEXP);
 
     strcpy(classbuf, CHAR(STRING_ELT(GET_CLASS(VECTOR_ELT(obj, 0)), 0)));
+    if (!strcmp(classbuf, "Polygons")) 
+        rgeos_xx2MP = rgeos_Polygons2MP;
+    else if (!strcmp(classbuf, "Lines")) 
+        rgeos_xx2MP = rgeos_Lines2MP;
+    else if (!strcmp(classbuf, "Polygon"))
+        rgeos_xx2MP = rgeos_Polygon2MP;
+    else
+    error("rgeos_binary_STRtree_query: object class %s unknown", classbuf);
+
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
     str = (GEOSSTRtree *) GEOSSTRtree_create_r(GEOShandle, (size_t) 10);
@@ -205,11 +223,7 @@ SEXP rgeos_unary_STRtree_query(SEXP env, SEXP obj) {
     for (i=0; i<nobj; i++) {
         ids[i] = i;
         pl = VECTOR_ELT(obj, i);
-        if (!strcmp(classbuf, "Polygons")) GC = rgeos_Polygons2MP(env, pl);
-        else if (!strcmp(classbuf, "Lines")) GC = rgeos_Lines2MP(env, pl);
-        else if (!strcmp(classbuf, "Polygon")) GC = rgeos_Polygon2MP(env, pl);
-        else error("rgeos_unary_STRtree_query: object class %s unknown",
-            classbuf);
+        GC = rgeos_xx2MP(env, pl);
         if (GC == NULL) {
             error("rgeos_unary_STRtree_query: MP GC[%d] not created", i);
         }
