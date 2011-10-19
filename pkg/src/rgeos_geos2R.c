@@ -380,7 +380,7 @@ SEXP rgeos_geospolygon2Polygons(SEXP env, GEOSGeom geom, SEXP ID) {
     char *buf;
     int nc;
 
-    nc = ceil(log10(npoly)+1);
+    nc = ceil(log10(npoly)+1)+1;
     buf = (char *) R_alloc((size_t) (npoly*nc)+1, sizeof(char));
     SP_PREFIX(comm2comment)(buf, (npoly*nc)+1, comm, npoly);
     SET_STRING_ELT(comment, 0, mkChar((const char*) buf));

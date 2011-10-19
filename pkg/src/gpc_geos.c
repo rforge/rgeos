@@ -224,7 +224,7 @@ SEXP GCGCPPts(SEXP env, GEOSGeom Geom) {
 
     int nc;
 
-    nc = ceil(log10(n)+1);
+    nc = ceil(log10(n)+1)+1;
     buf = (char *) R_alloc((size_t) (n*nc)+1, sizeof(char));
     SP_PREFIX(comm2comment)(buf, (n*nc)+1, comm, n);
     PROTECT(comment = NEW_CHARACTER(1)); pc++;
