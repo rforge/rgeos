@@ -1,3 +1,7 @@
+2011-11-10 07:43  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2011-11-09 10:51  rsbivand
 
 	* DESCRIPTION, src/rgeos_topology_binary.c: drop empty objects
