@@ -10,6 +10,7 @@ readWKT = function( text, id = NULL, p4s = NULL) {
     
     m =  str_match_all(wkt, "POINT|LINESTRING|LINEARRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON")   
     ngeoms =  dim( m[[1]] )[1]
+    if(is.null(ngeoms)) ngeoms = 0
     
     if(is.null(id)) {
         if (ngeoms == 0) {
