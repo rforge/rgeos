@@ -43,15 +43,8 @@ SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP width, SEXP quads
 
 
     SEXP ans;
-    PROTECT(ans = rgeos_convert_geos2R(env, res, p4s, id));
+    PROTECT(ans = rgeos_convert_geos2R(env, res, p4s, id)); // releases res
 
-	// EJP:
-    //GEOSGeom_destroy_r(GEOShandle, res);
-    if (n > 1) // only then res != geoms[0]:
-		GEOSGeom_destroy_r(GEOShandle, res);
-
-    for (i=0; i<n; i++) 
-		GEOSGeom_destroy_r(GEOShandle, geoms[i]);
     UNPROTECT(1);
     return(ans);
 }

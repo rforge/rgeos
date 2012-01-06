@@ -193,6 +193,8 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
     }
 
     UNPROTECT(pc);
+	// destroy geom? EJP, try:
+    GEOSGeom_destroy_r(GEOShandle, geom);
     return(ans);
 }
 
