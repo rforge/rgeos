@@ -30,6 +30,7 @@ SEXP rgeos_geom2bbox(SEXP env, GEOSGeom geom) {
     SEXP bbmat;
     PROTECT(bbmat = rgeos_CoordSeq2crdMat(env, s, 0, FALSE)); pc++;
     //PROTECT(bbmat = rgeos_CoordSeq2crdMat(env, s, (int) GEOSHasZ_r(GEOShandle, geom), FALSE)); pc++;
+    GEOSGeom_destroy_r(GEOShandle, bb); // EJP; try
         
     double UX=-DBL_MAX, LX=DBL_MAX, UY=-DBL_MAX, LY=DBL_MAX;
     for (int i=0; i<n; i++) {
