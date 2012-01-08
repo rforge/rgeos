@@ -462,6 +462,7 @@ SEXP rgeos_geosring2Polygon(SEXP env, GEOSGeom lr, int hole) {
     }
 
     //GEOSGeom_destroy_r(GEOShandle, p); -- won't work, as members are owned by geom too.
+    GEOSGeom_destroy_r(GEOShandle, centroid);
     UNPROTECT(pc);
     return(ans);
 }
