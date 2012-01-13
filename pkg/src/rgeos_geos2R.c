@@ -402,65 +402,86 @@ SEXP rgeos_geospolygon2Polygons(SEXP env, GEOSGeom geom, SEXP ID) {
 SEXP rgeos_geosring2Polygon(SEXP env, GEOSGeom lr, int hole) {
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    SEXP ringDir, labpt, Area, Hole, crd,crdfix;
     int pc=0;
     
-    PROTECT(ringDir = NEW_INTEGER(1)); pc++;
-    INTEGER_POINTER(ringDir)[0] = hole ? -1 : 1;
-
     GEOSCoordSeq s = (GEOSCoordSequence *) GEOSGeom_getCoordSeq_r(GEOShandle, lr);
-    if (s  == NULL) error("rgeos_geosring2Polygon: CoordSeq failure");
+    if (s == NULL) 
+        error("rgeos_geosring2Polygon: CoordSeq failure");
+    
     unsigned int n;
     if (GEOSCoordSeq_getSize_r(GEOShandle, s, &n) == 0)
         error("rgeos_geosring2Polygon: CoordSeq failure");
-        
-    PROTECT(crd = rgeos_CoordSeq2crdMat(env, s, FALSE, hole)); pc++;
-    PROTECT(crdfix = rgeos_crdMatFixDir(crd, hole)); pc++;
     
-    GEOSGeom p = GEOSGeom_createPolygon_r(GEOShandle,lr,NULL,0);
-    if (p == NULL) error("rgeos_geosring2Polygon: unable to create polygon");
-    double area;
-    if (!GEOSArea_r(GEOShandle, p, &area))
+    // Get coordinates
+    SEXP crd;
+    PROTECT(crd = rgeos_crdMatFixDir(rgeos_CoordSeq2crdMat(env, s, FALSE, hole), hole)); pc++;
+    
+    // Calculate area
+    GEOSGeom p = GEOSGeom_createPolygon_r(GEOShandle,GEOSGeom_clone_r(GEOShandle,lr),NULL,0);
+    if (p == NULL) 
+        error("rgeos_geosring2Polygon: unable to create polygon");
+    
+    SEXP area;
+    PROTECT(area = NEW_NUMERIC(1)); pc++;
+    NUMERIC_POINTER(area)[0] = 0.0;
+    if (!GEOSArea_r(GEOShandle, p, NUMERIC_POINTER(area)))
         error("rgeos_geosring2Polygon: area calculation failure");
-
-    PROTECT(Area = NEW_NUMERIC(1)); pc++;
-    NUMERIC_POINTER(Area)[0] = area;
-
-
-    double xc,yc;
-    GEOSGeom centroid = GEOSGetCentroid_r(GEOShandle, p);
-    rgeos_Pt2xy(env, centroid, &xc, &yc);
-    //FIXME - do we really need this? what cases produce a nonfinite centroid?
-    if (!R_FINITE(xc) || !R_FINITE(yc)) {
-        xc = (NUMERIC_POINTER(crd)[0] + NUMERIC_POINTER(crd)[(n-1)])/2.0;
-        yc = (NUMERIC_POINTER(crd)[n] + NUMERIC_POINTER(crd)[n+(n-1)])/2.0;
-    }
+    
+    
+    // Calculate label position
+    SEXP labpt;
     PROTECT(labpt = NEW_NUMERIC(2)); pc++;
+    
+    GEOSGeom centroid = GEOSGetCentroid_r(GEOShandle, p);
+    double xc, yc;
+    rgeos_Pt2xy(env, centroid, &xc, &yc);
+    
+    if (!R_FINITE(xc) || !R_FINITE(yc)) {
+        xc = 0.0;
+        yc = 0.0;
+        for(int i=0; i != n; i++) {
+            xc += NUMERIC_POINTER(crd)[i];
+            yc += NUMERIC_POINTER(crd)[n+i];
+        }
+        
+        xc /= n;
+        yc /= n;
+    }
+    
     NUMERIC_POINTER(labpt)[0] = xc;
     NUMERIC_POINTER(labpt)[1] = yc;
-
-
+    
+    GEOSGeom_destroy_r(GEOShandle, centroid);
+    GEOSGeom_destroy_r(GEOShandle, p);
+    
+    // Get ring direction
+    SEXP ringDir;
+    PROTECT(ringDir = NEW_INTEGER(1)); pc++;
+    INTEGER_POINTER(ringDir)[0] = hole ? -1 : 1;
+    
+    // Get hole status
+    SEXP Hole;
     PROTECT(Hole = NEW_LOGICAL(1)); pc++;
     LOGICAL_POINTER(Hole)[0] = hole;
     
-    SEXP ans, valid;
+    SEXP ans;
     PROTECT(ans = NEW_OBJECT(MAKE_CLASS("Polygon"))); pc++;    
     SET_SLOT(ans, install("ringDir"), ringDir);
     SET_SLOT(ans, install("labpt"), labpt);
-    SET_SLOT(ans, install("area"), Area);
+    SET_SLOT(ans, install("area"), area);
     SET_SLOT(ans, install("hole"), Hole);
-    SET_SLOT(ans, install("coords"), crdfix);
+    SET_SLOT(ans, install("coords"), crd);
     
+    SEXP valid;
     PROTECT(valid = SP_PREFIX(Polygon_validate_c)(ans)); pc++;
     if (!isLogical(valid)) {
         UNPROTECT(pc);
-        if (isString(valid)) error(CHAR(STRING_ELT(valid, 0)));
-        else error("invalid Polygon object");
+        if (isString(valid)) 
+            error(CHAR(STRING_ELT(valid, 0)));
+        else 
+            error("invalid Polygon object");
     }
-
-    //GEOSGeom_destroy_r(GEOShandle, p); -- won't work, as members are owned by geom too.
-    GEOSGeom_destroy_r(GEOShandle, centroid);
+    
     UNPROTECT(pc);
     return(ans);
 }
