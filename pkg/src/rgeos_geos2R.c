@@ -295,9 +295,7 @@ SEXP rgeos_geospolygon2Polygons(SEXP env, GEOSGeom geom, SEXP ID) {
                         (GEOSGeometry *) GEOSGetGeometryN_r(GEOShandle, geom, i) :
                         geom;
         
-        int GCempty = GEOSisEmpty_r(GEOShandle, GC);
-        
-        if (GCempty) {
+        if (GEOSisEmpty_r(GEOShandle, GC)) {
             
             SEXP ringDir,area,labpt,hole;
             
