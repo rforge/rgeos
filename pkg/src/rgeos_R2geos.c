@@ -22,15 +22,14 @@ GEOSGeom rgeos_convert_R2geos(SEXP env, SEXP obj) {
     strcpy(classbuf, CHAR( STRING_ELT(GET_CLASS(obj), 0) ));
     
     //TODO - handle DataFrame classes gracefully
-    GEOSGeom ans;
     if ( !strcmp( classbuf,"SpatialPoints") || !strcmp(classbuf,"SpatialPointsDataFrame") ) {
-        ans = rgeos_SpatialPoints2geospoint( env, obj);
+        return( rgeos_SpatialPoints2geospoint( env, obj) );
     } else if ( !strcmp(classbuf,"SpatialLines") || !strcmp(classbuf,"SpatialLinesDataFrame") ) {
-        ans = rgeos_SpatialLines2geosline( env, obj);
+        return( rgeos_SpatialLines2geosline( env, obj) );
     } else if ( !strcmp(classbuf,"SpatialRings") || !strcmp(classbuf,"SpatialRingsDataFrame") ) {
-        ans = rgeos_SpatialRings2geosring( env, obj);
+        return( rgeos_SpatialRings2geosring( env, obj) );
     } else if ( !strcmp(classbuf,"SpatialPolygons") || !strcmp(classbuf,"SpatialPolygonsDataFrame") ) {
-        ans = rgeos_SpatialPolygons2geospolygon( env, obj);
+        return( rgeos_SpatialPolygons2geospolygon( env, obj) );
     } else if ( !strcmp(classbuf,"SpatialCollections") ) {
 
         SEXP pointobj = GET_SLOT(obj, install("pointobj"));
@@ -82,13 +81,12 @@ GEOSGeom rgeos_convert_R2geos(SEXP env, SEXP obj) {
                 }
             }
         }
-        ans = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, ng);
         
-    } else {
-        error("rgeos_convert_R2geos: invalid R class, unable to convert");
+        return( GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, ng) );
     }
     
-    return(ans);
+    error("rgeos_convert_R2geos: invalid R class, unable to convert");
+    return(NULL); //should never get here, clears up warning
 } 
 
 // Spatial Points to geometry collection (Multipoints)
