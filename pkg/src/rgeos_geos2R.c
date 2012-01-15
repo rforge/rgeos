@@ -51,7 +51,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
             
             int *types = (int *) R_alloc((size_t) ng, sizeof(int));
             for (int i=0; i<ng; i++) {
-                GEOSGeom subgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, i);
+                const GEOSGeometry *subgeom = GEOSGetGeometryN_r(GEOShandle, geom, i);
                 if (subgeom == NULL)
                     error("rgeos_convert_geos2R: unable to retrieve subgeometry");
                 
@@ -83,7 +83,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
             } else if ( isRing && !isPoint && !isLine && !isPoly && !isGC ) {
                 PROTECT( ans = rgeos_geosring2SpatialRings(env, geom, p4s, id, ng) ); pc++;    
             } else {
-    
+                
                 //Rprintf("isPoint: %d  isLine: %d  isPoly: %d  isRing: %d  isGC: %d\n",isPoint, isLine, isPoly, isRing, isGC);
                 
                 int m = MAX(MAX(MAX(isPoint,isLine),isPoly),isRing);
@@ -98,14 +98,10 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
                 }
                 
                 GEOSGeom *GCS[4];
-                GCS[0] = (!isPoint) ? NULL :
-                         (GEOSGeom *) R_alloc((size_t) isPoint, sizeof(GEOSGeom));
-                GCS[1] = (!isLine) ? NULL : 
-                         (GEOSGeom *) R_alloc((size_t) isLine, sizeof(GEOSGeom));
-                GCS[2] = (!isRing) ? NULL : 
-                         (GEOSGeom *) R_alloc((size_t) isRing, sizeof(GEOSGeom));
-                GCS[3] = (!isPoly) ? NULL :
-                         (GEOSGeom *) R_alloc((size_t) isPoly, sizeof(GEOSGeom));
+                GCS[0] = (GEOSGeom *) R_alloc((size_t) isPoint, sizeof(GEOSGeom));
+                GCS[1] = (GEOSGeom *) R_alloc((size_t) isLine,  sizeof(GEOSGeom));
+                GCS[2] = (GEOSGeom *) R_alloc((size_t) isRing,  sizeof(GEOSGeom));
+                GCS[3] = (GEOSGeom *) R_alloc((size_t) isPoly,  sizeof(GEOSGeom));
                 
                 SEXP ptID, lID, rID, pID;
                 PROTECT(ptID = NEW_CHARACTER(isPoint)); pc++;
@@ -115,7 +111,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
                 
                 int typei[] = {0,0,0,0};
                 for (int i=0; i<ng; i++) {
-                    GEOSGeom subgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, i);
+                    const GEOSGeometry *subgeom = GEOSGetGeometryN_r(GEOShandle, geom, i);
                     if (subgeom == NULL)
                         error("rgeos_convert_geos2R: unable to retrieve subgeometry");
                     
@@ -136,40 +132,35 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
                         cur_id=pID;
                     }
                     
-                    if (GCS[j] != NULL)
-                        GCS[j][ typei[j] ] = subgeom;
-                    else
+                    if (GCS[j] == NULL)
                         error("rgeos_convert_geos2R: GCS element is NULL (this should never happen).");
+                    
+                    GCS[j][ typei[j] ] = GEOSGeom_clone_r(GEOShandle, subgeom);
                     
                     SET_STRING_ELT(cur_id, typei[j], STRING_ELT(id,typei[j]));
                     typei[j]++;
                 }         
                 
                 SEXP points = R_NilValue;
-                SEXP lines = R_NilValue;
-                SEXP rings = R_NilValue;
-                SEXP polys = R_NilValue;
+                SEXP lines  = R_NilValue;
+                SEXP rings  = R_NilValue;
+                SEXP polys  = R_NilValue;
                 
                 if (isPoint) {
-                    GEOSGeom ptGC = (isPoint==1) ? GCS[0][0] :
-                                    GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, GCS[0], isPoint);
-                    int npts = gctypen[ GEOS_POINT ] + gctypen[ GEOS_MULTIPOINT ];
-                    PROTECT( points = rgeos_geospoint2SpatialPoints(env, ptGC, p4s, ptID, npts) ); pc++;
+                    GEOSGeom ptGC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, GCS[0], isPoint);
+                    PROTECT( points = rgeos_convert_geos2R(env, ptGC, p4s, ptID) ); pc++;
                 }
                 if (isLine) {
-                    GEOSGeom lGC = (isLine==1) ? GCS[1][0] :
-                                    GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, GCS[1], isLine);
-                    PROTECT( lines = rgeos_geosline2SpatialLines(env, lGC, p4s, lID, isLine) ); pc++;
+                    GEOSGeom lGC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, GCS[1], isLine);
+                    PROTECT( lines = rgeos_convert_geos2R(env, lGC, p4s, lID) ); pc++;
                 }
                 if (isRing) {
-                    GEOSGeom rGC = (isLine==1) ? GCS[2][0] :
-                                    GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, GCS[2], isRing);
-                    PROTECT( rings = rgeos_geosring2SpatialRings(env, rGC, p4s, rID, isRing) ); pc++;    
+                    GEOSGeom rGC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, GCS[2], isRing);
+                    PROTECT( rings = rgeos_convert_geos2R(env, rGC, p4s, rID) ); pc++;
                 }
                 if (isPoly) {
-                    GEOSGeom pGC = (isLine==1) ? GCS[3][0] :
-                                    GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, GCS[3], isPoly);
-                    PROTECT( polys = rgeos_geospolygon2SpatialPolygons(env, pGC, p4s, pID, isPoly) ); pc++;
+                    GEOSGeom pGC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, GCS[3], isPoly);
+                    PROTECT( polys = rgeos_convert_geos2R(env, pGC, p4s, pID) ); pc++;
                 }
                 
                 PROTECT(ans = NEW_OBJECT(MAKE_CLASS("SpatialCollections"))); pc++;
@@ -198,8 +189,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
         default:
             error("rgeos_convert_geos2R: Unknown geometry type");
     }
-
-    // destroy geom; EJP Sat Jan  7 00:04:38 CET 2012
+    
     GEOSGeom_destroy_r(GEOShandle, geom);
     UNPROTECT(pc);
     return(ans);
