@@ -120,9 +120,9 @@ GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj) {
             }
         
             GC = (n == 1) ? geoms[0] : GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, n);   
-			//EJP, uncommented; loop now starting at 1; passes check:
+            //EJP, uncommented; loop now starting at 1; passes check:
             //for (int j=1; j<n; j++) 
-			//	GEOSGeom_destroy_r(GEOShandle, geoms[j]);
+            //    GEOSGeom_destroy_r(GEOShandle, geoms[j]);
             if (GC == NULL) error("rgeos_SpatialPoints2geospoint: collection not created");
             
         } else {
@@ -173,7 +173,7 @@ GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj) {
                             GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOINT, subgeoms, unqcnt[j]);
 // subgeoms[] objects are now owned by geoms[]; we should not destroy them.
                 if (geoms[j] == NULL) 
-					error("rgeos_SpatialPoints2geospoint: collection not created");
+                    error("rgeos_SpatialPoints2geospoint: collection not created");
             }
         
 // according to http://geos.osgeo.org/doxygen/geos__c_8h-source.html, in:
@@ -182,7 +182,7 @@ GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj) {
 // pointed-to objects become ownership of the returned GEOSGeometry.
 // so we must NOT destroy the geoms[] elements:
 //            for (int j=1; j<nunq; j++) 
-//				GEOSGeom_destroy_r(GEOShandle, geoms[j]);
+//                GEOSGeom_destroy_r(GEOShandle, geoms[j]);
 //            for (int j=0; j<nunq; j++) GEOSGeom_destroy_r(GEOShandle, geoms[j]);
             if (GC == NULL) error("rgeos_SpatialPoints2geospoint: collection not created");
         }
