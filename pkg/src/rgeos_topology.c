@@ -52,31 +52,26 @@ SEXP rgeos_topologyfunc(SEXP env, SEXP obj, SEXP id, SEXP byid, p_topofunc topof
     GEOSGeom *resgeoms = (GEOSGeom *) R_alloc((size_t) n, sizeof(GEOSGeom));
     
     GEOSGeom curgeom = geom;
-    int curtype = GEOSGeomTypeId_r(GEOShandle, curgeom);
     for(int i=0; i<n; i++) {
-        if ( n > 1) {
+        if (n > 1) {
             curgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, i);
-            if (curgeom == NULL) error("rgeos_topologyfunc: unable to get subgeometries");
-            curtype = GEOSGeomTypeId_r(GEOShandle, curgeom);
+            if (curgeom == NULL) 
+                error("rgeos_topologyfunc: unable to get subgeometries");
         }
-        if (topofunc == GEOSUnionCascaded_r && curtype == GEOS_POLYGON) {
+        if (    topofunc == GEOSUnionCascaded_r
+             && GEOSGeomTypeId_r(GEOShandle, curgeom) == GEOS_POLYGON) {
             resgeoms[i] = curgeom;
         } else {
             resgeoms[i] = topofunc(GEOShandle, curgeom);
             if (resgeoms[i] == NULL)
                 error("rgeos_topologyfunc: unable to calculate");
         }
-
-
     }
     
     GEOSGeom res = resgeoms[0];
     if (n > 1)
         res = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, resgeoms, n);
     
-    //FIXME - crashes if geom created from a collection created by R_Alloc
-    //GEOSGeom_destroy_r(GEOShandle, geom);
-        
     return( rgeos_convert_geos2R(env, res, p4s, id) ); // releases res
 }
 
