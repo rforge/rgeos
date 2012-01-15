@@ -72,14 +72,16 @@ GEOSGeom rgeos_convert_R2geos(SEXP env, SEXP obj) {
             n = n ? n : 1;
             
             if (n == 1) {
-                geoms[k] = GCs[i];
+                geoms[k] = GEOSGeom_clone_r(GEOShandle, GCs[i]);
                 k++;
             } else if (n > 1) {
-                for(int j=0;j<cnts[i];j++) {
-                    geoms[k] = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, GCs[i],j);
-                    k++;
+                for(int j=0; j<cnts[i]; j++, k++) {
+                    const GEOSGeometry *curgeom = GEOSGetGeometryN_r(GEOShandle, GCs[i],j);
+                    geoms[k] = GEOSGeom_clone_r(GEOShandle, curgeom);
                 }
             }
+            
+            GEOSGeom_destroy_r(GEOShandle, GCs[i]);
         }
         
         return( GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, ng) );
