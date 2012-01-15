@@ -214,7 +214,8 @@ SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP I
     
     int type = GEOSGeomTypeId_r(GEOShandle, geom);
     int empty = GEOSisEmpty_r(GEOShandle, geom);
-    if (ng < 1) error("rgeos_geospolygon2SpatialPolygons: invalid number of geometries");
+    if (ng < 1) 
+        error("rgeos_geospolygon2SpatialPolygons: invalid number of geometries");
     
     SEXP pls;
     PROTECT(pls = NEW_LIST(ng)); pc++;
@@ -227,8 +228,9 @@ SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP I
         GEOSGeom GC = (type == GEOS_GEOMETRYCOLLECTION && !empty) ?
                         (GEOSGeometry *) GEOSGetGeometryN_r(GEOShandle, geom, i) :
                         geom;
-
-        if (GC == NULL) error("rgeos_geospolygon2SpatialPolygons: unable to get subgeometry");
+        
+        if (GC == NULL) 
+            error("rgeos_geospolygon2SpatialPolygons: unable to get subgeometry");
         
         SEXP poly, ID;
         PROTECT( ID = NEW_CHARACTER(1));
