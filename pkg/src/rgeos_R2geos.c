@@ -235,7 +235,6 @@ GEOSGeom rgeos_Lines2geosline(SEXP env, SEXP obj) {
 
     GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) nlns, sizeof(GEOSGeom));
 
-    double scale = getScale(env);
     for (int i=0; i<nlns; i++) {
         SEXP crdMat = GET_SLOT(VECTOR_ELT(lns, i), install("coords"));
         
