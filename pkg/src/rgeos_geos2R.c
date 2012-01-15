@@ -8,8 +8,10 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
     int ng = GEOSGetNumGeometries_r(GEOShandle, geom);
     if (ng == -1) error("rgeos_convert_geos2R: invalid number of subgeometries"); 
     
-    if (type == GEOS_GEOMETRYCOLLECTION && ng==0 && GEOSisEmpty_r(GEOShandle,geom))
+    if (type == GEOS_GEOMETRYCOLLECTION && ng==0 && GEOSisEmpty_r(GEOShandle,geom)) {
+        GEOSGeom_destroy_r(GEOShandle, geom);
         return(R_NilValue);
+    }
     
     ng = ng ? ng : 1; // Empty MULTI type geometries return size 0
 
