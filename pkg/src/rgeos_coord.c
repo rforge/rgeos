@@ -108,7 +108,7 @@ SEXP rgeos_crdMatFixDir(SEXP crd, int hole) {
     return(crd);
 }
 
-SEXP rgeos_CoordSeq2crdMat(SEXP env, GEOSCoordSeq s, int HasZ, int rev) {
+SEXP rgeos_CoordSeq2crdMat(SEXP env, const GEOSCoordSequence *s, int HasZ, int rev) {
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
