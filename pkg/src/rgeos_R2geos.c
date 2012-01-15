@@ -3,8 +3,6 @@
 
 SEXP rgeos_double_translate(SEXP env, SEXP obj, SEXP id) {
     
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-    
     GEOSGeom geom = rgeos_convert_R2geos( env, obj);
     SEXP p4s = (obj == R_NilValue) ? R_NilValue : GET_SLOT(obj, install("proj4string"));
     
