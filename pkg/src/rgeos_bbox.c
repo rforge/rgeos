@@ -5,19 +5,18 @@ SEXP rgeos_geom2bbox(SEXP env, GEOSGeom geom) {
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     int pc=0;
     
-    GEOSGeom bb = GEOSEnvelope_r(GEOShandle, geom);
-    if (bb == NULL) return(R_NilValue);
-    
-    if (GEOSisEmpty_r(GEOShandle, bb) == 1) 
+    if (GEOSisEmpty_r(GEOShandle, geom) == 1)
         return(R_NilValue);
     
-    GEOSGeom chull = GEOSConvexHull_r(GEOShandle, geom);
-    const GEOSGeometry *ext = (GEOSGeomTypeId_r(GEOShandle, chull) != GEOS_POLYGON)
-                               ? chull : GEOSGetExteriorRing_r(GEOShandle, chull);
+    GEOSGeom envel = GEOSEnvelope_r(GEOShandle, geom);
+    if (envel == NULL)
+        return(R_NilValue);
+    
+    const GEOSGeometry *ext = (GEOSGeomTypeId_r(GEOShandle, envel) != GEOS_POLYGON)
+                               ? envel : GEOSGetExteriorRing_r(GEOShandle, envel);
     const GEOSCoordSequence *s = GEOSGeom_getCoordSeq_r(GEOShandle, ext);
-    
-    if (s == NULL) 
-        return(R_NilValue);
+    if (s == NULL)
+        error("rgeos_geom2bbox: envelope has empty coordinate sequence");
     
     unsigned int n;
     GEOSCoordSeq_getSize_r(GEOShandle, s, &n);
@@ -27,7 +26,7 @@ SEXP rgeos_geom2bbox(SEXP env, GEOSGeom geom) {
     SEXP bbmat;
     PROTECT(bbmat = rgeos_CoordSeq2crdMat(env, s, 0, FALSE)); pc++;
     
-    GEOSGeom_destroy_r(GEOShandle, chull); // EJP; try
+    GEOSGeom_destroy_r(GEOShandle, envel);
     
     SEXP ans;    
     PROTECT(ans = NEW_NUMERIC(4)); pc++;
