@@ -194,18 +194,18 @@ typedef int (*p_distdenfunc)(GEOSContextHandle_t,const GEOSGeometry*,const GEOSG
 SEXP rgeos_distancedensifyfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP densifyFrac, SEXP byid, p_distdenfunc);
 
 // GPC functions
-GEOSGeom GPCptPolygon(SEXP env, SEXP obj);
-GEOSGeom GPCpt2LinearRing(SEXP env, SEXP obj);
-GEOSCoordSeq GPCpt2CoordSeq(SEXP env, SEXP obj);
-GEOSGeom GCPPtsGC(SEXP env, SEXP pls);
-GEOSGeom GPCpt_i_Polygon(SEXP env, SEXP pls, SEXP vec);
+GEOSGeom gpc2geosPolygon(SEXP env, SEXP obj);
+GEOSGeom gpc2geosRing(SEXP env, SEXP obj);
+GEOSCoordSeq gpc2geosCoordSeq(SEXP env, SEXP obj);
+GEOSGeom gpc2geosCollection(SEXP env, SEXP pls);
+GEOSGeom gpc2geosPolygonHoles(SEXP env, SEXP pls, SEXP vec);
 
 
 SEXP checkHolesGPC(SEXP env, SEXP A);
 
 /* SEXP GCpolysGPCpts(SEXP env, GEOSGeom GC); */
-SEXP GCGCPPts(SEXP env, GEOSGeom Geom);
-SEXP rgeos_LinearRingGCPPts(SEXP env, GEOSGeom lr, int hole);
+SEXP geosPolygon2gpc(SEXP env, GEOSGeom Geom);
+SEXP geosRing2gpc(SEXP env, GEOSGeom lr, int hole);
 
 
 // Needs to be classified
