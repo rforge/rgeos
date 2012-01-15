@@ -58,21 +58,19 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
                 ns = ns ? ns : 1;
                 n += ns;
                 
-                int type =  GEOSGeomTypeId_r(GEOShandle, subgeom);
-                if (type == GEOS_GEOMETRYCOLLECTION)
+                types[i] = GEOSGeomTypeId_r(GEOShandle, subgeom);
+                if (types[i] == GEOS_GEOMETRYCOLLECTION)
                     error("Geometry collections may not contain other geometry collections");
                 
-                types[i] = type;
-                gctypes[ type ] += 1; 
-                gctypen[ type ] += ns;
+                gctypes[ types[i] ] += 1; 
+                gctypen[ types[i] ] += ns;
             }
-
+            
             int isPoint = gctypes[GEOS_POINT] + gctypes[GEOS_MULTIPOINT];
             int isLine  = gctypes[GEOS_LINESTRING] + gctypes[GEOS_MULTILINESTRING];
             int isPoly  = gctypes[GEOS_POLYGON] + gctypes[GEOS_MULTIPOLYGON];
             int isRing  = gctypes[GEOS_LINEARRING];
             int isGC    = gctypes[GEOS_GEOMETRYCOLLECTION];
-
             
             if ( isPoint && !isLine && !isPoly && !isRing && !isGC ) {
                 PROTECT( ans = rgeos_geospoint2SpatialPoints(env, geom, p4s, id, n) ); pc++;
@@ -119,23 +117,30 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
                     if (subgeom == NULL)
                         error("rgeos_convert_geos2R: unable to retrieve subgeometry");
                     
+                    int j = -1;
+                    SEXP cur_id;
+                    
                     if (types[i]==GEOS_POINT || types[i]==GEOS_MULTIPOINT) {
-                        GCS[0][typei[0]] = subgeom;
-                        SET_STRING_ELT(ptID, typei[0], STRING_ELT(id,typei[0]));
-                        typei[0]++;
+                        j=0;
+                        cur_id=ptID;
                     } else if (types[i]==GEOS_LINESTRING || types[i]==GEOS_MULTILINESTRING) {
-                        GCS[1][typei[1]] = subgeom;
-                        SET_STRING_ELT(lID, typei[1], STRING_ELT(id,typei[1]));
-                        typei[1]++;
+                        j=1;
+                        cur_id=lID;
                     } else if (types[i]==GEOS_LINEARRING) {
-                        GCS[2][typei[2]] = subgeom;
-                        SET_STRING_ELT(rID, typei[2], STRING_ELT(id,typei[2]));
-                        typei[2]++;
+                        j=2;
+                        cur_id=rID;
                     } else if (types[i]==GEOS_POLYGON || types[i]==GEOS_MULTIPOLYGON) {
-                        GCS[3][typei[3]] = subgeom;
-                        SET_STRING_ELT(pID, typei[3], STRING_ELT(id,typei[3]));
-                        typei[3]++;
+                        j=3;
+                        cur_id=pID;
                     }
+                    
+                    if (GCS[j] != NULL)
+                        GCS[j][ typei[j] ] = subgeom;
+                    else
+                        error("rgeos_convert_geos2R: GCS element is NULL (this should never happen).");
+                    
+                    SET_STRING_ELT(cur_id, typei[j], STRING_ELT(id,typei[j]));
+                    typei[j]++;
                 }         
                 
                 SEXP points = R_NilValue;
@@ -189,7 +194,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
             break;
         }    
         default:
-            error("Unknown type");
+            error("rgeos_convert_geos2R: Unknown geometry type");
     }
 
     // destroy geom; EJP Sat Jan  7 00:04:38 CET 2012
