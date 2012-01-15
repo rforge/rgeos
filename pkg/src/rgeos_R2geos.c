@@ -93,7 +93,8 @@ GEOSGeom rgeos_convert_R2geos(SEXP env, SEXP obj) {
 GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj) {
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
+    int pc = 0;
+    
     SEXP crds = GET_SLOT(obj, install("coords")); 
     SEXP dim = getAttrib(crds, install("dim")); 
     int n = INTEGER_POINTER(dim)[0];
@@ -102,9 +103,6 @@ GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj) {
     if ( n == 1 ){ 
         GC = rgeos_xy2Pt(env, NUMERIC_POINTER(crds)[0], NUMERIC_POINTER(crds)[1]);
     } else if ( n != 1 ) {
-        int pc = 0;
-
-
         SEXP ids;
         PROTECT(ids = VECTOR_ELT( getAttrib(crds, R_DimNamesSymbol), 0 ));pc++;
         
@@ -163,68 +161,59 @@ GEOSGeom rgeos_SpatialPoints2geospoint(SEXP env, SEXP obj) {
                         k++;
                     }
                 }
-
-// according to http://geos.osgeo.org/doxygen/geos__c_8h-source.html, in:
+                
                 geoms[j] = (k == 1) ? subgeoms[0] : 
                             GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOINT, subgeoms, unqcnt[j]);
-// subgeoms[] objects are now owned by geoms[]; we should not destroy them.
+                
                 if (geoms[j] == NULL) 
                     error("rgeos_SpatialPoints2geospoint: collection not created");
             }
-        
-// according to http://geos.osgeo.org/doxygen/geos__c_8h-source.html, in:
+            
             GC = (nunq == 1) ? geoms[0] :
-                    GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, nunq);
-// pointed-to objects become ownership of the returned GEOSGeometry.
-// so we must NOT destroy the geoms[] elements:
-//            for (int j=1; j<nunq; j++) 
-//                GEOSGeom_destroy_r(GEOShandle, geoms[j]);
-//            for (int j=0; j<nunq; j++) GEOSGeom_destroy_r(GEOShandle, geoms[j]);
-            if (GC == NULL) error("rgeos_SpatialPoints2geospoint: collection not created");
+                   GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, nunq);
+            
+            if (GC == NULL)
+                error("rgeos_SpatialPoints2geospoint: collection not created");
         }
-        
-        UNPROTECT(pc);
     } else {
         error("rgeos_SpatialPoints2geospoint: invalid dim");
     }
     
+    UNPROTECT(pc);
     return(GC);
 }
 
 // SpatialLines class to geometry collection
 GEOSGeom rgeos_SpatialLines2geosline(SEXP env, SEXP obj) {
-
+    
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
     int pc = 0;
+    
     SEXP lines;
     PROTECT(lines = GET_SLOT(obj, install("lines"))); pc++;
     int nlines = length(lines);
-
+    
     GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) nlines, sizeof(GEOSGeom));
-
+    
     for (int i=0; i<nlines; i++) {
         SEXP Lines = VECTOR_ELT(lines, i);
         geoms[i] = rgeos_Lines2geosline(env, Lines);
     }
     
     // If there is only one line collection return multiline not GC
-    GEOSGeom GC = geoms[0];
-    if (nlines != 1) {
-        GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, nlines);
-        if (GC == NULL) error("Lines2GC: collection not created");
-    }
-
+    GEOSGeom GC = (nlines == 1) ? geoms[0]
+                    : GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, nlines);
+    
     UNPROTECT(pc);
     return(GC);
 }
 
 // Lines class to geometry collection (Multilinestring)
 GEOSGeom rgeos_Lines2geosline(SEXP env, SEXP obj) {
-
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
     
+    GEOSContextHandle_t GEOShandle = getContextHandle(env);
     int pc=0;
+    
     SEXP lns;
     PROTECT(lns = GET_SLOT(obj, install("Lines"))); pc++;
     int nlns = length(lns);
@@ -242,12 +231,9 @@ GEOSGeom rgeos_Lines2geosline(SEXP env, SEXP obj) {
         }
     }
     
-    GEOSGeom GC = geoms[0];
-    if (nlns != 1) {
-        GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTILINESTRING, geoms, nlns);
-    }
-    if (GC == NULL) error("Lines2geosline: collection not created");
-
+    GEOSGeom GC = (nlns == 1) ? geoms[0]
+                    : GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTILINESTRING, geoms, nlns);
+    
     UNPROTECT(pc);
     return(GC);
 }
@@ -255,25 +241,22 @@ GEOSGeom rgeos_Lines2geosline(SEXP env, SEXP obj) {
 
 // Spatial polygons to geometry collection (multipolygon)
 GEOSGeom rgeos_SpatialPolygons2geospolygon(SEXP env, SEXP obj) {
-
+    
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
     int pc=0;
+    
     SEXP pls;
     PROTECT(pls = GET_SLOT(obj, install("polygons"))); pc++;
     int npls = length(pls);
-
+    
     GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) npls, sizeof(GEOSGeom));
-
+    
     for (int i=0; i<npls; i++)
         geoms[i] = rgeos_Polygons2geospolygon(env, VECTOR_ELT(pls, i));
     
-    GEOSGeom GC = geoms[0];
-    if (npls != 1) {
-        GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, npls);
-    } 
-    if (GC == NULL) error("rgeos_SpatialPolygons2geospolygon: collection not created");
-
+    GEOSGeom GC = (npls == 1) ? geoms[0]
+                    : GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, npls);
+    
     UNPROTECT(pc);
     return(GC);
 }
@@ -282,8 +265,8 @@ GEOSGeom rgeos_SpatialPolygons2geospolygon(SEXP env, SEXP obj) {
 GEOSGeom rgeos_Polygons2geospolygon(SEXP env, SEXP obj) {
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
-    
     int pc=0;
+    
     SEXP pls;
     PROTECT(pls = GET_SLOT(obj, install("Polygons"))); pc++;
     int npls = length(pls);
@@ -312,39 +295,29 @@ GEOSGeom rgeos_Polygons2geospolygon(SEXP env, SEXP obj) {
             }
             n++;
 
-            if (crdMat == R_NilValue) {
-                geoms[i] = GEOSGeom_createPolygon_r(GEOShandle, NULL, NULL, (unsigned int) 0);
-            } else {
-                geoms[i] = rgeos_crdMat2Polygon(env, crdMat, getAttrib(crdMat, R_DimSymbol));
-            }
+            geoms[i] = (crdMat == R_NilValue)
+                         ? GEOSGeom_createPolygon_r(GEOShandle, NULL, NULL, (unsigned int) 0)
+                         : rgeos_crdMat2Polygon(env, crdMat, getAttrib(crdMat, R_DimSymbol));
         }
         
-        GC = geoms[0];
-        if (n != 1)
-            GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, n);
-        
-        if (GC == NULL) error("Polygons2GC: collection not created");
+        GC = (n == 1) ? geoms[0]
+              : GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, n);
         
     } else {
-
+        
         int nErings = length(comm);
         GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) nErings, sizeof(GEOSGeom));
         
-        for (int i=0; i<nErings; i++) {
+        for (int i=0; i<nErings; i++)
             geoms[i] = rgeos_Polygons_i_2Polygon(env, pls, VECTOR_ELT(comm, i));
-        }
         
-        GC = geoms[0];
-        if (nErings != 1)
-            GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, nErings);
-        
-        if (GC == NULL) error("Polygons2GC: collection not created");
+        GC = (nErings == 1) ? geoms[0]
+               : GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOLYGON, geoms, nErings);
     }
-
+    
     UNPROTECT(pc);
     return(GC);
 }
-
 
 
 GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec) {
@@ -381,123 +354,11 @@ GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec) {
         res = GEOSGeom_createPolygon_r(GEOShandle, pol, holes,(unsigned int) (n-1));
     }
     
-    if (res == NULL) {
-//        GEOSGeom_destroy_r(GEOShandle, pol);
+    if (res == NULL)
         error("rgeos_Polygons_i_2Polygon: Polygon not created");
-    }
     
     return(res);
 }
-
-
-
-// sp Polygons to fish soup geometry collection (multipoint) 
-GEOSGeom rgeos_Polygons2MP(SEXP env, SEXP obj) {
-    
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-    
-    int pc=0;
-    SEXP pls;
-    PROTECT(pls = GET_SLOT(obj, install("Polygons"))); pc++;
-    int npls = length(pls);
-    
-    int nn = 0;
-    for (int i=0; i<npls; i++) {
-        SEXP crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
-        SEXP dim = getAttrib(crdMat, R_DimSymbol);
-        nn += (INTEGER_POINTER(dim)[0]-1);
-    }
-
-    GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) nn, sizeof(GEOSGeom));
-
-    for (int i=0, ii=0; i<npls; i++) {
-        SEXP crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
-        SEXP dim = getAttrib(crdMat, R_DimSymbol);
-        int n = INTEGER_POINTER(dim)[0];
-        for (int j=0; j<(n-1); j++) {
-            GEOSGeom pt = rgeos_xy2Pt(env, NUMERIC_POINTER(crdMat)[j],NUMERIC_POINTER(crdMat)[j+n]);
-            geoms[ii] = pt;
-            ii++;
-        }
-    }
-
-    GEOSGeom GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOINT, geoms, nn);
-    if (GC == NULL) {
-        error("rgeos_Polygons2MP: collection not created");
-    }
-
-    UNPROTECT(pc);
-    return(GC);
-}
-
-// sp Polygon to fish soup geometry collection (multipoint) 
-GEOSGeom rgeos_Polygon2MP(SEXP env, SEXP obj) {
-
-    int nn;
-    
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-
-    SEXP crdMat = GET_SLOT(obj, install("coords"));
-    SEXP dim = getAttrib(crdMat, R_DimSymbol);
-    nn = (INTEGER_POINTER(dim)[0]-1);
-
-    GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) nn, sizeof(GEOSGeom));
-
-    for (int i=0; i<nn; i++) {
-        GEOSGeom pt = rgeos_xy2Pt(env, NUMERIC_POINTER(crdMat)[i],NUMERIC_POINTER(crdMat)[i+nn]);
-        geoms[i] = pt;
-
-    }
-
-    GEOSGeom GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOINT, geoms, nn);
-    if (GC == NULL) {
-        error("rgeos_Polygon2MP: collection not created");
-    }
-
-    return(GC);
-
-}
-
-
-// sp Lines to fish soup geometry collection (multipoint) 
-GEOSGeom rgeos_Lines2MP(SEXP env, SEXP obj) {
-    
-    GEOSContextHandle_t GEOShandle = getContextHandle(env);
-    
-    int pc=0;
-    SEXP pls;
-    PROTECT(pls = GET_SLOT(obj, install("Lines"))); pc++;
-    int npls = length(pls);
-    
-    int nn = 0;
-    for (int i=0; i<npls; i++) {
-        SEXP crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
-        SEXP dim = getAttrib(crdMat, R_DimSymbol);
-        nn += (INTEGER_POINTER(dim)[0]-1);
-    }
-
-    GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) nn, sizeof(GEOSGeom));
-
-    for (int i=0, ii=0; i<npls; i++) {
-        SEXP crdMat = GET_SLOT(VECTOR_ELT(pls, i), install("coords"));
-        SEXP dim = getAttrib(crdMat, R_DimSymbol);
-        int n = INTEGER_POINTER(dim)[0];
-        for (int j=0; j<(n-1); j++) {
-            GEOSGeom pt = rgeos_xy2Pt(env, NUMERIC_POINTER(crdMat)[j],NUMERIC_POINTER(crdMat)[j+n]);
-            geoms[ii] = pt;
-            ii++;
-        }
-    }
-
-    GEOSGeom GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_MULTIPOINT, geoms, nn);
-    if (GC == NULL) {
-        error("rgeos_Lines2MP: collection not created");
-    }
-
-    UNPROTECT(pc);
-    return(GC);
-}
-
 
 
 // SpatialRings class to geometry collection
@@ -522,12 +383,12 @@ GEOSGeom rgeos_SpatialRings2geosring(SEXP env, SEXP obj) {
         }
     }
     
-    GEOSGeom GC = geoms[0];
-    if (nrings != 1) {
-        GC = GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, nrings);
-        if (GC == NULL) error("rgeos_SpatialRings2geosring: collection not created");
-    }
-
+    GEOSGeom GC = (nrings == 1) ? geoms[0]
+                    : GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, nrings);
+    
+    if (GC == NULL)
+        error("rgeos_SpatialRings2geosring: collection not created");
+    
     UNPROTECT(pc);
     return(GC);
 }
