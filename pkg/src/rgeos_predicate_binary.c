@@ -109,7 +109,7 @@ SEXP rgeos_equals(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
     return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, &GEOSEquals_r) );
 }
 SEXP rgeos_relate(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
-    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, &GEOSRelate_r) );
+    return( rgeos_binpredfunc(env,spgeom1,spgeom2,byid, (p_binpredfunc) &GEOSRelate_r) );
 }
 
 SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, p_binpredfunc binpredfunc) {
@@ -133,7 +133,7 @@ SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, p_binpre
     if (n == -1) error("rgeos_binpredfunc: invalid number of subgeometries in geometry 2");
     
     SEXP ans;
-    if (binpredfunc == GEOSRelate_r) {
+    if (binpredfunc == (p_binpredfunc) GEOSRelate_r) {
         PROTECT(ans = NEW_CHARACTER(m*n)); pc++;
     } else {
         PROTECT(ans = NEW_LOGICAL(m*n)); pc++;
@@ -153,7 +153,7 @@ SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, p_binpre
             if (curgeom2 == NULL) 
                 error("rgeos_binpredfunc: unable to get subgeometries from geometry 2");
             
-            if (binpredfunc == GEOSRelate_r) {
+            if (binpredfunc == (p_binpredfunc) GEOSRelate_r) {
                 char *buf = (char *) GEOSRelate_r(GEOShandle, curgeom1, curgeom2);
                 if (buf == NULL)
                     error("rgeos_isvalidreason: test failed");

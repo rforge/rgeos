@@ -10,5 +10,5 @@ Description: Interface to Geometry Engine - Open Source (GEOS) using the C API f
 Author: Roger Bivand and Colin Rundel
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
 License: GPL (>= 2)
-URL: http://trac.osgeo.org/geos/
+URL: http://trac.osgeo.org/geos/ https://r-forge.r-project.org/projects/rgeos/
 SystemRequirements: GEOS (>= 3.2.2); for building from source: GEOS from http://trac.osgeo.org/geos/; GEOS OSX frameworks built by William Kyngesburye at http://www.kyngchaos.com/ may be used for source installs on OSX.
