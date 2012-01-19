@@ -92,6 +92,7 @@ SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points) {
 
 SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
 
+    GEOSGeom *bbs2;
     int nobj1, nobj2, i, j, jj, pc=0;
     GEOSGeom GC, bb;
     SEXP pl, bblist;
@@ -114,6 +115,7 @@ SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
 
     nobj1 = length(obj1);
     nobj2 = length(obj2);
+    bbs2 = (GEOSGeom *) R_alloc((size_t) nobj2, sizeof(GEOSGeom));
     ids = (int *) R_alloc((size_t) nobj1, sizeof(int));
 
     UD.ids = (int *) R_alloc((size_t) nobj1, sizeof(int));
@@ -131,7 +133,6 @@ SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
         }
         GEOSGeom_destroy_r(GEOShandle, GC);
         GEOSSTRtree_insert_r(GEOShandle, str, bb, &(ids[i]));
-        GEOSGeom_destroy_r(GEOShandle, bb);
     }
 
     strcpy(classbuf2, CHAR(STRING_ELT(GET_CLASS(VECTOR_ELT(obj2, 0)), 0)));
@@ -141,9 +142,6 @@ SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
         rgeos_xx2MP = rgeos_Lines2MP;
     else
         error("rgeos_binary_STRtree_query: object class %s unknown", classbuf2);
-
-    icard = (int *) R_alloc((size_t) nobj2, sizeof(int));
-    PROTECT(bblist = NEW_LIST(nobj2)); pc++;
 
     for (i=0; i<nobj2; i++) {
         pl = VECTOR_ELT(obj2, i);
@@ -155,11 +153,18 @@ SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
             error("rgeos_binary_STRtree_query: envelope [%d] not created", i);
         }
         GEOSGeom_destroy_r(GEOShandle, GC);
+        bbs2[i] = bb;
+    }
 
+//     GEOSGeom_destroy_r(GEOShandle, bb); // EJP, try
+// 110904 EJP
+    icard = (int *) R_alloc((size_t) nobj2, sizeof(int));
+    PROTECT(bblist = NEW_LIST(nobj2)); pc++;
+
+    for (i=0; i<nobj2; i++) {
         UD.count = 0;
-        GEOSSTRtree_query_r(GEOShandle, str, bb,
+        GEOSSTRtree_query_r(GEOShandle, str, bbs2[i],
             (GEOSQueryCallback) cb, &UD);
-        GEOSGeom_destroy_r(GEOShandle, bb);
 
         icard[i] = UD.count;
 
@@ -177,6 +182,10 @@ SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
     }
 
     GEOSSTRtree_destroy_r(GEOShandle, str);
+    for (i=0; i<nobj2; i++) {
+        GEOSGeom_destroy(bbs2[i]);
+    }
+//    GEOSGeom_destroy_r(GEOShandle, bb);
 
     UNPROTECT(pc);
     return(bblist);
