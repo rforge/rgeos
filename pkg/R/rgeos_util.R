@@ -77,6 +77,8 @@ createSPComment = function(sppoly,which=NULL,overwrite=TRUE) {
             return(p)
         }
       })
+      comment(sppoly) <- as.character(any(sapply(slot(sppoly, "polygons"),
+                function(x) !is.null(comment(x))), na.rm=TRUE))
     }
 
     return(sppoly)
