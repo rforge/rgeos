@@ -250,6 +250,9 @@ SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP I
     SET_SLOT(ans, install("proj4string"), p4s);
     SET_SLOT(ans, install("plotOrder"), plotOrder);
     SET_SLOT(ans, install("bbox"), bbox);
+// RSB 120417 add top-level comment that all member Polygons
+// objects have comment set
+//    setAttrib(ans, install("comment"), mkChar("TRUE"));
 
     UNPROTECT(pc);
     return(ans);
