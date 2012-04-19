@@ -201,7 +201,7 @@ SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP I
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
     int pc=0;
-    SEXP bbox;
+    SEXP bbox, comment;
     PROTECT(bbox = rgeos_geom2bbox(env, geom)); pc++;
     
     int type = GEOSGeomTypeId_r(GEOShandle, geom);
@@ -252,7 +252,9 @@ SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP I
     SET_SLOT(ans, install("bbox"), bbox);
 // RSB 120417 add top-level comment that all member Polygons
 // objects have comment set
-//    setAttrib(ans, install("comment"), mkChar("TRUE"));
+    PROTECT(comment = NEW_CHARACTER(1)); pc++;
+    SET_STRING_ELT(comment, 0, mkChar("TRUE"));
+    setAttrib(ans, install("comment"), comment);
 
     UNPROTECT(pc);
     return(ans);
