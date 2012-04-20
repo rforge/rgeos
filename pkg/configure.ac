@@ -61,8 +61,8 @@ if test ${GEOS_VER_DOT} -lt 322 ; then
     exit 1
 fi
 
-PKG_CPPFLAGS="${PKG_CPPFLAGS} ${GEOS_CPPFLAGS}"
-PKG_LIBS="${PKG_LIBS} ${GEOS_LIBS} ${GEOS_CLIBS}"
+AC_SUBST([PKG_CPPFLAGS],["${PKG_CPPFLAGS} ${GEOS_CPPFLAGS}"])
+AC_SUBST([PKG_LIBS],["${PKG_LIBS} ${GEOS_LIBS} ${GEOS_CLIBS}"])
 
 # honor PKG_xx overrides
 # for CPPFLAGS we will superfluously double R's flags

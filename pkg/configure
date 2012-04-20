@@ -311,7 +311,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS GEOS_CONFIG CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP EGREP PKG_CPPFLAGS PKG_LIBS LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS GEOS_CONFIG PKG_CPPFLAGS PKG_LIBS CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP EGREP LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -1372,7 +1372,11 @@ if test ${GEOS_VER_DOT} -lt 322 ; then
 fi
 
 PKG_CPPFLAGS="${PKG_CPPFLAGS} ${GEOS_CPPFLAGS}"
+
+#PKG_CPPFLAGS="${PKG_CPPFLAGS} ${GEOS_CPPFLAGS}"
 PKG_LIBS="${PKG_LIBS} ${GEOS_LIBS} ${GEOS_CLIBS}"
+
+#PKG_LIBS="${PKG_LIBS} ${GEOS_LIBS} ${GEOS_CLIBS}"
 
 # honor PKG_xx overrides
 # for CPPFLAGS we will superfluously double R's flags
@@ -3680,6 +3684,8 @@ s,@ECHO_N@,$ECHO_N,;t t
 s,@ECHO_T@,$ECHO_T,;t t
 s,@LIBS@,$LIBS,;t t
 s,@GEOS_CONFIG@,$GEOS_CONFIG,;t t
+s,@PKG_CPPFLAGS@,$PKG_CPPFLAGS,;t t
+s,@PKG_LIBS@,$PKG_LIBS,;t t
 s,@CC@,$CC,;t t
 s,@CFLAGS@,$CFLAGS,;t t
 s,@LDFLAGS@,$LDFLAGS,;t t
@@ -3689,8 +3695,6 @@ s,@EXEEXT@,$EXEEXT,;t t
 s,@OBJEXT@,$OBJEXT,;t t
 s,@CPP@,$CPP,;t t
 s,@EGREP@,$EGREP,;t t
-s,@PKG_CPPFLAGS@,$PKG_CPPFLAGS,;t t
-s,@PKG_LIBS@,$PKG_LIBS,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@LTLIBOBJS@,$LTLIBOBJS,;t t
 CEOF
