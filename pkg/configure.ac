@@ -1,5 +1,20 @@
-dnl Process this file with autoconf to produce a configure script.
-AC_INIT(src/rgeos.c)
+# dnl Process this file with autoconf to produce a configure script.
+AC_INIT(rgeos, 0.2-6, Roger.Bivand@nhh.no)
+AC_CONFIG_SRCDIR(src/rgeos.c)
+
+# find R home and set correct compiler + flags
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+  AC_MSG_ERROR([cannot determine R_HOME. Make sure you use R CMD INSTALL!])
+fi
+RBIN="${R_HOME}/bin/R"
+
+# pick all flags for testing from R
+: ${CC=`"${RBIN}" CMD config CC`}
+: ${CPP=`"${RBIN}" CMD config CPP`}
+: ${CFLAGS=`"${RBIN}" CMD config CFLAGS`}
+: ${CPPFLAGS=`"${RBIN}" CMD config CPPFLAGS`}
+: ${LDFLAGS=`"${RBIN}" CMD config LDFLAGS`}
 
 GEOS_CONFIG="geos-config"
 
@@ -11,11 +26,15 @@ if test [ -n "$geos_config" ] ; then
     AC_SUBST([GEOS_CONFIG],["${geos_config}"])
 fi
 echo "geos-config: ${GEOS_CONFIG}"
+
+
 if test `${GEOS_CONFIG} --version`;
 then
 
-	PKG_CPPFLAGS=`${GEOS_CONFIG} --cflags`
-	PKG_LIBS=`${GEOS_CONFIG} --libs`
+	GEOS_CPPFLAGS=`${GEOS_CONFIG} --cflags`
+	GEOS_LIBS=`${GEOS_CONFIG} --libs`
+        GEOS_CLIBS=`${GEOS_CONFIG} --clibs`
+        GEOS_VER=`${GEOS_CONFIG} --version`
 
 else
 
@@ -33,7 +52,6 @@ else
 
 fi
 
-GEOS_VER=`${GEOS_CONFIG} --version`
 echo "GEOS: $GEOS_VER"
 GEOS_VER_DOT=`echo $GEOS_VER | tr -d "."`
 if test ${GEOS_VER_DOT} -lt 322 ; then
@@ -42,6 +60,23 @@ if test ${GEOS_VER_DOT} -lt 322 ; then
 
     exit 1
 fi
+
+PKG_CPPFLAGS="${PKG_CPPFLAGS} ${GEOS_CPPFLAGS}"
+PKG_LIBS="${PKG_LIBS} ${GEOS_LIBS} ${GEOS_CLIBS}"
+
+# honor PKG_xx overrides
+# for CPPFLAGS we will superfluously double R's flags
+# since we'll set PKG_CPPFLAGS with this, but that shouldn't hurt
+CPPFLAGS="${CPPFLAGS} ${PKG_CPPFLAGS}"
+LIBS="${LIBS} ${PKG_LIBS}"
+
+geosok=yes
+AC_CHECK_HEADERS(geos_c.h,,geosok=no)
+AC_CHECK_LIB(geos_c,initGEOS_r,,geosok=no)
+if test "${geosok}" = no; then
+   AC_MSG_ERROR([libgeos_c and/or geos_c.h not found in given locations.])
+fi
+
 echo "CPPFLAGS: $PKG_CPPFLAGS"
 AC_SUBST(PKG_CPPFLAGS)
 echo "LIBS: $PKG_LIBS"
@@ -51,5 +86,6 @@ if test -e ".svn" ; then
   svnversion -n > inst/SVN_VERSION
 fi
 
-AC_OUTPUT(src/Makevars)
+AC_CONFIG_FILES(src/Makevars)
+AC_OUTPUT
 
