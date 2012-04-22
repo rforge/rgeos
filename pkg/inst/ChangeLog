@@ -1,3 +1,23 @@
+2012-04-22 11:42  rsbivand
+
+	* DESCRIPTION: add plyr dependency
+
+2012-04-20 08:32  rsbivand
+
+	* configure, configure.ac: tidy
+
+2012-04-20 07:06  rsbivand
+
+	* R/AAA.R: tidy
+
+2012-04-20 07:01  rsbivand
+
+	* DESCRIPTION: tidy
+
+2012-04-20 07:01  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2012-04-20 07:00  rsbivand
 
 	* configure, configure.ac, configure.in, src/Makevars.in: upgrading
