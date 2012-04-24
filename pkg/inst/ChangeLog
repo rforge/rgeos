@@ -1,3 +1,11 @@
+2012-04-24 10:54  rsbivand
+
+	* configure, configure.ac: tidying configure.ac
+
+2012-04-22 11:42  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2012-04-22 11:42  rsbivand
 
 	* DESCRIPTION: add plyr dependency
