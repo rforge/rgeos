@@ -25,9 +25,9 @@ AC_ARG_WITH([geos-config],
 if test [ -n "$geos_config" ] ; then
     AC_SUBST([GEOS_CONFIG],["${geos_config}"])
 fi
-echo "geos-config: ${GEOS_CONFIG}"
 
 
+AC_MSG_CHECKING(geos-config usability)
 if test `${GEOS_CONFIG} --version`;
 then
 
@@ -35,30 +35,23 @@ then
 	GEOS_LIBS=`${GEOS_CONFIG} --libs`
         GEOS_CLIBS=`${GEOS_CONFIG} --clibs`
         GEOS_VER=`${GEOS_CONFIG} --version`
+        AC_MSG_RESULT(yes)
 
 else
 
-	echo "Error: geos-config not found"
-	echo "The geos-config script distributed with GEOS could not be found."
-	echo "If you have not installed the GEOS libraries, you can"
-	echo "download the source from  http://http://trac.osgeo.org/geos/"
-	echo "If you have installed the GEOS libraries, then make sure that"
-	echo "geos-config is in your path. Try typing geos-config at a"
-	echo "shell prompt and see if it runs. If not, use:"
-	echo " --configure-args='--with-geos-config=/usr/local/bin/geos-config'"	echo "with appropriate values for your installation."
-	echo ""
-
-	exit 1
-
+        AC_MSG_RESULT(no)
+        AC_MSG_ERROR([${GEOS_CONFIG} not usable])
 fi
 
-echo "GEOS: $GEOS_VER"
+AC_MSG_NOTICE([geos-config: ${GEOS_CONFIG}])
+AC_MSG_NOTICE([GEOS version: ${GEOS_VER}])
+AC_MSG_CHECKING([geos version over 3.2.1])
 GEOS_VER_DOT=`echo $GEOS_VER | tr -d "."`
 if test ${GEOS_VER_DOT} -lt 322 ; then
-    echo "Error: GEOS version less than 3.2.2"
-    echo "Upgrade GEOS to at least 3.2.2"
-
-    exit 1
+        AC_MSG_RESULT(no)
+        AC_MSG_ERROR([Upgrade GEOS to at least 3.2.2])
+else
+        AC_MSG_RESULT(yes)
 fi
 
 AC_SUBST([PKG_CPPFLAGS],["${PKG_CPPFLAGS} ${GEOS_CPPFLAGS}"])
@@ -77,9 +70,9 @@ if test "${geosok}" = no; then
    AC_MSG_ERROR([libgeos_c and/or geos_c.h not found in given locations.])
 fi
 
-echo "CPPFLAGS: $PKG_CPPFLAGS"
+AC_MSG_NOTICE([PKG_CPPFLAGS: ${PKG_CPPFLAGS}])
 AC_SUBST(PKG_CPPFLAGS)
-echo "LIBS: $PKG_LIBS"
+AC_MSG_NOTICE([PKG_LIBS: ${PKG_LIBS}])
 AC_SUBST(PKG_LIBS)
 
 if test -e ".svn" ; then

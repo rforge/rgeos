@@ -1335,9 +1335,10 @@ if test  -n "$geos_config"  ; then
     GEOS_CONFIG="${geos_config}"
 
 fi
-echo "geos-config: ${GEOS_CONFIG}"
 
 
+echo "$as_me:$LINENO: checking geos-config usability" >&5
+echo $ECHO_N "checking geos-config usability... $ECHO_C" >&6
 if test `${GEOS_CONFIG} --version`;
 then
 
@@ -1345,38 +1346,40 @@ then
 	GEOS_LIBS=`${GEOS_CONFIG} --libs`
         GEOS_CLIBS=`${GEOS_CONFIG} --clibs`
         GEOS_VER=`${GEOS_CONFIG} --version`
+        echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
 
 else
 
-	echo "Error: geos-config not found"
-	echo "The geos-config script distributed with GEOS could not be found."
-	echo "If you have not installed the GEOS libraries, you can"
-	echo "download the source from  http://http://trac.osgeo.org/geos/"
-	echo "If you have installed the GEOS libraries, then make sure that"
-	echo "geos-config is in your path. Try typing geos-config at a"
-	echo "shell prompt and see if it runs. If not, use:"
-	echo " --configure-args='--with-geos-config=/usr/local/bin/geos-config'"	echo "with appropriate values for your installation."
-	echo ""
-
-	exit 1
-
+        echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+        { { echo "$as_me:$LINENO: error: ${GEOS_CONFIG} not usable" >&5
+echo "$as_me: error: ${GEOS_CONFIG} not usable" >&2;}
+   { (exit 1); exit 1; }; }
 fi
 
-echo "GEOS: $GEOS_VER"
+{ echo "$as_me:$LINENO: geos-config: ${GEOS_CONFIG}" >&5
+echo "$as_me: geos-config: ${GEOS_CONFIG}" >&6;}
+{ echo "$as_me:$LINENO: GEOS version: ${GEOS_VER}" >&5
+echo "$as_me: GEOS version: ${GEOS_VER}" >&6;}
+echo "$as_me:$LINENO: checking geos version over 3.2.1" >&5
+echo $ECHO_N "checking geos version over 3.2.1... $ECHO_C" >&6
 GEOS_VER_DOT=`echo $GEOS_VER | tr -d "."`
 if test ${GEOS_VER_DOT} -lt 322 ; then
-    echo "Error: GEOS version less than 3.2.2"
-    echo "Upgrade GEOS to at least 3.2.2"
-
-    exit 1
+        echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+        { { echo "$as_me:$LINENO: error: Upgrade GEOS to at least 3.2.2" >&5
+echo "$as_me: error: Upgrade GEOS to at least 3.2.2" >&2;}
+   { (exit 1); exit 1; }; }
+else
+        echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
 fi
 
 PKG_CPPFLAGS="${PKG_CPPFLAGS} ${GEOS_CPPFLAGS}"
 
-#PKG_CPPFLAGS="${PKG_CPPFLAGS} ${GEOS_CPPFLAGS}"
 PKG_LIBS="${PKG_LIBS} ${GEOS_LIBS} ${GEOS_CLIBS}"
 
-#PKG_LIBS="${PKG_LIBS} ${GEOS_LIBS} ${GEOS_CLIBS}"
 
 # honor PKG_xx overrides
 # for CPPFLAGS we will superfluously double R's flags
@@ -3038,9 +3041,11 @@ echo "$as_me: error: libgeos_c and/or geos_c.h not found in given locations." >&
    { (exit 1); exit 1; }; }
 fi
 
-echo "CPPFLAGS: $PKG_CPPFLAGS"
+{ echo "$as_me:$LINENO: PKG_CPPFLAGS: ${PKG_CPPFLAGS}" >&5
+echo "$as_me: PKG_CPPFLAGS: ${PKG_CPPFLAGS}" >&6;}
 
-echo "LIBS: $PKG_LIBS"
+{ echo "$as_me:$LINENO: PKG_LIBS: ${PKG_LIBS}" >&5
+echo "$as_me: PKG_LIBS: ${PKG_LIBS}" >&6;}
 
 
 if test -e ".svn" ; then
