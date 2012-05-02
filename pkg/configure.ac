@@ -31,10 +31,10 @@ AC_MSG_CHECKING(geos-config usability)
 if test `${GEOS_CONFIG} --version`;
 then
 
+        GEOS_VER=`${GEOS_CONFIG} --version`
+        GEOS_VER_DOT=`echo $GEOS_VER | tr -d "."`
 	GEOS_CPPFLAGS=`${GEOS_CONFIG} --cflags`
 	GEOS_LIBS=`${GEOS_CONFIG} --libs`
-        GEOS_CLIBS=`${GEOS_CONFIG} --clibs`
-        GEOS_VER=`${GEOS_CONFIG} --version`
         AC_MSG_RESULT(yes)
 
 else
@@ -46,13 +46,22 @@ fi
 AC_MSG_NOTICE([geos-config: ${GEOS_CONFIG}])
 AC_MSG_NOTICE([GEOS version: ${GEOS_VER}])
 AC_MSG_CHECKING([geos version over 3.2.1])
-GEOS_VER_DOT=`echo $GEOS_VER | tr -d "."`
 if test ${GEOS_VER_DOT} -lt 322 ; then
         AC_MSG_RESULT(no)
         AC_MSG_ERROR([Upgrade GEOS to at least 3.2.2])
 else
         AC_MSG_RESULT(yes)
 fi
+
+AC_MSG_CHECKING(geos-config clibs)
+if test ${GEOS_VER_DOT} -lt 332 ; then
+        AC_MSG_RESULT(no)
+        GEOS_CLIBS="-lgeos_c"
+else        
+        GEOS_CLIBS=`${GEOS_CONFIG} --clibs`
+        AC_MSG_RESULT(yes)
+fi
+
 
 AC_SUBST([PKG_CPPFLAGS],["${PKG_CPPFLAGS} ${GEOS_CPPFLAGS}"])
 AC_SUBST([PKG_LIBS],["${PKG_LIBS} ${GEOS_LIBS} ${GEOS_CLIBS}"])

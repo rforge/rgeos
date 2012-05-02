@@ -1342,10 +1342,10 @@ echo $ECHO_N "checking geos-config usability... $ECHO_C" >&6
 if test `${GEOS_CONFIG} --version`;
 then
 
+        GEOS_VER=`${GEOS_CONFIG} --version`
+        GEOS_VER_DOT=`echo $GEOS_VER | tr -d "."`
 	GEOS_CPPFLAGS=`${GEOS_CONFIG} --cflags`
 	GEOS_LIBS=`${GEOS_CONFIG} --libs`
-        GEOS_CLIBS=`${GEOS_CONFIG} --clibs`
-        GEOS_VER=`${GEOS_CONFIG} --version`
         echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6
 
@@ -1364,7 +1364,6 @@ echo "$as_me: geos-config: ${GEOS_CONFIG}" >&6;}
 echo "$as_me: GEOS version: ${GEOS_VER}" >&6;}
 echo "$as_me:$LINENO: checking geos version over 3.2.1" >&5
 echo $ECHO_N "checking geos version over 3.2.1... $ECHO_C" >&6
-GEOS_VER_DOT=`echo $GEOS_VER | tr -d "."`
 if test ${GEOS_VER_DOT} -lt 322 ; then
         echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
@@ -1375,6 +1374,19 @@ else
         echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6
 fi
+
+echo "$as_me:$LINENO: checking geos-config clibs" >&5
+echo $ECHO_N "checking geos-config clibs... $ECHO_C" >&6
+if test ${GEOS_VER_DOT} -lt 332 ; then
+        echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+        GEOS_CLIBS="-lgeos_c"
+else
+        GEOS_CLIBS=`${GEOS_CONFIG} --clibs`
+        echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+fi
+
 
 PKG_CPPFLAGS="${PKG_CPPFLAGS} ${GEOS_CPPFLAGS}"
 
