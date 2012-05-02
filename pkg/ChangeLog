@@ -1,3 +1,11 @@
+2012-05-02 09:58  rsbivand
+
+	* configure, configure.ac: more configure updates
+
+2012-04-24 10:56  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2012-04-24 10:54  rsbivand
 
 	* configure, configure.ac: tidying configure.ac
