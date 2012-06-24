@@ -1,12 +1,12 @@
 Package: rgeos
 Title: Interface to Geometry Engine - Open Source (GEOS)
 Version: 0.2-7
-Date: 2012-05-07
+Date: 2012-06-24
 Depends: R (>= 2.10.0), methods, sp (>= 0.9-99), stringr (>= 0.5), plyr
 LinkingTo: sp
 Suggests: maptools (>= 0.8-5), testthat, XML
 LazyLoad: yes
-Description: Interface to Geometry Engine - Open Source (GEOS) using the C API for topology operations on geometries. The GEOS library is external to the package, and, when installing the package from source, must be correctly installed first. Windows binaries are provided on CRAN. Mac Intel OS X binaries are not provided on CRAN, but can be installed from the CRAN Extras repository with: setRepositories(ind=1:2); install.packages('rgeos').
+Description: Interface to Geometry Engine - Open Source (GEOS) using the C API for topology operations on geometries. The GEOS library is external to the package, and, when installing the package from source, must be correctly installed first. Windows and Mac Intel OS X binaries are provided on CRAN.
 Author: Roger Bivand and Colin Rundel
 Maintainer: Roger Bivand <Roger.Bivand@nhh.no>
 License: GPL (>= 2)
