@@ -1,12 +1,13 @@
 \name{calc.labpt.strings}
 \alias{calc.labpt.strings}
 \alias{calc.labpt.strings}
+\alias{polygonsLabel}
 
 \title{optimally compute label points}
 \description{optimally compute label points}
 \usage{
-calc.labpt.strings(pol, label, gridpoints=50)
-labpt(pol, labels, ...)
+calc.labpt.strings(pol, label, gridpoints = 50, cex = 1,...)
+polygonsLabel(pol, labels, ...)
 }
 
 \arguments{
@@ -14,7 +15,9 @@ labpt(pol, labels, ...)
   \item{label}{ character; vector of length one with label}
   \item{labels}{ character; vector with labels}
   \item{gridpoints}{ integer; number of grid points to try }
-  \item{...}{ argument(s) passed on to \code{calc.labpt.strings}}
+  \item{cex}{numeric; magnification factor for text labels}
+  \item{...}{ argument(s) passed on to \code{calc.labpt.strings}, and from
+  there to \code{strwidth} and \code{strheight}}
 }
 
 \value{ 
@@ -71,7 +74,7 @@ xy.sp=SpatialPolygons(list(
 	Polygons(list(Polygon(cbind(x2,y2))), ID="test2")  # high
 	))
 plot(xy.sp, col=bpy.colors(3))
-text(labpt(xy.sp, labels), labels, col = c('white', 'black', 'black'))
+text(polygonsLabel(xy.sp, labels), labels, col = c('white', 'black', 'black'))
 
 }
 
