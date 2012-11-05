@@ -1,3 +1,11 @@
+2012-11-05 17:30  rsbivand
+
+	* man/comment-functions.Rd: dontrun part of check holes example
+
+2012-11-05 08:56  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2012-11-05 08:55  rsbivand
 
 	* DESCRIPTION: tidy
