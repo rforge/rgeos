@@ -31,8 +31,7 @@ version_GEOS0 <- function() {
   assign("do_poly_check", TRUE, envir=.RGEOS_HANDLE)
   fn <- system.file("SVN_VERSION", package="rgeos")
   if (file.exists(fn)) {
-    svn_version <- scan(system.file("SVN_VERSION", package="rgeos"),
-      what=character(1), sep="\n", quiet=TRUE)
+    svn_version <- scan(fn, what=character(1), sep="\n", quiet=TRUE)
   } else {
     svn_version <- "(unknown)"
   }
