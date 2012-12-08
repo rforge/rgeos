@@ -35,7 +35,7 @@ version_GEOS0 <- function() {
   } else {
     svn_version <- "(unknown)"
   }
-  Smess <- paste("rgeos version: ", packageVersion("rgeos"),
+  Smess <- paste("rgeos version: ", utils::packageVersion("rgeos"),
     ", (SVN revision ", svn_version, ")\n", sep="")
   Smess <- paste(Smess, "GEOS runtime version:",
     version_GEOS(), "\n")
