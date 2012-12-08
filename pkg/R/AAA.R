@@ -35,7 +35,8 @@ version_GEOS0 <- function() {
   } else {
     svn_version <- "(unknown)"
   }
-  Smess <- paste("rgeos: (SVN revision ", svn_version, ")\n", sep="")
+  Smess <- paste("rgeos version: ", packageVersion("rgeos"),
+    ", (SVN revision ", svn_version, ")\n", sep="")
   Smess <- paste(Smess, "GEOS runtime version:",
     version_GEOS(), "\n")
   Smess <- paste(Smess, "Polygon checking:", get_do_poly_check(), "\n")
