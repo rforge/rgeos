@@ -1,8 +1,8 @@
 Package: rgeos
 Title: Interface to Geometry Engine - Open Source (GEOS)
-Version: 0.2-14
-Date: 2013-02-23
-Depends: R (>= 2.10.0), methods, sp (>= 1.0-4)
+Version: 0.2-15
+Date: 2013-03-29
+Depends: R (>= 2.10.0), methods, sp (>= 1.0-8)
 LinkingTo: sp
 Suggests: maptools (>= 0.8-5), testthat, XML
 LazyLoad: yes
