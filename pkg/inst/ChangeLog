@@ -1,3 +1,11 @@
+2013-03-29 10:59  rsbivand
+
+	* ChangeLog,
+	  DESCRIPTION, inst/ChangeLog, src/rgeos_R2geos.c,
+	  src/rgeos_R2geosMP.c, src/rgeos_bbox.c, src/rgeos_buffer.c,
+	  src/rgeos_coord.c, src/rgeos_geos2R.c, src/rgeos_topology.c,
+	  src/rgeos_topology_binary.c: remove clang warnings
+
 2013-03-04 09:53  rsbivand
 
 	* configure:
