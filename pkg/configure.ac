@@ -17,6 +17,10 @@ RBIN="${R_HOME}/bin/R"
 : ${CFLAGS=`"${RBIN}" CMD config CFLAGS`}
 : ${CPPFLAGS=`"${RBIN}" CMD config CPPFLAGS`}
 : ${LDFLAGS=`"${RBIN}" CMD config LDFLAGS`}
+# AC_SUBST([CC],["clang"])
+# AC_SUBST([CXX],["clang++"])
+AC_MSG_NOTICE([CC: ${CC}])
+AC_MSG_NOTICE([CXX: ${CXX}])
 
 AC_MSG_NOTICE([${PACKAGE_NAME}: ${PACKAGE_VERSION}])
 
