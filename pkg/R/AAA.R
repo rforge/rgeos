@@ -47,6 +47,8 @@ version_GEOS0 <- function() {
   packageStartupMessage(Smess, appendLF = TRUE)
 }
 
+if(getRversion() >= "3.1.0") utils::suppressForeignCheck("func")
+
 .onUnload <- function(libpath) {
   invisible(finish_RGEOS())
 }
