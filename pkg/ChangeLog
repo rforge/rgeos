@@ -1,3 +1,12 @@
+2013-06-22 14:16  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/labelpt.R, man/labelpt.Rd: update
+	  patched to polygonsLabel
+
+2013-06-22 13:40  rsbivand
+
+	* ChangeLog, inst/ChangeLog: more symbol check issues
+
 2013-06-22 13:39  rsbivand
 
 	* R/AAA.R, R/rgeos_misc.R, R/rgeos_predicate_binary.R,
