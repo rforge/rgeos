@@ -1,3 +1,13 @@
+2013-06-22 13:39  rsbivand
+
+	* R/AAA.R, R/rgeos_misc.R, R/rgeos_predicate_binary.R,
+	  R/rgeos_predicate_unary.R, R/rgeos_topology.R,
+	  R/rgeos_topology_binary.R: tidy
+
+2013-06-22 12:23  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2013-06-22 12:23  rsbivand
 
 	* man/comment-functions.Rd, man/constructor-SpatialCollections.Rd,
