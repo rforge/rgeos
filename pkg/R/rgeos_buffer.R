@@ -51,7 +51,7 @@ gBuffer = function(spgeom, byid=FALSE, id=NULL, width=1.0, quadsegs=5,
  
 	if (byid) {
 		if (.hasSlot(spgeom, 'data')) {
-			ans <- addAttrToGeom(ans, spgeom@data, FALSE)
+			ans <- SpatialPolygonsDataFrame(ans, spgeom@data, FALSE)
 		}	
 	}
  
