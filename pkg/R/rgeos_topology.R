@@ -196,6 +196,13 @@ gDelaunayTriangulation <- function(spgeom, tolerance=0.0, onlyEdges=0L) {
     
 }
 
+#out <- rgeos:::gDelaunayTriangulation(meuse, onlyEdges=1L)
+#lns <- slot(slot(out, "lines")[[1]], "Lines")
+#out1 <- SpatialLines(lapply(seq(along=lns), function(i) Lines(list(lns[[i]]), ID=as.character(i))))
+#out2 <- gTouches(meuse, out1, byid=TRUE)
+#out3 <- which(out2, arr.ind=TRUE)
+
+
 
 RGEOSEnvelope = function(spgeom, byid=FALSE, id = NULL) {
     .Deprecated("gEnvelope")
