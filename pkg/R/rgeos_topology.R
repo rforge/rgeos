@@ -177,7 +177,7 @@ gUnaryUnion = function(spgeom, id = NULL) {
     res
 }
 
-gDelaunayTriangulation <- function(spgeom, tolerance=0.0, onlyEdges=0L) {
+gDelaunayTriangulation <- function(spgeom, tolerance=0.0, onlyEdges=FALSE) {
 
     if (version_GEOS0() < "3.4.0")
         stop("No DelaunayTriangulation in this version of GEOS")
@@ -188,21 +188,13 @@ gDelaunayTriangulation <- function(spgeom, tolerance=0.0, onlyEdges=0L) {
         stop("duplicate points not permitted")
     stopifnot(is.numeric(tolerance))
     stopifnot(length(tolerance) == 1)
-    stopifnot(is.integer(onlyEdges))
+    stopifnot(is.logical(onlyEdges))
     stopifnot(length(onlyEdges) == 1)
 
     .Call("rgeos_delaunaytriangulation", .RGEOS_HANDLE,
         spgeom, tolerance, onlyEdges, PACKAGE="rgeos")
     
 }
-
-#out <- rgeos:::gDelaunayTriangulation(meuse, onlyEdges=1L)
-#lns <- slot(slot(out, "lines")[[1]], "Lines")
-#out1 <- SpatialLines(lapply(seq(along=lns), function(i) Lines(list(lns[[i]]), ID=as.character(i))))
-#out2 <- gTouches(meuse, out1, byid=TRUE)
-#out3 <- which(out2, arr.ind=TRUE)
-
-
 
 RGEOSEnvelope = function(spgeom, byid=FALSE, id = NULL) {
     .Deprecated("gEnvelope")

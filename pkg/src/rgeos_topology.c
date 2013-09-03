@@ -42,7 +42,7 @@ SEXP rgeos_delaunaytriangulation(SEXP env, SEXP obj, SEXP tol,
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
     double tolerance = NUMERIC_POINTER(tol)[0];
     int oE = INTEGER_POINTER(onlyEdges)[0];
-    int pc;
+    int pc=0;
 
     SEXP ans, id;
     
