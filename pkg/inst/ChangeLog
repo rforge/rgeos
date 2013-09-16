@@ -1,3 +1,18 @@
+2013-09-16 12:22  rsbivand
+
+	* man/topo-unary-gDelaunayTriangulation.Rd:
+	  tidy
+
+2013-09-16 11:15  rsbivand
+
+	* man/topo-unary-gDelaunayTriangulation.Rd:
+	  tidy
+
+2013-09-16 11:01  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: tidy
+
 2013-09-03 10:17  rsbivand
 
 	* NAMESPACE,
