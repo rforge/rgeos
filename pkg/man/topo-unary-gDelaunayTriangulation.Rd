@@ -25,6 +25,7 @@
 
 
 \examples{
+if (version_GEOS0() > "3.4.0") {
 library(sp)
 data(meuse)
 coordinates(meuse) <- c("x", "y")
@@ -48,6 +49,6 @@ attr(out5, "n") <- length(meuse)
 attr(out5, "region.id") <- as.character(1:length(meuse))
 nb1 <- sn2listw(out5)$neighbours
 nb2 <- make.sym.nb(nb1)
-}}
+}}}
 
 \keyword{spatial}
