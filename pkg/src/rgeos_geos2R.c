@@ -333,6 +333,9 @@ SEXP rgeos_geospolygon2Polygons(SEXP env, GEOSGeom geom, SEXP ID) {
             comm[k] = 0;
             areas[k] = 0;
             po[k] = k + R_OFFSET;
+// modified 131004 RSB 
+// https://stat.ethz.ch/pipermail/r-sig-geo/2013-October/019470.html
+            warning("rgeos_geospolygon2Polygons: empty Polygons object");
             
             k++;
         } else {

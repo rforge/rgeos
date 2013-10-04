@@ -50,8 +50,9 @@ gBuffer = function(spgeom, byid=FALSE, id=NULL, width=1.0, quadsegs=5,
                                 capStyle, joinStyle, mitreLimit, PACKAGE="rgeos")
  
 	if (byid) {
-		if (.hasSlot(spgeom, 'data')) {
-			ans <- SpatialPolygonsDataFrame(ans, spgeom@data, FALSE)
+	    if (.hasSlot(spgeom, 'data')) {
+	        ans <- SpatialPolygonsDataFrame(ans,
+                    spgeom@data[match(row.names(ans), id),], FALSE)
 		}	
 	}
  
