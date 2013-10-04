@@ -13,6 +13,6 @@ Authors@R: c(
 	person("Colin", "Rundel", role = "aut"),
 	person("Edzer", "Pebesma", role = "ctb"),
 	person("Karl Ove", "Hufthammer", role = "ctb"))
-icense: GPL (>= 2)
+License: GPL (>= 2)
 URL: https://r-forge.r-project.org/projects/rgeos/ http://trac.osgeo.org/geos/ 
 SystemRequirements: GEOS (>= 3.2.0); for building from source: GEOS from http://trac.osgeo.org/geos/; GEOS OSX frameworks built by William Kyngesburye at http://www.kyngchaos.com/ may be used for source installs on OSX.
