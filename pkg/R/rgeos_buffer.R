@@ -24,6 +24,13 @@ gBuffer = function(spgeom, byid=FALSE, id=NULL, width=1.0, quadsegs=5,
     
     id = as.character(id)
     width = as.numeric(width)
+    n <- length(curids)
+    if (byid) {
+        if (length(width) == 1) width <- rep(width, n)
+        stopifnot(length(width) == n)
+    } else {
+        stopifnot(length(width) == 1)
+    }
     quadsegs = as.integer(quadsegs)
     byid = as.logical(byid)
     mitreLimit=as.numeric(mitreLimit)

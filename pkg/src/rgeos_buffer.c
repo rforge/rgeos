@@ -28,7 +28,7 @@ SEXP rgeos_buffer(SEXP env, SEXP obj, SEXP byid, SEXP id, SEXP width, SEXP quads
         }
         
         thisgeom = GEOSBufferWithStyle_r(GEOShandle, curgeom, 
-                                         NUMERIC_POINTER(width)[0], 
+                                         NUMERIC_POINTER(width)[i], 
                                          INTEGER_POINTER(quadsegs)[0], 
                                          INTEGER_POINTER(capStyle)[0], 
                                          INTEGER_POINTER(joinStyle)[0],  

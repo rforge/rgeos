@@ -13,14 +13,14 @@ gBuffer(spgeom, byid=FALSE, id=NULL, width=1.0, quadsegs=5, capStyle="ROUND",
   \item{spgeom}{sp object as defined in package sp}
   \item{byid}{Logical determining if the function should be applied across subgeometries (TRUE) or the entire object (FALSE)}
   \item{id}{Character vector defining id labels for the resulting geometries, if unspecified returned geometries will be labeled based on their parent geometries' labels.}
-  \item{width}{Distance from original geometry to include in the new geometry. Negative values are allowed.}
+  \item{width}{Distance from original geometry to include in the new geometry. Negative values are allowed. Either a numeric vector of length 1 when byid is FALSE; if byid is TRUE: of length 1 replicated to the number of input geometries, or of length equal to the number of input geometries}
   \item{quadsegs}{Number of line segments to use to approximate a quarter circle.}
   \item{capStyle}{Style of cap to use at the ends of the geometry. Allowed values: \code{ROUND},\code{FLAT},\code{SQUARE}}
   \item{joinStyle}{Style to use for joints in the geometry. Allowed values: \code{ROUND},\code{MITRE},\code{BEVEL}}
   \item{mitreLimit}{Numerical value that specifies how far a joint can extend if a mitre join style is used.}
 }
 
-\value{SpatialPolygons (or a SpatialPolygonsDataFrame if byid=TRUE and spgeom has a data.frame)}
+\value{SpatialPolygons (or a SpatialPolygonsDataFrame if byid=TRUE and spgeom has a data.frame); if negative width(s) lead the object to disappear, NULL is returned for byid FALSE, and component Polygons objects are dropped if empty for byid TRUE; the SpatialPolygonsDataFrame is subsetted by row.names or id if given to retain non-empty geometry rows}
 
 \author{Roger Bivand & Colin Rundel}
 
