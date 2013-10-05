@@ -45,7 +45,20 @@ plot(p2,border='blue',lwd=2,add=TRUE);title("width: 0")
 plot(gBuffer(p2,width=0.2),col='black',pbg='white',xlim=c(-2.5,2.5),ylim=c(-2.5,2.5))
 plot(p2,border='blue',lwd=2,add=TRUE);title("width: 0.2")
 
+p3 <- readWKT(paste("GEOMETRYCOLLECTION(",
+ "POLYGON((0 1,0.95 0.31,0.59 -0.81,-0.59 -0.81,-0.95 0.31,0 1)),",
+ "POLYGON((2 2,-2 2,-2 -2,2 -2,2 2),(1 1,-1 1,-1 -1,1 -1,1 1)))"))
 
+par(mfrow=c(1,1))
+plot(gBuffer(p3, byid=TRUE, width=c(-0.2, -0.1)),col='black',pbg='white',
+xlim=c(-2.5,2.5),ylim=c(-2.5,2.5))
+plot(p3,border=c('blue', 'red'),lwd=2,add=TRUE);title("width: -0.2, -0.1")
+length(p3)
+dropEmpty = gBuffer(p3, byid=TRUE, width=c(-1, 0))
+length(dropEmpty)
+plot(dropEmpty, col='black', pbg='white', xlim=c(-2.5,2.5),ylim=c(-2.5,2.5))
+plot(p3,border=c('blue'),lwd=2,add=TRUE);title("width: -1, 0")
+par(mfrow=c(2,3))
 
 #Style options
 l1 = readWKT("LINESTRING(0 0,1 5,4 5,5 2,8 2,9 4,4 6.5)")
