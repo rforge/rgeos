@@ -53,12 +53,19 @@ par(mfrow=c(1,1))
 plot(gBuffer(p3, byid=TRUE, width=c(-0.2, -0.1)),col='black',pbg='white',
 xlim=c(-2.5,2.5),ylim=c(-2.5,2.5))
 plot(p3,border=c('blue', 'red'),lwd=2,add=TRUE);title("width: -0.2, -0.1")
-length(p3)
-dropEmpty = gBuffer(p3, byid=TRUE, width=c(-1, 0))
-length(dropEmpty)
+library(sp)
+p3df <- SpatialPolygonsDataFrame(p3, data=data.frame(i=1:length(p3),
+ row.names=row.names(p3)))
+dim(p3df)
+row.names(p3df)
+dropEmpty = gBuffer(p3df, byid=TRUE, id=letters[1:nrow(p3df)], width=c(-1, 0))
+dim(dropEmpty)
+row.names(dropEmpty)
+row.names(slot(dropEmpty, "data"))
 plot(dropEmpty, col='black', pbg='white', xlim=c(-2.5,2.5),ylim=c(-2.5,2.5))
-plot(p3,border=c('blue'),lwd=2,add=TRUE);title("width: -1, 0")
+plot(p3df,border=c('blue'),lwd=2,add=TRUE);title("width: -1, 0")
 par(mfrow=c(2,3))
+
 
 #Style options
 l1 = readWKT("LINESTRING(0 0,1 5,4 5,5 2,8 2,9 4,4 6.5)")
