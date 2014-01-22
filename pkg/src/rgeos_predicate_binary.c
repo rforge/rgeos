@@ -1,6 +1,6 @@
 #include "rgeos.h"
 // symmetric intersects_prepared 
-// not symmetric contains_prepared containsproperly_prepared rgeos_covers_prepared
+// not symmetric contains_prepared containsproperly_prepared covers_prepared
 
 SEXP rgeos_intersects_prepared(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
     return( rgeos_binpredfunc_prepared(env,spgeom1,spgeom2,byid, &GEOSPreparedIntersects_r, TRUE) );
