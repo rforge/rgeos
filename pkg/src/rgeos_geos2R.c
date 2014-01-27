@@ -61,8 +61,15 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
                 n += ns;
                 
                 types[i] = GEOSGeomTypeId_r(GEOShandle, subgeom);
-                if (types[i] == GEOS_GEOMETRYCOLLECTION)
-                    error("Geometry collections may not contain other\n    geometry collections, at subgeometry %d, row.name %s", i, CHAR(STRING_ELT(id, i)));
+                if (types[i] == GEOS_GEOMETRYCOLLECTION) {
+                    Rprintf("output subgeometry %d, row.name: %s\n", i,
+                        CHAR(STRING_ELT(id, i)));
+                    for (int ii=0; ii<ns; ii++)
+                        Rprintf("subsubgeometry %d: %s\n", ii,
+                            GEOSGeomType_r(GEOShandle,
+                            GEOSGetGeometryN_r(GEOShandle, subgeom, ii)));
+                    error("Geometry collections may not contain other geometry collections");
+                }
                 
                 gctypes[ types[i] ] += 1; 
                 gctypen[ types[i] ] += ns;
