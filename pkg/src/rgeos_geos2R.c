@@ -62,7 +62,7 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
                 
                 types[i] = GEOSGeomTypeId_r(GEOShandle, subgeom);
                 if (types[i] == GEOS_GEOMETRYCOLLECTION)
-                    error("Geometry collections may not contain other geometry collections");
+                    error("Geometry collections may not contain other\n    geometry collections, at subgeometry %d, row.name %s", i, CHAR(STRING_ELT(id, i)));
                 
                 gctypes[ types[i] ] += 1; 
                 gctypen[ types[i] ] += ns;

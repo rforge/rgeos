@@ -37,6 +37,10 @@ SEXP rgeos_binarytopologyfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, S
 
     GEOSGeom *geoms = (GEOSGeom *) R_alloc((size_t) (m*n), sizeof(GEOSGeom));
     GEOSGeom thisgeom;
+//Rprintf("m=%d n=%d\n", m, n);
+//Rprintf("spgeom1 is %s\n", GEOSGeomType_r(GEOShandle, geom1));
+//Rprintf("spgeom2 is %s\n", GEOSGeomType_r(GEOShandle, geom2));
+
 
     int k=0;
     for(int i=0; i<m; i++) {
@@ -67,12 +71,15 @@ SEXP rgeos_binarytopologyfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, S
     
     GEOSGeom_destroy_r(GEOShandle, geom1);
     GEOSGeom_destroy_r(GEOShandle, geom2);
-    
+//Rprintf("m=%d n=%d k=%d\n", m, n, k);
+
     if (k == 0)
         return(R_NilValue);
     GEOSGeom res = (k > 1) ? GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, geoms, (unsigned int) k)
                              : geoms[0];
     
+//Rprintf("res is %s\n", GEOSGeomType_r(GEOShandle, res));
+
     return( rgeos_convert_geos2R(env, res, p4s, ids) );
 }
 
