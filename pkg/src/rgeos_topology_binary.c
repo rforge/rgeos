@@ -49,7 +49,7 @@ SEXP rgeos_binarytopologyfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, S
 //Rprintf("spgeom2 is %s\n", GEOSGeomType_r(GEOShandle, geom2));
 
 
-    int k=0, k1=0, k2=0, kk=0;
+    int k=0, k1=0, kk=0;
     for(int i=0; i<m; i++) {
 
         const GEOSGeometry *curgeom1 = (m > 1) ? GEOSGetGeometryN_r(GEOShandle, geom1, i) : geom1;
@@ -87,7 +87,7 @@ SEXP rgeos_binarytopologyfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, S
                         GEOSGeom *kgeoms = (GEOSGeom *) R_alloc(
                             (size_t) nsGC, sizeof(GEOSGeom));
                         for (k1=0, kk=0; k1<nsGC; k1++) {
-                            kgeom = GEOSGetGeometryN_r(GEOShandle,
+                            kgeom = (GEOSGeom) GEOSGetGeometryN_r(GEOShandle,
                                 thisgeom, k1);
                             k_type = GEOSGeomTypeId_r(GEOShandle, kgeom);
                             k_empty = GEOSisEmpty_r(GEOShandle, kgeom);
