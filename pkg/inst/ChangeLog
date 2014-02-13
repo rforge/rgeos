@@ -1,3 +1,13 @@
+2014-02-13 15:28  rsbivand
+
+	* src/rgeos_topology_binary.c:
+	  cast to remove warnings
+
+2014-02-13 08:52  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: tidy
+
 2014-02-13 08:51  rsbivand
 
 	* DESCRIPTION,
