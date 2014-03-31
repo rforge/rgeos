@@ -143,6 +143,9 @@ SEXP rgeos_relate(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid) {
 SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, p_binpredfunc binpredfunc, int canSym) {
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
+    SEXP returnDense = findVarInFrame(env, install("returnDense"));
+    int retDen = LOGICAL_POINTER(returnDense)[0];
+    int *listvec, vecn=0;
     int pc = 0;
     
     GEOSGeom geom1 = rgeos_convert_R2geos(env, spgeom1);
@@ -161,10 +164,16 @@ SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, p_binpre
     if (n == -1) error("rgeos_binpredfunc: invalid number of subgeometries in geometry 2");
     
     SEXP ans;
-    if (binpredfunc == (p_binpredfunc) GEOSRelate_r) {
-        PROTECT(ans = NEW_CHARACTER(m*n)); pc++;
+    if (retDen) {
+        if (binpredfunc == (p_binpredfunc) GEOSRelate_r) {
+            PROTECT(ans = NEW_CHARACTER(m*n)); pc++;
+        } else {
+            PROTECT(ans = NEW_LOGICAL(m*n)); pc++;
+        }
     } else {
-        PROTECT(ans = NEW_LOGICAL(m*n)); pc++;
+        PROTECT(ans = NEW_LIST(m)); pc++;
+        listvec = (int *) R_alloc((size_t) n, sizeof(int));
+        vecn = 0;
     }
     
     for(int i=0; i<m; i++) {
@@ -174,7 +183,7 @@ SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, p_binpre
             error("rgeos_binpredfunc: unable to get subgeometries from geometry 1");
 
         for(int j=0; j<n; j++) {
-            if(S1isS2 && j > i && canSym)
+            if(S1isS2 && j > i && canSym && retDen)
                 break;
             
             const GEOSGeometry *curgeom2 = (n > 1) ? GEOSGetGeometryN_r(GEOShandle, geom2, j) : geom2;
@@ -196,14 +205,28 @@ SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, p_binpre
                 if (val == 2)
                     error("rgeos_binpredfunc: comparison failed");
 
-                LOGICAL_POINTER(ans)[n*i+j] = val;
-                if (S1isS2 && canSym)
-                    LOGICAL_POINTER(ans)[n*j+i] = val;
+                if (retDen) {
+                    LOGICAL_POINTER(ans)[n*i+j] = val;
+                    if (S1isS2 && canSym)
+                        LOGICAL_POINTER(ans)[n*j+i] = val;
+                } else {
+                    if (val == 1) {
+                        listvec[vecn] = j+R_OFFSET;
+                        vecn++;
+                    }
+                }
+            }
+            if (!retDen && vecn > 0) {
+                SET_VECTOR_ELT(ans, i, NEW_INTEGER(vecn));
+                for (int j=0; j<vecn; j++) {
+                    INTEGER_POINTER(VECTOR_ELT(ans, i))[j] = listvec[j];
+                }
+                vecn = 0;
             }
         }
     }
     
-    if (LOGICAL_POINTER(byid)[0] || LOGICAL_POINTER(byid)[1]) {
+    if ((LOGICAL_POINTER(byid)[0] || LOGICAL_POINTER(byid)[1]) && retDen) {
         SEXP dims;
         PROTECT(dims = NEW_INTEGER(2)); pc++;
         INTEGER_POINTER(dims)[0] = n;
