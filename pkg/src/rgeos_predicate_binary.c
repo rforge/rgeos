@@ -216,14 +216,15 @@ SEXP rgeos_binpredfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, p_binpre
                     }
                 }
             }
-            if (!retDen && vecn > 0) {
-                SET_VECTOR_ELT(ans, i, NEW_INTEGER(vecn));
-                for (int j=0; j<vecn; j++) {
-                    INTEGER_POINTER(VECTOR_ELT(ans, i))[j] = listvec[j];
-                }
-                vecn = 0;
-            }
         }
+        if (!retDen && vecn > 0) {
+            SET_VECTOR_ELT(ans, i, NEW_INTEGER(vecn));
+            for (int j=0; j<vecn; j++) {
+                INTEGER_POINTER(VECTOR_ELT(ans, i))[j] = listvec[j];
+            }
+            vecn = 0;
+        }
+
     }
     
     if ((LOGICAL_POINTER(byid)[0] || LOGICAL_POINTER(byid)[1]) && retDen) {
