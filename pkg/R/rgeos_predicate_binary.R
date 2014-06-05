@@ -71,7 +71,12 @@ RGEOSBinPredFunc = function(spgeom1, spgeom2, byid, func, optparam=NULL) {
 
 
 
-gContains = function(spgeom1, spgeom2 = NULL, byid = FALSE, prepared=TRUE, returnDense=TRUE) {
+gContains = function(spgeom1, spgeom2 = NULL, byid = FALSE, prepared=TRUE, returnDense=TRUE, STRsubset=FALSE) {
+    stopifnot(is.logical(STRsubset))
+    stopifnot(length(STRsubset)==1)
+    oSTRsubset <- get_RGEOS_STR()
+    set_RGEOS_STR(STRsubset)
+    if (STRsubset) returnDense=FALSE
     stopifnot(is.logical(returnDense))
     stopifnot(length(returnDense)==1)
     oreturnDense <- get_RGEOS_DENSE()
@@ -82,6 +87,7 @@ gContains = function(spgeom1, spgeom2 = NULL, byid = FALSE, prepared=TRUE, retur
 
     res <- RGEOSBinPredFunc(spgeom1,spgeom2,byid,func)
     set_RGEOS_DENSE(oreturnDense)
+    set_RGEOS_STR(oSTRsubset)
     res
 }
 gIntersects = function(spgeom1, spgeom2 = NULL, byid = FALSE, prepared=TRUE, returnDense=TRUE) {

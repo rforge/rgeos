@@ -14,6 +14,16 @@ get_RGEOS_DENSE <- function() {
     get("returnDense", envir=.RGEOS_HANDLE)
 }
 
+set_RGEOS_STR <- function(value) {
+    stopifnot(is.logical(value))
+    stopifnot(length(value) == 1)
+    assign("STRsubset", value, envir=.RGEOS_HANDLE)
+}
+
+get_RGEOS_STR <- function() {
+    get("STRsubset", envir=.RGEOS_HANDLE)
+}
+
 init_RGEOS <- function() {
     .Call('rgeos_Init', PACKAGE="rgeos")
 }
@@ -42,7 +52,7 @@ version_GEOS0 <- function() {
   assign("both_poly", FALSE, envir=.RGEOS_HANDLE)
   assign("drop_not_poly", FALSE, envir=.RGEOS_HANDLE)
   assign("returnDense", TRUE, envir=.RGEOS_HANDLE)
-
+  assign("STRsubset", FALSE, envir=.RGEOS_HANDLE)
 }
 
 .onAttach <- function(lib, pkg) {
