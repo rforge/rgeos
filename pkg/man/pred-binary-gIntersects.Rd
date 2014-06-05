@@ -7,8 +7,8 @@
 \title{Geometry Relationships - Intersects and Disjoint}
 \description{Function for testing if the geometries have at least one point in common or no points in common}
 \usage{
-	gIntersects(spgeom1, spgeom2 = NULL, byid = FALSE, prepared=TRUE, returnDense=TRUE)
-	gDisjoint(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE)
+gIntersects(spgeom1, spgeom2 = NULL, byid = FALSE, prepared=TRUE, returnDense=TRUE)
+gDisjoint(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE)
 }
 	
 \arguments{

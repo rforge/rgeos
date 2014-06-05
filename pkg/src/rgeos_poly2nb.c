@@ -90,8 +90,8 @@ SEXP rgeos_poly_findInBox(SEXP env, SEXP pls, SEXP as_points) {
     return(bblist);
 }
 
-GEOSSTRtree *rgeos_geom2tree(GEOSContextHandle_t GEOShandle, ) {
-}
+/*GEOSSTRtree *rgeos_geom2tree(GEOSContextHandle_t GEOShandle, ) {
+}*/
 
 SEXP rgeos_binary_STRtree_query(SEXP env, SEXP obj1, SEXP obj2) {
 
