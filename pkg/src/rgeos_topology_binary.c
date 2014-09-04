@@ -16,9 +16,9 @@ SEXP rgeos_union(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, SEXP ids) {
 SEXP rgeos_binarytopologyfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, SEXP ids, p_bintopofunc bintopofunc) {
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
-    int both_poly = LOGICAL_POINTER(findVarInFrame(env,
+    int both_poly = LOGICAL_POINTER(getAttrib(byid,
         install("both_poly")))[0];
-    int drop_not_poly = LOGICAL_POINTER(findVarInFrame(env,
+    int drop_not_poly = LOGICAL_POINTER(getAttrib(byid,
         install("drop_not_poly")))[0];
     int drop_me = FALSE, k_type, k_empty;
 
@@ -94,6 +94,7 @@ SEXP rgeos_binarytopologyfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, S
                             if (!k_empty && (k_type == GEOS_POLYGON ||
                                 k_type == GEOS_MULTIPOLYGON)) {
                                 kgeoms[kk] = kgeom;
+//Rprintf("%d %d %d %s\n", k1, kk, GEOSGeomTypeId_r(GEOShandle, kgeom), GEOSGeomType_r(GEOShandle, kgeom));
                                 kk++;
                             }
                         }
@@ -101,7 +102,7 @@ SEXP rgeos_binarytopologyfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, S
                             drop_me = TRUE;
                         } else {
                             thisgeom = (kk > 1) ? GEOSGeom_createCollection_r(
-                                GEOShandle, GEOS_GEOMETRYCOLLECTION, 
+                                GEOShandle, GEOS_MULTIPOLYGON, 
                                 kgeoms, (unsigned int) kk) : kgeoms[0];
                         }
                     }
@@ -109,7 +110,7 @@ SEXP rgeos_binarytopologyfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP byid, S
                 if (!drop_me) {
                     geoms[k] = thisgeom;
                     SET_STRING_ELT(ids, k, STRING_ELT(ids, i*n+j));
-//            Rprintf("%d: %d %d %s %d\n", k, GEOSisEmpty_r(GEOShandle, geoms[k]), GEOSGeomTypeId_r(GEOShandle, geoms[k]), GEOSGeomType_r(GEOShandle, geoms[k]), GEOSGetNumGeometries_r(GEOShandle, geoms[k]));
+//Rprintf("%d: %d %d %s %d\n", k, GEOSisEmpty_r(GEOShandle, geoms[k]), GEOSGeomTypeId_r(GEOShandle, geoms[k]), GEOSGeomType_r(GEOShandle, geoms[k]), GEOSGetNumGeometries_r(GEOShandle, geoms[k]));
                     k++;
                 }
             }

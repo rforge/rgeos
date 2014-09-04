@@ -1,5 +1,7 @@
 RGEOSBinTopoFunc = function(spgeom1, spgeom2, byid, ids=NULL, drop_not_poly=FALSE, func) {
     stopifnot(is.logical(byid))
+    stopifnot(is.logical(drop_not_poly))
+    stopifnot(length(drop_not_poly) == 1)
     byid = as.logical(byid)
     if (any(is.na(byid)) ) 
         stop("Invalid value for byid, must be logical")
@@ -36,14 +38,16 @@ RGEOSBinTopoFunc = function(spgeom1, spgeom2, byid, ids=NULL, drop_not_poly=FALS
     
     if (idlen != length(ids))
         stop(paste("ids vector has incorrect length of",length(ids),"expected length of",idlen))
-    oboth_poly <- get("both_poly", envir=.RGEOS_HANDLE)
-    odrop_not_poly <- get("drop_not_poly", envir=.RGEOS_HANDLE)
+#    oboth_poly <- get("both_poly", envir=.RGEOS_HANDLE)
+#    odrop_not_poly <- get("drop_not_poly", envir=.RGEOS_HANDLE)
+    both_poly <-(inherits(spgeom1, "SpatialPolygons") &&
+        inherits(spgeom2, "SpatialPolygons"))
+#    assign("both_poly", (inherits(spgeom1, "SpatialPolygons") &&
+#        inherits(spgeom2, "SpatialPolygons")), envir=.RGEOS_HANDLE)
+#    if (drop_not_poly) assign("drop_not_poly", drop_not_poly, envir=.RGEOS_HANDLE)
 
-    assign("both_poly", (inherits(spgeom1, "SpatialPolygons") &&
-        inherits(spgeom2, "SpatialPolygons")), envir=.RGEOS_HANDLE)
-    if (drop_not_poly) assign("drop_not_poly", drop_not_poly, envir=.RGEOS_HANDLE)
-
-    
+    attr(byid, "both_poly") <- both_poly
+    attr(byid, "drop_not_poly") <- drop_not_poly
     if (func == "rgeos_difference")
         x <- .Call("rgeos_difference", .RGEOS_HANDLE, spgeom1, spgeom2, byid, ids, PACKAGE="rgeos")
     else if (func == "rgeos_symdifference")
@@ -54,11 +58,12 @@ RGEOSBinTopoFunc = function(spgeom1, spgeom2, byid, ids=NULL, drop_not_poly=FALS
         x <- .Call("rgeos_union", .RGEOS_HANDLE, spgeom1, spgeom2, byid, ids, PACKAGE="rgeos")
     else stop("no such function:", func)
 
-    assign("both_poly", oboth_poly, envir=.RGEOS_HANDLE)
-    assign("drop_not_poly", odrop_not_poly, envir=.RGEOS_HANDLE)
+#    assign("both_poly", oboth_poly, envir=.RGEOS_HANDLE)
+#    assign("drop_not_poly", odrop_not_poly, envir=.RGEOS_HANDLE)
 
     return(x)
 }
+
 gDifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly=FALSE) {
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_not_poly,
     "rgeos_difference") )
