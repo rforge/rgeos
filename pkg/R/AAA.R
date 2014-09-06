@@ -51,6 +51,9 @@ version_GEOS0 <- function() {
   assign("do_poly_check", TRUE, envir=.RGEOS_HANDLE)
 #  assign("both_poly", FALSE, envir=.RGEOS_HANDLE)
 #  assign("drop_not_poly", FALSE, envir=.RGEOS_HANDLE)
+  assign("polyThreshold", 0.0, envir=.RGEOS_HANDLE)
+  assign("dropSlivers", FALSE, envir=.RGEOS_HANDLE)
+  assign("warnSlivers", TRUE, envir=.RGEOS_HANDLE)
   assign("returnDense", TRUE, envir=.RGEOS_HANDLE)
   assign("STRsubset", FALSE, envir=.RGEOS_HANDLE)
 }
