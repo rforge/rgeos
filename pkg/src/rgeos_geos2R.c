@@ -352,6 +352,10 @@ SEXP rgeos_geospolygon2Polygons(SEXP env, GEOSGeom geom, SEXP ID) {
     double polyT = NUMERIC_POINTER(findVarInFrame(env,
         install("polyThreshold")))[0];
     double totalarea = 0.0;
+    int dropSlivers = LOGICAL_POINTER(findVarInFrame(env,
+        install("dropSlivers")))[0];
+    int warnSlivers = LOGICAL_POINTER(findVarInFrame(env,
+        install("warnSlivers")))[0];
 
 //    GEOSArea_r(GEOShandle, geom, &totalarea);
 //Rprintf("%g %g\n", totalarea, polyT);
