@@ -286,19 +286,20 @@ SEXP rgeos_geospolygon2SpatialPolygons(SEXP env, GEOSGeom geom, SEXP p4s, SEXP I
             if (GC == NULL) 
                 error("rgeos_geospolygon2SpatialPolygons: unable to get subgeometry");
 
-            if (dropSlivers) {
-                if ((bb = GEOSEnvelope_r(GEOShandle, GC)) == NULL) {
-                    error("rgeos_geospolygon2SpatialPolygons: envelope [%d] not created", i);
-                }
-                bbs[ii] = bb;
-//Rprintf("bb is %s\n", GEOSGeomType_r(GEOShandle, bb));
-            }
-
 
             SEXP poly, ID;
             PROTECT( ID = NEW_CHARACTER(1));
             SET_STRING_ELT(ID,0,STRING_ELT(IDs, i));
             PROTECT( poly = rgeos_geospolygon2Polygons(env, GC, ID) );
+
+            if (dropSlivers) {
+                if ((bb = GEOSEnvelope_r(GEOShandle,
+                    (GEOSGeom) rgeos_Polygons2MP(env, poly))) == NULL) {
+                    error("rgeos_geospolygon2SpatialPolygons: envelope [%d] not created", i);
+                }
+                bbs[ii] = bb;
+//Rprintf("bb is %s\n", GEOSGeomType_r(GEOShandle, bb));
+            }
         
             areas[ii] = NUMERIC_POINTER(GET_SLOT(poly, install("area")))[0];
             SET_VECTOR_ELT(pls, ii, poly);
@@ -379,7 +380,71 @@ SEXP rgeos_geospolygon2Polygons(SEXP env, GEOSGeom geom, SEXP ID) {
         int GCpolys = (GCempty) ? 1 :
                         GEOSGetNumInteriorRings_r(GEOShandle, GC) + 1;
 
+
         npoly += GCpolys;
+    }
+
+    int *keep = (int *) R_alloc((size_t) npoly, sizeof(int));
+    int kk1=npoly;
+    if (polyT > 0.0) {
+        int kk=0;
+        kk1=0;
+        double iiarea, maxiiarea=0.0;
+        int n_maxarea=-1;
+        for (int ii=0; ii<ngeom; ii++) {
+            keep[ii] = TRUE;
+            GEOSGeom GC = (type == GEOS_MULTIPOLYGON && !empty) ?
+                (GEOSGeometry *) GEOSGetGeometryN_r(GEOShandle, geom, ii) :
+                geom;
+        
+            if (GEOSisEmpty_r(GEOShandle, GC)) 
+                error("rgeos_geospolygon2Polygons: empty Polygons object");
+
+            GEOSGeom lr = (GEOSGeometry *) GEOSGetExteriorRing_r(GEOShandle,
+                GC);
+            if (lr == NULL)
+                error("rgeos_geospolygon2Polygons: exterior ring failure");
+            GEOSArea_r(GEOShandle, lr, &iiarea);
+            if (iiarea < polyT) {
+                keep[kk] = FALSE;
+                if (iiarea > maxiiarea) n_maxarea = kk;
+                if (warnSlivers) 
+                    warning("Exterior ring %d of object %s area %g", ii,
+                    CHAR(STRING_ELT(ID, 0)), iiarea);
+            } else {
+                kk1++;
+            }
+            kk++;
+
+            int nirs = GEOSGetNumInteriorRings_r(GEOShandle, GC);
+            for (int j=0; j<nirs; j++) {
+            
+                lr = (GEOSGeometry *) GEOSGetInteriorRingN_r(GEOShandle, GC, j);
+                if (lr == NULL)
+                    error("rgeos_geospolygon2Polygons: interior ring failure");
+            
+                GEOSArea_r(GEOShandle, lr, &iiarea);
+                if (iiarea < polyT) {
+                    keep[kk] = FALSE;
+                    if (iiarea > maxiiarea) n_maxarea = kk;
+                    if (warnSlivers) 
+                        warning("Interior ring %d of Polygon %d of object %s area %g", j, ii, CHAR(STRING_ELT(ID, 0)), iiarea);
+                } else {
+                    kk1++;
+                }
+                kk++;
+            }
+        }
+        if (kk1 == 0) {
+            if (n_maxarea < 0 || n_maxarea >= npoly)
+                error("n_maxarea %d out of bounds 0:%d", n_maxarea, npoly);
+            keep[n_maxarea] = TRUE;
+            kk1++;
+        }
+    }
+
+    if (polyT > 0.0 && dropSlivers) {
+        npoly = kk1;
     }
     
     SEXP polys;
@@ -390,83 +455,106 @@ SEXP rgeos_geospolygon2Polygons(SEXP env, GEOSGeom geom, SEXP ID) {
     
     totalarea = 0.0;
     int k = 0;
-    for (int i=0; i<ngeom; i++) {
+    int ownerk;
+    if (polyT > 0.0 && dropSlivers) {
+        int kk = 0;
+        for (int i=0; i<ngeom; i++) {
+            GEOSGeom GC = (type == GEOS_MULTIPOLYGON && !empty) ?
+                (GEOSGeometry *) GEOSGetGeometryN_r(GEOShandle, geom, i) :
+                 geom;
         
-        GEOSGeom GC = (type == GEOS_MULTIPOLYGON && !empty) ?
-                        (GEOSGeometry *) GEOSGetGeometryN_r(GEOShandle, geom, i) :
-                        geom;
+            if (GEOSisEmpty_r(GEOShandle, GC)) {
+            
+                error("rgeos_geospolygon2Polygons: empty Polygons object");
+            
+            } else {
         
-        if (GEOSisEmpty_r(GEOShandle, GC)) {
-            
-/*            SEXP ringDir,area,labpt,hole;
-            
-            PROTECT(ringDir = NEW_INTEGER(1));
-            INTEGER_POINTER(ringDir)[0] = 1;
-            
-            PROTECT(labpt = NEW_NUMERIC(2));
-            NUMERIC_POINTER(labpt)[0] = NA_REAL;
-            NUMERIC_POINTER(labpt)[1] = NA_REAL;
-            
-            PROTECT(area = NEW_NUMERIC(1));
-            NUMERIC_POINTER(area)[0] = 0.0;
-            
-            PROTECT(hole = NEW_LOGICAL(1));
-            LOGICAL_POINTER(hole)[0] = TRUE;
-            
-            SEXP poly;
-            PROTECT(poly = NEW_OBJECT(MAKE_CLASS("Polygon")));    
-            SET_SLOT(poly, install("ringDir"), ringDir);
-            SET_SLOT(poly, install("labpt"), labpt);
-            SET_SLOT(poly, install("area"), area);
-            SET_SLOT(poly, install("hole"), hole);
-            SET_SLOT(poly, install("coords"), R_NilValue);
-            
-            SET_VECTOR_ELT(polys, k, poly);
-            UNPROTECT(5);
-            
-            comm[k] = 0;
-            areas[k] = 0;
-            po[k] = k + R_OFFSET;
-// modified 131004 RSB 
-// https://stat.ethz.ch/pipermail/r-sig-geo/2013-October/019470.html
-//            warning("rgeos_geospolygon2Polygons: empty Polygons object");*/
-            error("rgeos_geospolygon2Polygons: empty Polygons object");
-            
-            k++;
-        } else {
-        
-            GEOSGeom lr = (GEOSGeometry *) GEOSGetExteriorRing_r(GEOShandle, GC);
-            if (lr == NULL)
-                error("rgeos_geospolygon2Polygons: exterior ring failure");
-        
-            SET_VECTOR_ELT(polys, k, rgeos_geosring2Polygon(env, lr, FALSE));
-            comm[k] = 0;
-        
-            areas[k] = NUMERIC_POINTER( GET_SLOT(VECTOR_ELT(polys,k), install("area")) )[0];
-            totalarea += areas[k];
-            po[k] = k + R_OFFSET;
-        
-            int ownerk = k + R_OFFSET;
-        
-            k++;
-        
-            int nirs = GEOSGetNumInteriorRings_r(GEOShandle, GC);
-            for (int j=0; j<nirs; j++) {
-            
-                lr = (GEOSGeometry *) GEOSGetInteriorRingN_r(GEOShandle, GC, j);
+                GEOSGeom lr = (GEOSGeometry *) GEOSGetExteriorRing_r(GEOShandle, GC);
                 if (lr == NULL)
-                    error("rgeos_geospolygon2Polygons: interior ring failure");
-            
-                SET_VECTOR_ELT(polys, k, rgeos_geosring2Polygon(env, lr, TRUE));
-                comm[k] = ownerk;
-            
-                areas[k] = NUMERIC_POINTER( GET_SLOT(VECTOR_ELT(polys,k), install("area")) )[0];
-                po[k] = k + R_OFFSET;
-            
+                    error("rgeos_geospolygon2Polygons: exterior ring failure");
+
+                if (keep[k]) {
+                    SET_VECTOR_ELT(polys, kk, rgeos_geosring2Polygon(env,
+                        lr, FALSE));
+                    comm[kk] = 0;
+        
+                    areas[kk] = NUMERIC_POINTER( GET_SLOT(VECTOR_ELT(polys,
+                        kk), install("area")) )[0];
+                    totalarea += areas[kk];
+                    po[kk] = kk + R_OFFSET;
+        
+                    ownerk = kk + R_OFFSET;
+                    kk++;
+                }
+        
                 k++;
+        
+                int nirs = GEOSGetNumInteriorRings_r(GEOShandle, GC);
+                for (int j=0; j<nirs; j++) {
+                    lr = (GEOSGeometry *) GEOSGetInteriorRingN_r(GEOShandle, GC, j);
+                    if (lr == NULL)
+                        error("rgeos_geospolygon2Polygons: interior ring failure");
+                    if (keep[k]) {
+                        SET_VECTOR_ELT(polys, kk, rgeos_geosring2Polygon(env, lr, TRUE));
+                        comm[kk] = ownerk;
+            
+                        areas[kk] = NUMERIC_POINTER( GET_SLOT(VECTOR_ELT(polys,
+                            kk), install("area")) )[0];
+                        po[kk] = kk + R_OFFSET;
+                        kk++;
+                    }
+                    k++;
+                }
             }
         }
-    }
+    } else {
+        for (int i=0; i<ngeom; i++) {
+            GEOSGeom GC = (type == GEOS_MULTIPOLYGON && !empty) ?
+                (GEOSGeometry *) GEOSGetGeometryN_r(GEOShandle, geom, i) :
+                 geom;
+        
+            if (GEOSisEmpty_r(GEOShandle, GC)) {
+            
+                error("rgeos_geospolygon2Polygons: empty Polygons object");
+            
+            } else {
+        
+                GEOSGeom lr = (GEOSGeometry *) GEOSGetExteriorRing_r(GEOShandle, GC);
+                if (lr == NULL)
+                    error("rgeos_geospolygon2Polygons: exterior ring failure");
+                SET_VECTOR_ELT(polys, k, rgeos_geosring2Polygon(env,
+                    lr, FALSE));
+                comm[k] = 0;
+        
+                areas[k] = NUMERIC_POINTER( GET_SLOT(VECTOR_ELT(polys, k),
+                    install("area")) )[0];
+                totalarea += areas[k];
+                po[k] = k + R_OFFSET;
+        
+                ownerk = k + R_OFFSET;
+      
+                k++;
+        
+                int nirs = GEOSGetNumInteriorRings_r(GEOShandle, GC);
+                for (int j=0; j<nirs; j++) {
+            
+                    lr = (GEOSGeometry *) GEOSGetInteriorRingN_r(GEOShandle, GC, j);
+                    if (lr == NULL)
+                        error("rgeos_geospolygon2Polygons: interior ring failure");
+            
+                    SET_VECTOR_ELT(polys, k, rgeos_geosring2Polygon(env, lr, TRUE));
+                    comm[k] = ownerk;
+            
+                    areas[k] = NUMERIC_POINTER( GET_SLOT(VECTOR_ELT(polys,
+                        k), install("area")) )[0];
+                    po[k] = k + R_OFFSET;
+            
+                    k++;
+                    
+                }
+            }
+        }
+    } 
     
     SEXP plotOrder;
     PROTECT(plotOrder = NEW_INTEGER(npoly)); pc++;
