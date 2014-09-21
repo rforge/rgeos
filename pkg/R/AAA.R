@@ -14,6 +14,37 @@ get_RGEOS_DENSE <- function() {
     get("returnDense", envir=.RGEOS_HANDLE)
 }
 
+set_RGEOS_dropSlivers <- function(value) {
+    stopifnot(is.logical(value))
+    stopifnot(length(value) == 1)
+    assign("dropSlivers", value, envir=.RGEOS_HANDLE)
+}
+
+get_RGEOS_dropSlivers <- function() {
+    get("dropSlivers", envir=.RGEOS_HANDLE)
+}
+
+set_RGEOS_warnSlivers <- function(value) {
+    stopifnot(is.logical(value))
+    stopifnot(length(value) == 1)
+    assign("warnSlivers", value, envir=.RGEOS_HANDLE)
+}
+
+get_RGEOS_warnSlivers <- function() {
+    get("warnSlivers", envir=.RGEOS_HANDLE)
+}
+
+set_RGEOS_polyThreshold <- function(value) {
+    stopifnot(is.numeric(value))
+    stopifnot(length(value) == 1)
+    stopifnot(value >= 0.0)
+    assign("polyThreshold", value, envir=.RGEOS_HANDLE)
+}
+
+get_RGEOS_polyThreshold <- function() {
+    get("polyThreshold", envir=.RGEOS_HANDLE)
+}
+
 set_RGEOS_STR <- function(value) {
     stopifnot(is.logical(value))
     stopifnot(length(value) == 1)

@@ -404,7 +404,7 @@ SEXP rgeos_geospolygon2Polygons(SEXP env, GEOSGeom geom, SEXP ID) {
                 GC);
             if (lr == NULL)
                 error("rgeos_geospolygon2Polygons: exterior ring failure");
-            GEOSArea_r(GEOShandle, lr, &iiarea);
+            GEOSArea_r(GEOShandle, GEOSGeom_createPolygon_r(GEOShandle, lr, NULL, (unsigned int) 0), &iiarea);
             if (iiarea < polyT) {
                 keep[kk] = FALSE;
                 if (iiarea > maxiiarea) n_maxarea = kk;
@@ -423,7 +423,7 @@ SEXP rgeos_geospolygon2Polygons(SEXP env, GEOSGeom geom, SEXP ID) {
                 if (lr == NULL)
                     error("rgeos_geospolygon2Polygons: interior ring failure");
             
-                GEOSArea_r(GEOShandle, lr, &iiarea);
+                GEOSArea_r(GEOShandle, GEOSGeom_createPolygon_r(GEOShandle, lr, NULL, (unsigned int) 0), &iiarea);
                 if (iiarea < polyT) {
                     keep[kk] = FALSE;
                     if (iiarea > maxiiarea) n_maxarea = kk;
@@ -435,7 +435,7 @@ SEXP rgeos_geospolygon2Polygons(SEXP env, GEOSGeom geom, SEXP ID) {
                 kk++;
             }
         }
-        if (kk1 == 0) {
+        if (kk1 == 0 && dropSlivers) {
             if (n_maxarea < 0 || n_maxarea >= npoly)
                 error("n_maxarea %d out of bounds 0:%d", n_maxarea, npoly);
             keep[n_maxarea] = TRUE;
