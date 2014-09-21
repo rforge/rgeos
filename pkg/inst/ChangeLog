@@ -1,3 +1,14 @@
+2014-09-21 14:09  rsbivand
+
+	* DESCRIPTION,
+	  R/rgeos_topology_binary.R, man/topo-bin-gIntersection.Rd:
+	  deprecate drop_not_poly
+
+2014-09-21 11:19  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: tidy
+
 2014-09-21 11:18  rsbivand
 
 	* DESCRIPTION,
