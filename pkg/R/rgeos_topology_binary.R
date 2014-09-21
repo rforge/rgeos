@@ -74,7 +74,11 @@ gSymdifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=F
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
     "rgeos_symdifference") )
 }
-gIntersection = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE) {
+gIntersection = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, drop_lower_td=FALSE) {
+    if (!missing(drop_not_poly)) {
+        warning("drop_not_poly argument name deprecated, use drop_lower_td")
+        drop_lower_td <- drop_not_poly
+    }
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
     "rgeos_intersection") )
 }

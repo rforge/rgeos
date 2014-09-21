@@ -3,13 +3,14 @@
 \title{Geometry Intersections}
 \description{Function for determining the intersection between the two given geometries}
 \usage{
-gIntersection(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE)
+gIntersection(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, drop_lower_td=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{spgeom1, spgeom2}{sp objects as defined in package sp}
   \item{byid}{Logical vector determining if the function should be applied across ids (TRUE) or the entire object (FALSE) for spgeom1 and spgeom2}
   \item{id}{Character vector defining id labels for the resulting geometries, if unspecified returned geometries will be labeled based on their parent geometries' labels.}
+  \item{drop_not_poly}{deprecated argument, use drop_lower_td}
   \item{drop_lower_td}{default FALSE; if TRUE, objects will be dropped from output GEOMETRYCOLLECTION objects to simplify output if their topological dinension is less than the minimum topological dinension of the input objects.}
 }
 
