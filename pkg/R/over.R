@@ -8,7 +8,12 @@ overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ...) {
 	if (returnList) {
 		ret = apply(gI, 1, which)
 		if (!is.list(ret)) {
-			ret = lapply(1:ncol(ret), function(x) ret[,x])
+			if (is.matrix(ret))
+				ret = lapply(1:ncol(ret), function(x) ret[,x])
+			else {
+				ret = as.vector(ret) # strips names
+				ret = lapply(1:length(ret), function(x) ret[x])
+			}
 			names(ret) = names(x)
 		}
 	} else
