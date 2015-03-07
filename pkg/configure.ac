@@ -46,6 +46,22 @@ if test [ -n "$geos_config" ] ; then
     AC_SUBST([GEOS_CONFIG],["${geos_config}"])
 fi
 
+AC_MSG_CHECKING(geos-config exists)
+if test -r "${GEOS_CONFIG}"; then
+  AC_MSG_RESULT(yes)
+else
+  AC_MSG_RESULT(no)
+  AC_MSG_ERROR([geos-config not found - install GEOS or put on search path.])
+fi
+
+AC_MSG_CHECKING(geos-config executable)
+if test -x "${GEOS_CONFIG}"; then
+  AC_MSG_RESULT(yes)
+else
+  AC_MSG_RESULT(no)
+  AC_MSG_ERROR([geos-config not executable.])
+fi
+
 
 AC_MSG_CHECKING(geos-config usability)
 if test `${GEOS_CONFIG} --version`;
