@@ -1,3 +1,51 @@
+2015-03-10 08:30  rsbivand
+
+	* inst/README,
+	  inst/README.windows: OSX install note
+
+2015-03-09 07:37  edzer
+
+	* NAMESPACE,
+	  man/class-SpatialCollections.Rd: exportClass Spatial*NULL
+	  classes
+
+2015-03-08 16:04  rsbivand
+
+	* src/rgeos_coord.c,
+	  src/rgeos_geos2R.c, src/rgeos_poly2nb.c,
+	  src/rgeos_predicate_binary.c, src/rgeos_topology.c,
+	  src/rgeos_topology_binary.c: added extra geos-config checks
+
+2015-03-08 12:35  rsbivand
+
+	* DESCRIPTION:
+	  added extra geos-config checks
+
+2015-03-08 12:34  rsbivand
+
+	* configure,
+	  configure.ac: added extra geos-config checks
+
+2015-03-07 17:30  rsbivand
+
+	* configure,
+	  configure.ac: added extra geos-config checks
+
+2015-01-29 08:19  edzer
+
+	* R/over.R,
+	  man/pred-binary-gIntersects.Rd: improve readability overGeomGeom
+
+2015-01-28 22:58  edzer
+
+	* R/over.R:
+	  fix overGeomGeom for length(x) == 1
+
+2014-09-21 14:09  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: tidy
+
 2014-09-21 14:09  rsbivand
 
 	* DESCRIPTION,
