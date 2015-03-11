@@ -1,3 +1,13 @@
+2015-03-11 13:08  rsbivand
+
+	* R/labelpt.R,
+	  man/pred-unary-gIsSimple.Rd, man/pred-unary-gIsValid.Rd: tidy
+
+2015-03-11 12:48  rsbivand
+
+	* ChangeLog,
+	  inst/ChangeLog: tidy
+
 2015-03-10 08:30  rsbivand
 
 	* inst/README,
