@@ -52,6 +52,7 @@ fi
 if test ["$GEOS_CONFIG_SET" = "no"] ; then
   AC_PATH_PROG([GEOS_CONFIG], ["$GEOS_CONFIG"],["no"])
   if test ["$GEOS_CONFIG" = "no"] ; then
+    AC_MSG_RESULT(no)
     AC_MSG_ERROR([geos-config not found or not executable.])
   fi
 else

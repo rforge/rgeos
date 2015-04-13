@@ -90,8 +90,12 @@ labpos.buffer = function(pol, getLargestPolyPart) {
       repeat {
         r = init + estep                 # Amount to shrink
         pol.b = gBuffer(pol, width = -r) # Shrink the polygon
-        if( gArea(pol.b) <= 0 )          # If the shrunken polygon is empty ...
-          estep = estep/2 else break     # ... try again with a smaller value
+        if (is.null(pol.b)) {
+          estep = estep/2
+        } else {
+          if( gArea(pol.b) <= 0 )        # If the shrunken polygon is empty ...
+            estep = estep/2 else break   # ... try again with a smaller value
+        }
       }
       
       # If we"re left with more than one polygon, choose the largest one
