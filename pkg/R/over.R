@@ -75,7 +75,7 @@ setMethod("over",
 	        overGeomGeomDF)
 setMethod("over",
     signature(x = "SpatialPolygons", y = "SpatialPolygonsDataFrame"),
-	        overGeomGeom)
+	        overGeomGeomDF)
 setMethod("over",
     signature(x = "SpatialLines", y = "SpatialPointsDataFrame"),
 	        overGeomGeomDF)
