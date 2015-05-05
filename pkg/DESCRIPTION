@@ -1,11 +1,11 @@
 Package: rgeos
 Title: Interface to Geometry Engine - Open Source (GEOS)
-Version: 0.3-10
-Date: 2015-04-09
+Version: 0.3-11
+Date: 2015-05-06
 Depends: R (>= 2.14.0)
 Imports: methods, sp (>= 1.1-0)
 LinkingTo: sp
-Suggests: maptools (>= 0.8-5), testthat, XML
+Suggests: maptools (>= 0.8-5), testthat, XML, maps, rgdal
 LazyLoad: yes
 Description: Interface to Geometry Engine - Open Source (GEOS) using the C API for topology operations on geometries. The GEOS library is external to the package, and, when installing the package from source, must be correctly installed first. Windows and Mac Intel OS X binaries are provided on CRAN.
 Authors@R: c(
