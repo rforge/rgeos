@@ -2,6 +2,9 @@ useDynLib(rgeos)
 
 import(methods)
 import(sp)
+importFrom(utils, packageVersion)
+importFrom(stats, optim)
+importFrom(graphics, par, lines, strwidth, strheight, text)
 
 export(createPolygonsComment, createSPComment, set_do_poly_check, get_do_poly_check)
 

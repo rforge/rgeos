@@ -106,6 +106,7 @@ version_sp_linkingTo <- function() {
     version_GEOS(), "\n")
   splVersion <- version_sp_linkingTo()
   Smess <- paste(Smess, "Linking to sp version:", splVersion, "\n")
+  spVcheck <- NULL
   if("sp" %in% .packages()) spVcheck <- utils::packageVersion("sp") == splVersion
   if (!is.null(spVcheck) && !spVcheck) paste(Smess, 
     "sp version used to install rgeos and loaded sp version differ\n")
