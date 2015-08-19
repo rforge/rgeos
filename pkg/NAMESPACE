@@ -80,3 +80,6 @@ exportMethods("show", "get.bbox", "plot", "intersect", "union", "symdiff",
 export("read.polyfile", "write.polyfile")
 
 export(polygonsLabel)
+
+export(overGeomGeom) # needed by sp::overMultiPoints
+export(overGeomGeomDF) # needed by sp::overMultiPoints
