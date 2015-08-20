@@ -4,17 +4,19 @@ overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ...) {
 		x = as(x, "SpatialPolygons")
 	if (gridded(y))
 		y = as(y, "SpatialPolygons")
-	gI = gIntersects(y, x, byid = TRUE)
+	gI = gIntersects(y, x, byid = TRUE) # length(x) rows, length(y) cols
+	nx = nrow(gI)
 	if (returnList) {
 		ret = apply(gI, 1, which)
 		if (! is.list(ret)) {
-			if (! is.matrix(ret)) # apply returned vector
-				ret = matrix(ret, length(y), length(x)) 
+			if (! is.matrix(ret)) # apply returned vector: make column vector
+				#ret = matrix(ret, length(y), length(x)) 
+				ret = matrix(ret, 1, nx) 
 			ret = lapply(1:ncol(ret), function(i) ret[,i])
 		}
-		names(ret) = names(x)
+		names(ret) = row.names(gI)
 	} else
-		ret = apply(gI, 1, function(x) which(x)[1])
+		ret = apply(gI, 1, function(x) which(x)[1]) # or maybe sample(x,1)?
 	ret
 }
 
@@ -23,9 +25,9 @@ overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ...) {
 overGeomGeomDF = function(x, y, returnList = FALSE, fn = NULL, ...) {
     r = overGeomGeom(x, y, returnList = TRUE)
     #ret = sp:::.overDF(r, y@data, length(x), returnList, fn, ...)
-    ret = overDF_for_rgeos(r, y@data, length(x), returnList, fn, ...)
+    ret = overDF_for_rgeos(r, y@data, length(r), returnList, fn, ...)
     if (!returnList)
-        row.names(ret) = row.names(x)
+        row.names(ret) = row.names(r)
     ret
 }
 
