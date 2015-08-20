@@ -1,23 +1,43 @@
-overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ...) {
-	stopifnot(identical(proj4string(x), proj4string(y)))
+order_relations = function(rel, minDimension = 0) {
+	rel = sapply(rel, function(x)
+			paste0(substring(x, c(1,4),c(2,5)), collapse=""))
+		# our interest is in chars
+		# 1-2 = inner of x with inner/border of y
+		# 4-5 = border of x with inner/border of y
+	ret = vector("numeric", length(rel)) * NA
+	if (minDimension <= 0)
+		ret[grep("0", rel, fixed = TRUE, useBytes = TRUE)] = 0
+	if (minDimension <= 1) 
+		ret[grep("1", rel, fixed = TRUE, useBytes = TRUE)] = 1
+	if (minDimension <= 2)
+		ret[grep("2", rel, fixed = TRUE, useBytes = TRUE)] = 2
+	order(ret, decreasing = TRUE, na.last = NA)
+}
+
+listifyMatrix = function(x) { # put columns in list elements
+	if (!is.list(x)) {
+		if (!is.matrix(x)) # vector!
+			x = matrix(x, 1, length(x))
+		x = lapply(1:ncol(x), function(i) x[,i])
+	}
+	x
+}
+
+overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ...,
+		minDimension = 0) {
+	stopifnot(identicalCRS(x, y))
 	if (gridded(x))
 		x = as(x, "SpatialPolygons")
 	if (gridded(y))
 		y = as(y, "SpatialPolygons")
-	gI = gIntersects(y, x, byid = TRUE) # length(x) rows, length(y) cols
-	nx = nrow(gI)
-	if (returnList) {
-		ret = apply(gI, 1, which)
-		if (! is.list(ret)) {
-			if (! is.matrix(ret)) # apply returned vector: make column vector
-				#ret = matrix(ret, length(y), length(x)) 
-				ret = matrix(ret, 1, nx) 
-			ret = lapply(1:ncol(ret), function(i) ret[,i])
-		}
-		names(ret) = row.names(gI)
-	} else
-		ret = apply(gI, 1, function(x) which(x)[1]) # or maybe sample(x,1)?
-	ret
+
+	ret = apply(gRelate(x, y, byid = TRUE), 2, 
+		order_relations, minDimension = minDimension)
+	ret = listifyMatrix(ret) # if not already list, create one now
+	if (!returnList) # pick first or NA if length is 0:
+		sapply(ret, function(x) (x)[1])
+	else 
+		ret
 }
 
 # taken from: overDFGeneric in sp; 
@@ -25,6 +45,8 @@ overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ...) {
 overGeomGeomDF = function(x, y, returnList = FALSE, fn = NULL, ...) {
     r = overGeomGeom(x, y, returnList = TRUE)
     #ret = sp:::.overDF(r, y@data, length(x), returnList, fn, ...)
+	#  length(x) differs from length(r) in case of SpatialMultiPoints!!!
+	#  reason to change is sp::overMultiPoints
     ret = overDF_for_rgeos(r, y@data, length(r), returnList, fn, ...)
     if (!returnList)
         row.names(ret) = row.names(r)
