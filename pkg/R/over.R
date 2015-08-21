@@ -16,6 +16,8 @@ order_relations = function(rel, minDimension = 0) {
 
 listifyMatrix = function(x) { # put columns in list elements
 	if (!is.list(x)) {
+		if (length(x) == 0)
+			return(list(x))
 		if (!is.matrix(x)) # vector!
 			x = matrix(x, 1, length(x))
 		x = lapply(1:ncol(x), function(i) x[,i])
