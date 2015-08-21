@@ -1,16 +1,23 @@
 order_relations = function(rel, minDimension = 0) {
+	stopifnot(minDimension %in% 0:2)
 	rel = sapply(rel, function(x)
 			paste0(substring(x, c(1,4),c(2,5)), collapse=""))
 		# our interest is in chars
 		# 1-2 = inner of x with inner/border of y
 		# 4-5 = border of x with inner/border of y
 	ret = vector("numeric", length(rel)) * NA
-	if (minDimension <= 0)
-		ret[grep("0", rel, fixed = TRUE, useBytes = TRUE)] = 0
-	if (minDimension <= 1) 
-		ret[grep("1", rel, fixed = TRUE, useBytes = TRUE)] = 1
-	if (minDimension <= 2)
-		ret[grep("2", rel, fixed = TRUE, useBytes = TRUE)] = 2
+	for (d in minDimension:2) {
+		r = regexpr(as.character(d), rel, fixed = TRUE)
+		sel = which(r != -1)
+		if (length(sel) > 0)
+			ret[sel] = 4 - r[sel] + 4 * d
+	}
+#	if (minDimension <= 0)
+#		ret[grep("0", rel, fixed = TRUE, useBytes = TRUE)] = 0
+#	if (minDimension <= 1) 
+#		ret[grep("1", rel, fixed = TRUE, useBytes = TRUE)] = 1
+#	if (minDimension <= 2)
+#		ret[grep("2", rel, fixed = TRUE, useBytes = TRUE)] = 2
 	order(ret, decreasing = TRUE, na.last = NA)
 }
 
