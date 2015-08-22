@@ -1,5 +1,4 @@
 order_relations = function(rel, minDimension = 0) {
-	stopifnot(minDimension %in% 0:2)
 	rel = sapply(rel, function(x)
 			paste0(substring(x, c(1,4),c(2,5)), collapse=""))
 		# our interest is in chars
@@ -35,6 +34,7 @@ listifyMatrix = function(x) { # put columns in list elements
 overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ...,
 		minDimension = 0) {
 	stopifnot(identicalCRS(x, y))
+	stopifnot(minDimension %in% 0:2)
 	if (gridded(x))
 		x = as(x, "SpatialPolygons")
 	if (gridded(y))
@@ -43,7 +43,7 @@ overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ...,
 	ret = apply(gRelate(x, y, byid = TRUE), 2, 
 		order_relations, minDimension = minDimension)
 	ret = listifyMatrix(ret) # if not already list, create one now
-	if (!returnList) # pick first or NA if length is 0:
+	if (!returnList) # pick first, or NA if length is 0:
 		sapply(ret, function(x) (x)[1])
 	else 
 		ret
