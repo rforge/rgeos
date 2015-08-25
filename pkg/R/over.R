@@ -31,17 +31,17 @@ listifyMatrix = function(x) { # put columns in list elements
 	x
 }
 
-overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ...,
-		minDimension = 0) {
+overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ..., minDimension = -1) {
 	stopifnot(identicalCRS(x, y))
-	stopifnot(minDimension %in% 0:2)
 	if (gridded(x))
 		x = as(x, "SpatialPolygons")
 	if (gridded(y))
 		y = as(y, "SpatialPolygons")
 
-	ret = apply(gRelate(x, y, byid = TRUE), 2, 
-		order_relations, minDimension = minDimension)
+	if (minDimension %in% 0:2)
+		ret = apply(gRelate(x, y, byid = TRUE), 2, order_relations, minDimension = minDimension)
+	else
+		ret = apply(gIntersects(x, y, byid = TRUE), 2, which)
 	ret = listifyMatrix(ret) # if not already list, create one now
 	if (!returnList) # pick first, or NA if length is 0:
 		sapply(ret, function(x) (x)[1])
