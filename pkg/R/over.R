@@ -17,11 +17,13 @@ order_relations = function(rel, minDimension) {
 
 listifyMatrix = function(x) { # put columns in list elements
 	if (!is.list(x)) {
-		nm = names(x)
 		if (length(x) == 0)
 			return(list(x))
-		if (!is.matrix(x)) # vector!
+		if (!is.matrix(x)) { # vector!
+			nm = names(x)
 			x = matrix(x, 1, length(x))
+		} else
+			nm = dimnames(x)[[2]]
 		x = lapply(1:ncol(x), function(i) x[,i])
 		names(x) = nm
 	}
