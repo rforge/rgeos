@@ -1,4 +1,5 @@
-order_relations = function(rel, minDimension = 0) {
+order_relations = function(rel, minDimension) {
+	stopifnot(minDimension %in% 0:2)
 	rel = sapply(rel, function(x)
 			paste0(substring(x, c(1,4),c(2,5)), collapse=""))
 		# our interest is in chars
@@ -11,12 +12,6 @@ order_relations = function(rel, minDimension = 0) {
 		if (length(sel) > 0)
 			ret[sel] = 4 - r[sel] + 4 * d
 	}
-#	if (minDimension <= 0)
-#		ret[grep("0", rel, fixed = TRUE, useBytes = TRUE)] = 0
-#	if (minDimension <= 1) 
-#		ret[grep("1", rel, fixed = TRUE, useBytes = TRUE)] = 1
-#	if (minDimension <= 2)
-#		ret[grep("2", rel, fixed = TRUE, useBytes = TRUE)] = 2
 	order(ret, decreasing = TRUE, na.last = NA)
 }
 
@@ -43,7 +38,7 @@ overGeomGeom = function(x, y, returnList = FALSE, fn = NULL, ..., minDimension =
 	else
 		ret = apply(gIntersects(x, y, byid = TRUE), 2, which)
 	ret = listifyMatrix(ret) # if not already list, create one now
-	if (!returnList) # pick first, or NA if length is 0:
+	if (! returnList) # pick first, or NA if length is 0:
 		sapply(ret, function(x) (x)[1])
 	else 
 		ret
