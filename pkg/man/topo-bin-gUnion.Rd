@@ -9,7 +9,7 @@
 \title{Geometry Union}
 \description{Functions for joining intersecting geometries.}
 \usage{
-gUnion(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE)
+gUnion(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, checkValidity=FALSE)
 gUnionCascaded(spgeom, id = NULL)
 gUnaryUnion(spgeom, id = NULL)
 gLineMerge(spgeom, byid=FALSE, id = NULL)
@@ -21,6 +21,7 @@ gLineMerge(spgeom, byid=FALSE, id = NULL)
   \item{id}{Character vector defining id labels for the resulting geometries, if unspecified returned geometries will be labeled based on their parent geometries' labels; it may contain NA values for input objects not included in the union; it should define the memberships of the output Polygons objects}
   \item{drop_lower_td}{default FALSE; if TRUE, objects will be dropped from output GEOMETRYCOLLECTION objects to simplify output if their topological dinension is less than the minimum topological dinension of the input objects.}
   \item{spgeom}{sp Polygon(s) or Line(s) depending on the function used}
+  \item{checkValidity}{default FALSE; error meesages from GEOS do not say clearly which object fails if a topology exception is encountered. If this argument is TRUE, \code{gIsValid} is run on each in turn in an environment in which object names are available. If objects are invalid, this is reported and those affected are named}
 }
 
 \details{Returns an sp object with intersecting geometries merged. If geometries do not intersect then both are returned as distinct subgeometries.

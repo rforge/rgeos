@@ -15,7 +15,7 @@ RGEOSBinTopoFunc = function(spgeom1, spgeom2, byid, ids=NULL, drop_lower_td=FALS
         
     if(!identical(spgeom1@proj4string,spgeom2@proj4string))
         warning("spgeom1 and spgeom2 have different proj4 strings")
-    
+
     if (inherits(spgeom1, "SpatialPolygons") && get_do_poly_check() && notAllComments(spgeom1))
         spgeom1 <- createSPComment(spgeom1)
     if (inherits(spgeom2, "SpatialPolygons") && get_do_poly_check() && notAllComments(spgeom2)) 
@@ -66,23 +66,55 @@ RGEOSBinTopoFunc = function(spgeom1, spgeom2, byid, ids=NULL, drop_lower_td=FALS
     return(x)
 }
 
-gDifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE) {
+gDifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, checkValidity=FALSE) {
+    if(checkValidity) {
+        val1 <- gIsValid(spgeom1)
+        val2 <- gIsValid(spgeom2)
+        if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
+        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!all(c(val1, val2))) stop("Invalid objects found")
+    }
+    
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
     "rgeos_difference") )
 }
-gSymdifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE) {
+gSymdifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, checkValidity=FALSE) {
+    if(checkValidity) {
+        val1 <- gIsValid(spgeom1)
+        val2 <- gIsValid(spgeom2)
+        if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
+        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!all(c(val1, val2))) stop("Invalid objects found")
+    }
+    
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
     "rgeos_symdifference") )
 }
-gIntersection = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, drop_lower_td=FALSE) {
+gIntersection = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, drop_lower_td=FALSE, checkValidity=FALSE) {
     if (!missing(drop_not_poly)) {
         warning("drop_not_poly argument name deprecated, use drop_lower_td")
         drop_lower_td <- drop_not_poly
     }
+    if(checkValidity) {
+        val1 <- gIsValid(spgeom1)
+        val2 <- gIsValid(spgeom2)
+        if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
+        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!all(c(val1, val2))) stop("Invalid objects found")
+    }
+    
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
     "rgeos_intersection") )
 }
-gUnion = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE) {
+gUnion = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, checkValidity=FALSE) {
+    if(checkValidity) {
+        val1 <- gIsValid(spgeom1)
+        val2 <- gIsValid(spgeom2)
+        if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
+        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!all(c(val1, val2))) stop("Invalid objects found")
+    }
+    
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
     "rgeos_union") )
 }
