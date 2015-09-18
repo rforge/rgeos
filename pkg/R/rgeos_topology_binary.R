@@ -71,7 +71,7 @@ gDifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALS
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -83,7 +83,7 @@ gSymdifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=F
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -99,7 +99,7 @@ gIntersection = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, d
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -111,7 +111,7 @@ gUnion = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, ch
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     

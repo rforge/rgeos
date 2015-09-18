@@ -89,7 +89,7 @@ gContains = function(spgeom1, spgeom2 = NULL, byid = FALSE, prepared=TRUE, retur
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -111,7 +111,7 @@ gIntersects = function(spgeom1, spgeom2 = NULL, byid = FALSE, prepared=TRUE, ret
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -129,7 +129,7 @@ gContainsProperly = function(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -147,7 +147,7 @@ gCovers = function(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, chec
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -165,7 +165,7 @@ gCoveredBy = function(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, c
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -184,7 +184,7 @@ gDisjoint = function(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, ch
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -202,7 +202,7 @@ gTouches = function(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, che
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -220,7 +220,7 @@ gCrosses = function(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, che
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -238,7 +238,7 @@ gWithin = function(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, chec
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -256,7 +256,7 @@ gOverlaps = function(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, ch
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -274,7 +274,7 @@ gEquals = function(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, chec
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -296,7 +296,7 @@ gEqualsExact = function(spgeom1, spgeom2 = NULL, tol=0.0, byid = FALSE, returnDe
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
@@ -311,7 +311,7 @@ gRelate = function(spgeom1, spgeom2 = NULL, pattern = NULL, byid = FALSE, checkV
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom1))," is invalid")
+        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
         if (!all(c(val1, val2))) stop("Invalid objects found")
     }
     
