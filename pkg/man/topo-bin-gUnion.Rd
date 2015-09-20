@@ -33,6 +33,8 @@ gUnaryUnion expects a single sp object of class SpatialPolygons with subgeometri
 gLineMerge is similar to gUnionCascaded but is written to work with lines, specifically it joins line segments with intersecting end points. 
 }
 
+\note{Error messages from GEOS, in particular topology exceptions, report 0-based object order, so geom 0 is spgeom1, and geom 1 is spgeom2.}
+
 \author{Roger Bivand & Colin Rundel}
 
 \seealso{

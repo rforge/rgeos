@@ -23,6 +23,8 @@
 \code{gOverlaps} returns TRUE when the geometries share some but not all interior points, and the intersection has the same dimension as the geometries themselves.
 }
 
+\note{Error messages from GEOS, in particular topology exceptions, report 0-based object order, so geom 0 is spgeom1, and geom 1 is spgeom2.}
+
 \author{Roger Bivand & Colin Rundel}
 
 \seealso{

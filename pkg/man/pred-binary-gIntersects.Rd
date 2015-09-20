@@ -26,6 +26,8 @@ gDisjoint(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, checkValidity
 Both return a conforming logical matrix if \code{byid = TRUE}.
 }
 
+\note{Error messages from GEOS, in particular topology exceptions, report 0-based object order, so geom 0 is spgeom1, and geom 1 is spgeom2.}
+
 \author{Roger Bivand & Colin Rundel}
 
 \seealso{

@@ -16,6 +16,7 @@ gDifference(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, checkVal
 
 \details{Returns the regions of spgeom1 that are not within spgeom2. If the geometries do not intersect then the result is just spgeom1. Note that the function is not symmetric for spgeom1 and spgeom2.}
 
+\note{Error messages from GEOS, in particular topology exceptions, report 0-based object order, so geom 0 is spgeom1, and geom 1 is spgeom2.}
 
 \author{Roger Bivand & Colin Rundel}
 

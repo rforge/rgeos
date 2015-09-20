@@ -24,6 +24,8 @@
 \code{gEqualsExact} returns TRUE if geometries are "exactly equivalent" which requires that \code{spgeom1} and \code{spgeom1} are "spatially equivalent" and that their constituent points are in the same order.
 }
 
+\note{Error messages from GEOS, in particular topology exceptions, report 0-based object order, so geom 0 is spgeom1, and geom 1 is spgeom2.}
+
 \author{Roger Bivand & Colin Rundel}
 
 \seealso{

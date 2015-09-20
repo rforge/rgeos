@@ -39,6 +39,8 @@ gWithin(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, checkValidity=F
 \code{gWithin} is the converse of \code{gContains} and is equivalent to swapping \code{spgeom1} and \code{spgeom2}. 
 }
 
+\note{Error messages from GEOS, in particular topology exceptions, report 0-based object order, so geom 0 is spgeom1, and geom 1 is spgeom2.}
+
 \references{
 Helpful information on the subtle differences between these functions:
 \url{http://lin-ear-th-inking.blogspot.com/2007/06/subtleties-of-ogc-covers-spatial.html}}

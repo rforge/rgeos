@@ -17,6 +17,8 @@ gIntersection(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, drop_lower_t
 
 \details{Returns all spatial intersections as sp objects of the appropriate class. If the geometries do not intersect then an empty geometry is returned.}
 
+\note{Error messages from GEOS, in particular topology exceptions, report 0-based object order, so geom 0 is spgeom1, and geom 1 is spgeom2.}
+
 \author{Roger Bivand & Colin Rundel}
 
 \seealso{

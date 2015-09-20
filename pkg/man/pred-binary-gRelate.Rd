@@ -26,6 +26,8 @@ If a pattern is specified then limited matching with wildcards is possible, \cod
 See references for additional details.
 } 
 
+\note{Error messages from GEOS, in particular topology exceptions, report 0-based object order, so geom 0 is spgeom1, and geom 1 is spgeom2.}
+
 \references{
 Documentation of Intersection Matrix Patterns:
 \url{http://docs.geotools.org/stable/userguide/library/jts/dim9.html}

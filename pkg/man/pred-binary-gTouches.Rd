@@ -17,6 +17,8 @@
 
 \value{Returns TRUE if the intersection of the boundaries of the two geometries is not empty.}
 
+\note{Error messages from GEOS, in particular topology exceptions, report 0-based object order, so geom 0 is spgeom1, and geom 1 is spgeom2.}
+
 \author{Roger Bivand & Colin Rundel}
 
 \seealso{
