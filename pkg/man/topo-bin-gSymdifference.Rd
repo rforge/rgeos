@@ -3,7 +3,7 @@
 \title{Geometry Symmetric Difference}
 \description{Function for determining the symmetric difference between the two given geometries }
 \usage{
-gSymdifference(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, checkValidity=FALSE)
+gSymdifference(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE)
 }
 
 \arguments{
@@ -11,6 +11,7 @@ gSymdifference(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, check
   \item{byid}{Logical vector determining if the function should be applied across ids (TRUE) or the entire object (FALSE) for spgeom1 and spgeom2}
   \item{id}{Character vector defining id labels for the resulting geometries, if unspecified returned geometries will be labeled based on their parent geometries' labels.}
   \item{drop_lower_td}{default FALSE; if TRUE, objects will be dropped from output GEOMETRYCOLLECTION objects to simplify output if their topological dinension is less than the minimum topological dinension of the input objects.}
+  \item{unaryUnion_if_byid_false}{default TRUE; if \code{byid} takes a FALSE in either position, the subgeometries are combined first to avoid possible topology exceptions (change in 0.3-13, previous behaviour did not combine subgeometries, and may be achieved by setting this argument FALSE}
   \item{checkValidity}{default FALSE; error meesages from GEOS do not say clearly which object fails if a topology exception is encountered. If this argument is TRUE, \code{gIsValid} is run on each in turn in an environment in which object names are available. If objects are invalid, this is reported and those affected are named}
 }
 

@@ -1,7 +1,9 @@
-RGEOSBinTopoFunc = function(spgeom1, spgeom2, byid, ids=NULL, drop_lower_td=FALSE, func) {
+RGEOSBinTopoFunc = function(spgeom1, spgeom2, byid, ids=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, func) {
     stopifnot(is.logical(byid))
     stopifnot(is.logical(drop_lower_td))
     stopifnot(length(drop_lower_td) == 1)
+    stopifnot(is.logical(unaryUnion_if_byid_false))
+    stopifnot(length(unaryUnion_if_byid_false) == 1)
     byid = as.logical(byid)
     if (any(is.na(byid)) ) 
         stop("Invalid value for byid, must be logical")
@@ -50,6 +52,7 @@ RGEOSBinTopoFunc = function(spgeom1, spgeom2, byid, ids=NULL, drop_lower_td=FALS
     min_tds <- as.integer(min(tds))
     attr(byid, "min_tds") <- min_tds
     attr(byid, "drop_lower_td") <- drop_lower_td
+    attr(byid, "unaryUnion_if_byid_false") <- unaryUnion_if_byid_false
     if (func == "rgeos_difference")
         x <- .Call("rgeos_difference", .RGEOS_HANDLE, spgeom1, spgeom2, byid, ids, PACKAGE="rgeos")
     else if (func == "rgeos_symdifference")
@@ -66,7 +69,7 @@ RGEOSBinTopoFunc = function(spgeom1, spgeom2, byid, ids=NULL, drop_lower_td=FALS
     return(x)
 }
 
-gDifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, checkValidity=FALSE) {
+gDifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE) {
     if(checkValidity) {
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
@@ -76,9 +79,9 @@ gDifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALS
     }
     
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
-    "rgeos_difference") )
+        unaryUnion_if_byid_false, "rgeos_difference") )
 }
-gSymdifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, checkValidity=FALSE) {
+gSymdifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE) {
     if(checkValidity) {
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
@@ -88,9 +91,9 @@ gSymdifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=F
     }
     
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
-    "rgeos_symdifference") )
+        unaryUnion_if_byid_false, "rgeos_symdifference") )
 }
-gIntersection = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, drop_lower_td=FALSE, checkValidity=FALSE) {
+gIntersection = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE) {
     if (!missing(drop_not_poly)) {
         warning("drop_not_poly argument name deprecated, use drop_lower_td")
         drop_lower_td <- drop_not_poly
@@ -104,9 +107,9 @@ gIntersection = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, d
     }
     
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
-    "rgeos_intersection") )
+        unaryUnion_if_byid_false, "rgeos_intersection") )
 }
-gUnion = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, checkValidity=FALSE) {
+gUnion = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE) {
     if(checkValidity) {
         val1 <- gIsValid(spgeom1)
         val2 <- gIsValid(spgeom2)
@@ -116,5 +119,5 @@ gUnion = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, ch
     }
     
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
-    "rgeos_union") )
+        unaryUnion_if_byid_false, "rgeos_union") )
 }
