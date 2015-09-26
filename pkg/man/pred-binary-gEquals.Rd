@@ -7,8 +7,10 @@
 \title{Geometry Relationships - Equality}
 \description{Function for testing equivalence of the given geometries}
 \usage{
-	gEquals(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, checkValidity=FALSE)
-	gEqualsExact(spgeom1, spgeom2 = NULL, tol=0.0, byid = FALSE, returnDense=TRUE, checkValidity=FALSE)
+	gEquals(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE,
+ checkValidity=FALSE)
+	gEqualsExact(spgeom1, spgeom2 = NULL, tol=0.0, byid = FALSE,
+ returnDense=TRUE, checkValidity=FALSE)
 }
 
 \arguments{

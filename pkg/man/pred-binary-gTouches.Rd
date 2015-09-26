@@ -5,7 +5,8 @@
 \title{Geometry Relationships - Touches}
 \description{Functions for testing if the geometries have at least one boundary point in common, but no interior points}
 \usage{
-	gTouches(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, checkValidity=FALSE)
+	gTouches(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE,
+ checkValidity=FALSE)
 }
 	
 \arguments{

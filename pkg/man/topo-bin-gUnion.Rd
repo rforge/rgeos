@@ -9,7 +9,8 @@
 \title{Geometry Union}
 \description{Functions for joining intersecting geometries.}
 \usage{
-gUnion(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE)
+gUnion(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE,
+ unaryUnion_if_byid_false=TRUE, checkValidity=FALSE)
 gUnionCascaded(spgeom, id = NULL)
 gUnaryUnion(spgeom, id = NULL)
 gLineMerge(spgeom, byid=FALSE, id = NULL)

@@ -12,7 +12,8 @@
 \usage{
 gContains(spgeom1, spgeom2 = NULL, byid = FALSE, prepared=TRUE,
  returnDense=TRUE, STRsubset=FALSE, checkValidity=FALSE)
-gContainsProperly(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, checkValidity=FALSE)
+gContainsProperly(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE,
+ checkValidity=FALSE)
 gCovers(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, checkValidity=FALSE)
 gCoveredBy(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, checkValidity=FALSE)
 gWithin(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, checkValidity=FALSE)

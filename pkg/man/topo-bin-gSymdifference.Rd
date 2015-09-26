@@ -3,7 +3,8 @@
 \title{Geometry Symmetric Difference}
 \description{Function for determining the symmetric difference between the two given geometries }
 \usage{
-gSymdifference(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE)
+gSymdifference(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE,
+ unaryUnion_if_byid_false=TRUE, checkValidity=FALSE)
 }
 
 \arguments{

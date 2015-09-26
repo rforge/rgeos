@@ -3,7 +3,8 @@
 \title{Geometry Intersections}
 \description{Function for determining the intersection between the two given geometries}
 \usage{
-gIntersection(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE)
+gIntersection(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly,
+ drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

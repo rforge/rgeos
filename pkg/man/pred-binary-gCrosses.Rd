@@ -7,8 +7,10 @@
 \title{Geometry Relationships - Crosses and Overlaps}
 \description{Functions for testing whether geometries share some but not all interior points}
 \usage{
-	gCrosses(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, checkValidity=FALSE)
-	gOverlaps(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE, checkValidity=FALSE)
+	gCrosses(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE,
+ checkValidity=FALSE)
+	gOverlaps(spgeom1, spgeom2 = NULL, byid = FALSE, returnDense=TRUE,
+ checkValidity=FALSE)
 }
 	
 \arguments{

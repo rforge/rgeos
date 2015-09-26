@@ -3,7 +3,8 @@
 \title{Geometry Difference}
 \description{Function for determining the difference between the two given geometries.}
 \usage{
-gDifference(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE)
+gDifference(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE,
+ unaryUnion_if_byid_false=TRUE, checkValidity=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
