@@ -53,6 +53,7 @@ load(system.file("test_cases/polys.RData", package="rgeos"))
 try(res <- gIntersection(a, b, byid=TRUE))
 res <- gIntersection(a, b, byid=TRUE, drop_lower_td=TRUE)
 unlist(sapply(slot(res, "polygons"), function(p) sapply(slot(p, "Polygons"), slot, "area")))
+# example from Pius Korner 2015-10-25
 poly1 <- SpatialPolygons(list(Polygons(list(Polygon(coords=matrix(c(0, 0, 2, 2, 0, 1, 1, 0),
  ncol=2, byrow=FALSE))), ID=c("a")), Polygons(list(Polygon(coords=matrix(c(0, 0, 2, 2, 2, 3, 3, 2),
  ncol=2, byrow=FALSE))), ID=c("b"))))
