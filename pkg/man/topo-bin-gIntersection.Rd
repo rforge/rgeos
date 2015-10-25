@@ -53,6 +53,15 @@ load(system.file("test_cases/polys.RData", package="rgeos"))
 try(res <- gIntersection(a, b, byid=TRUE))
 res <- gIntersection(a, b, byid=TRUE, drop_lower_td=TRUE)
 unlist(sapply(slot(res, "polygons"), function(p) sapply(slot(p, "Polygons"), slot, "area")))
+poly1 <- SpatialPolygons(list(Polygons(list(Polygon(coords=matrix(c(0, 0, 2, 2, 0, 1, 1, 0),
+ ncol=2, byrow=FALSE))), ID=c("a")), Polygons(list(Polygon(coords=matrix(c(0, 0, 2, 2, 2, 3, 3, 2),
+ ncol=2, byrow=FALSE))), ID=c("b"))))
+poly2 <- SpatialPolygons(list(Polygons(list(Polygon(coords=matrix(c(0, 0, 2, 2,
+ 1, 1, 1, 3, 3, 0, 0, 2), ncol=2, byrow=FALSE))), ID=c("c"))))
+plot(poly1, border="orange")
+plot(poly2, border="blue", add=TRUE, lty=2, density=8, angle=30, col="blue")
+gI <- gIntersection(poly1, poly2, byid=TRUE, drop_lower_td=TRUE)
+plot(gI, add=TRUE, border="red", lwd=3)
 oT <- get_RGEOS_polyThreshold()
 oW <- get_RGEOS_warnSlivers()
 oD <- get_RGEOS_dropSlivers()

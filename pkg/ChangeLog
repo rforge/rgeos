@@ -1,3 +1,12 @@
+2015-09-28 15:51  rsbivand
+
+	* ChangeLog, configure,
+	  inst/tests/testxml/general/TestFunctionLLPrec.xml,
+	  inst/tests/testxml/validate/TestRelateLL.xml,
+	  inst/tests/testxml/validate/TestRelatePA.xml,
+	  inst/tests/testxml/validate/TestRelatePL.xml,
+	  inst/tests/testxml/validate/TestRelatePP.xml: tidy
+
 2015-09-28 09:49  rsbivand
 
 	* src/rgeos_geos2R.c: SpatialRings stack unbalance
