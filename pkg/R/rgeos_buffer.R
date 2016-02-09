@@ -6,7 +6,11 @@ gBuffer = function(spgeom, byid=FALSE, id=NULL, width=1.0, quadsegs=5,
     stopifnot(is.logical(byid))
     if (!is.na(is.projected(spgeom)) && !is.projected(spgeom))
      warning("Spatial object is not projected; GEOS expects planar coordinates")
-
+# Josh O'Brien 2016-02-08
+    if (byid && length(spgeom) == 1) {
+        byid <- FALSE
+        warning("byid set to FALSE; single feature detected")
+    }
     GEOSCapStyles = c("ROUND","FLAT","SQUARE")
     GEOSJoinStyles = c("ROUND","MITRE","BEVEL")
 
