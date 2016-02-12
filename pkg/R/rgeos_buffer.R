@@ -7,9 +7,12 @@ gBuffer = function(spgeom, byid=FALSE, id=NULL, width=1.0, quadsegs=5,
     if (!is.na(is.projected(spgeom)) && !is.projected(spgeom))
      warning("Spatial object is not projected; GEOS expects planar coordinates")
 # Josh O'Brien 2016-02-08
+    byid_status <- byid
     if (byid && length(spgeom) == 1) {
+        id <- row.names(spgeom)[1]
         byid <- FALSE
-        warning("byid set to FALSE; single feature detected")
+        byid_status <- TRUE
+        message("byid set to FALSE; single feature detected")
     }
     GEOSCapStyles = c("ROUND","FLAT","SQUARE")
     GEOSJoinStyles = c("ROUND","MITRE","BEVEL")
@@ -60,7 +63,7 @@ gBuffer = function(spgeom, byid=FALSE, id=NULL, width=1.0, quadsegs=5,
     ans = .Call("rgeos_buffer", .RGEOS_HANDLE, spgeom, byid, id, width, quadsegs,
                                 capStyle, joinStyle, mitreLimit, PACKAGE="rgeos")
  
-	if (byid) {
+	if (byid_status) {
 	    if (.hasSlot(spgeom, 'data')) {
                 m1 <- match(row.names(ans), id)
                 df1 <- spgeom@data[m1, , drop=FALSE]
