@@ -12,7 +12,7 @@ gBuffer = function(spgeom, byid=FALSE, id=NULL, width=1.0, quadsegs=5,
         id <- row.names(spgeom)[1]
         byid <- FALSE
         byid_status <- TRUE
-        message("byid set to FALSE; single feature detected")
+        #message("byid set to FALSE; single feature detected")
     }
     GEOSCapStyles = c("ROUND","FLAT","SQUARE")
     GEOSJoinStyles = c("ROUND","MITRE","BEVEL")
