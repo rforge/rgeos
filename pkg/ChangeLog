@@ -1,3 +1,19 @@
+2016-09-06 11:40  rsbivand
+
+	* configure: tidy
+
+2016-09-06 11:38  rsbivand
+
+	* inst/tests, tests/test-all.R, tests/testthat: moved tests folder
+
+2016-09-06 10:50  rcs
+
+	* ChangeLog, DESCRIPTION, NAMESPACE, R/rgeos_linearref.R,
+	  inst/tests/test-linearref.R, man/linref-gInterpolate.Rd,
+	  man/linref-gProject.Rd, src/init.c, src/rgeos.h,
+	  src/rgeos_linearref.c: added linear referencing functions
+	  (gInterpolate/gProject)
+
 2016-08-30 17:36  rsbivand
 
 	* DESCRIPTION, src/rgeos_coord.c: protect s in src/rgeos_coord.c
