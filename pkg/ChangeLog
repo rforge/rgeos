@@ -1,3 +1,11 @@
+2016-08-30 17:36  rsbivand
+
+	* DESCRIPTION, src/rgeos_coord.c: protect s in src/rgeos_coord.c
+
+2016-04-04 11:37  rsbivand
+
+	* ChangeLog, configure, inst/ChangeLog: tidy
+
 2016-04-04 11:35  rsbivand
 
 	* DESCRIPTION, src/Makevars.win: update to win-4.9.3
