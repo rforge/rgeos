@@ -1,6 +1,6 @@
 #' Project Points to Line Geometry
 #'
-#' Return closest points to given distances within geometry.
+#' Return distances along geometry to points nearest the specified points.
 #'
 #' @param spgeom SpatialLines or SpatialLinesDataFrame object
 #' @param sppoint SpatialPoints or SpatialPointsDataFrame object

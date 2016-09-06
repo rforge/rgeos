@@ -84,7 +84,7 @@ SEXP rgeos_interpolate(SEXP env, SEXP spgeom, SEXP d, SEXP normalized) {
     double y;
     SEXP ans;
 
-    // select interpoilation function (normalized/unnormalized)
+    // select interpolation function (normalized/unnormalized)
     GEOSGeometry GEOS_DLL *(*interp_fun)(GEOSContextHandle_t,
                                          const GEOSGeometry*,
                                          double);

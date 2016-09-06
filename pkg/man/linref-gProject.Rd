@@ -19,7 +19,7 @@ a numeric vector containing the distances along the line to
   points nearest to the specified points
 }
 \description{
-Return closest points to given distances within geometry.
+Return distances along geometry to points nearest the specified points.
 }
 \details{
 If \code{normalized=TRUE}, distances normalized to the length
