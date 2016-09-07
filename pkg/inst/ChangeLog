@@ -1,3 +1,17 @@
+2016-09-07 09:48  rcs
+
+	* ChangeLog, src/rgeos_geos2R.c: fix stack imbalance in
+	  rgeos_geosring2SpatialRings()
+
+2016-09-06 13:13  rcs
+
+	* ChangeLog, R/rgeos_linearref.R, man/linref-gProject.Rd,
+	  src/rgeos_linearref.c: update Rd; fix typo
+
+2016-09-06 11:41  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2016-09-06 11:40  rsbivand
 
 	* configure: tidy
