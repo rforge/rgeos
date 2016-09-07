@@ -1,3 +1,8 @@
+2016-09-07 09:48  rcs
+
+	* ChangeLog, src/rgeos_geos2R.c: fix stack imbalance in
+	  rgeos_geosring2SpatialRings()
+
 2016-09-06 13:13  rcs
 
 	* ChangeLog, R/rgeos_linearref.R, man/linref-gProject.Rd,
