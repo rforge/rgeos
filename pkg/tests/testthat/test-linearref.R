@@ -11,7 +11,7 @@ coord <- function(x) unname(coordinates(x))
 test_that("zero-length input arguments fail with error", {
 
   dat <- data.frame(x = 1)
-  p <- SpatialPointsDataFrame(rgeos::readWKT("POINT(0 0)"), dat)
+  p <- SpatialPointsDataFrame(readWKT("POINT(0 0)"), dat)
   l <- SpatialLinesDataFrame(readWKT("LINESTRING (-1 0, 1 0)"), dat)
 
   expect_error(gProject(l, subset(p, x > 1)))
