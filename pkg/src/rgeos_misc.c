@@ -212,7 +212,7 @@ SEXP rgeos_distancedensifyfunc(SEXP env, SEXP spgeom1, SEXP spgeom2, SEXP densif
     return(ans);
 }
 
-
+#ifdef HAVE_NEARESTPOINTS
 SEXP rgeos_nearestpoints(SEXP env, SEXP spgeom1, SEXP spgeom2) {
 
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
@@ -236,3 +236,4 @@ SEXP rgeos_nearestpoints(SEXP env, SEXP spgeom1, SEXP spgeom2) {
 
     return(coordmat);
 }
+#endif

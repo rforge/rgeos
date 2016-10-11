@@ -19,11 +19,13 @@
 #if GEOS_VERSION_MAJOR > 3
 #define  HAVE_DELAUNAY 1
 #define HAVE_NODE 1
+#define HAVE_NEARESTPOINTS 1
 #endif
 #if GEOS_VERSION_MAJOR == 3
 #if GEOS_VERSION_MINOR >= 4
 #define  HAVE_DELAUNAY 1
 #define HAVE_NODE 1
+#define HAVE_NEARESTPOINTS 1
 #endif
 #endif
 

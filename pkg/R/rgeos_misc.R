@@ -127,6 +127,10 @@ gTopoDim <- function(obj) {
 #' @export
 gNearestPoints <- function(spgeom1, spgeom2) {
 
+
+    if (version_GEOS0() < "3.4.0")
+        stop("No NearestPoints in this version of GEOS")
+
   stopifnot(identical(proj4string(spgeom1), proj4string(spgeom2)))
 
   x <- .Call("rgeos_nearestpoints", .RGEOS_HANDLE, spgeom1, spgeom2,
