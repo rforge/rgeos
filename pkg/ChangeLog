@@ -1,3 +1,9 @@
+2016-10-11 03:24  rsbivand
+
+	* ChangeLog, R/rgeos_misc.R, man/misc-gNearestPoints.Rd,
+	  src/rgeos.h, src/rgeos_misc.c: checking NearestPoint dependency
+	  on >= 3.4
+
 2016-10-10 07:28  rcs
 
 	* ChangeLog, DESCRIPTION, NAMESPACE, R/rgeos_misc.R, configure,
