@@ -1882,6 +1882,8 @@ LIBS="${LIBS} ${PKG_LIBS}"
 #   AC_MSG_ERROR([geos_c.h not found in given locations.])
 #fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking geos_c.h  presence and usability" >&5
+$as_echo_n "checking geos_c.h  presence and usability... " >&6; }
 cat > geos_test.c << _EOCONF
 #include <stdio.h>
 #include <geos_c.h>

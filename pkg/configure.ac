@@ -123,6 +123,7 @@ LIBS="${LIBS} ${PKG_LIBS}"
 #   AC_MSG_ERROR([geos_c.h not found in given locations.])
 #fi
 
+AC_MSG_CHECKING(geos_c.h  presence and usability)
 [cat > geos_test.c << _EOCONF
 #include <stdio.h>
 #include <geos_c.h>
