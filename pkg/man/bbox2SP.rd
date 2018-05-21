@@ -3,13 +3,13 @@
 \title{Converts a bounding box into a SpatialPolygons object.}
 \description{Converts a bounding box into a SpatialPolygons object.}
 
-\usage{bbox2SP(n,s,e,w,bbox=NA,proj4string=CRS("+init=epsg:4326"))}
+\usage{bbox2SP(n,s,w,e,bbox=NA,proj4string=CRS("+init=epsg:4326"))}
 
 \arguments{
   \item{n}{the top north latitude}
   \item{s}{the bottom south latitude}
-  \item{e}{the most eastern longitude}
   \item{w}{the most western longitude}
+  \item{e}{the most eastern longitude}
   \item{bbox}{a bounding box 2 x 2 matrix as produced by  \code{\link[sp]{bbox}}}
   \item{proj4string}{a coordinate reference system as defined in  \code{\link[sp]{CRS}}}
 }
@@ -31,8 +31,8 @@ if (require(rgdal)) {
 cities <- readOGR(dsn=system.file("vectors", package = "rgdal")[1], layer="cities")
 n<-75
 s<-30
-e<--40
-w<-32
+w<--40
+e<-32
 myPoly<-bbox2SP(n,s,e,w)
 plot(cities)
 plot(myPoly,border="red",add=TRUE)
