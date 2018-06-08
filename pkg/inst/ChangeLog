@@ -1,3 +1,16 @@
+2018-06-08 06:47  rsbivand
+
+	* ChangeLog, configure: tidy
+
+2018-06-03 21:05  rsbivand
+
+	* DESCRIPTION, src/rgeos.c, src/rgeos_geos2R.c: rchk fixes, mostly
+	  MAKE_CLASS
+
+2018-06-01 11:39  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2018-06-01 11:38  rsbivand
 
 	* DESCRIPTION, LICENSE.note: add LICENSE.note
