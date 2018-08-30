@@ -1,6 +1,7 @@
 #include <math.h>
 #include "rgeos.h"
 //static void rgeos_finish_handle(SEXP ptr);
+//static GEOSContextHandle_t sr;
 
 SEXP rgeos_GEOSversion(void) {
 
@@ -15,17 +16,69 @@ SEXP rgeos_sp_linkingTo_version(void) {
     return(SP_PREFIX(sp_linkingTo_version)());
 }
 
+// from line 79, postgis/liblwgeom/lwgeom_geos.c
+/* Free any non-null GEOSGeometry* pointers passed as arguments *
+ * Called by GEOS_FREE, which populates 'count' */
+/*static void geos_destroy(size_t count, ...) {
+	va_list ap;
+	va_start(ap, count);
+	while (count--)
+	{
+		GEOSGeometry* g = va_arg(ap, GEOSGeometry*);
+		if (g)
+		{
+			GEOSGeom_destroy(g);
+		}
+	}
+}*/
+
+char errbuf[BUFSIZ];
+int errbuf_set;
+
+char* get_errbuf(void) {
+
+    if (errbuf_set) return(errbuf);
+    else return(NULL);
+
+}
+
+void unset_errbuf(void) {
+
+    if (errbuf_set) {
+        errbuf[0] = '\0';
+        errbuf_set = 0;
+    }
+
+}
+
+
+int is_errbuf_set(void) {
+
+    return (errbuf_set);
+
+}
+
+
 static void __errorHandler(const char *fmt, ...) {
 
     char buf[BUFSIZ], *p;
     va_list ap;
+    // from line 56, postgis/liblwgeom/lwgeom_geos.c
+/*    do {
+        geos_destroy((sizeof((void*[])...)/sizeof(void*)),
+            ...);
+    } while (0);*/
     va_start(ap, fmt);
-    vsprintf(buf, fmt, ap);
+    unset_errbuf();
+    vsnprintf(errbuf, BUFSIZ-1, fmt, ap);
     va_end(ap);
-    p = buf + strlen(buf) - 1;
-    if(strlen(buf) > 0 && *p == '\n') *p = '\0';
+    p = errbuf + strlen(errbuf) - 1;
+    if(strlen(errbuf) > 0 && *p == '\n') *p = '\0';
+    errbuf_set = 1;
+//Rprintf("ptr: %d\n", (int) sr);
+//    finishGEOS_r(sr);
 
-    error(buf);
+//    error(errbuf);
 
     return;
 }
@@ -57,7 +110,9 @@ SEXP rgeos_Init(void) {
 
     GEOSContextHandle_t r = initGEOS_r((GEOSMessageHandler) __warningHandler, (GEOSMessageHandler) __errorHandler);
 // rchk replace mkChar with install RSB 180602
+//    sr = initGEOS_r((GEOSMessageHandler) __warningHandler, (GEOSMessageHandler) __errorHandler);
     SEXP sxpHandle = R_MakeExternalPtr((void *) r, install("GEOSContextHandle"), R_NilValue);
+//    SEXP sxpHandle = R_MakeExternalPtr((void *) sr, install("GEOSContextHandle"), R_NilValue);
 //    R_RegisterCFinalizerEx(sxpHandle, rgeos_finish_handle, TRUE);
  
     return(sxpHandle);
