@@ -364,7 +364,7 @@ GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec) {
         error(buf);
     }
     
-    GEOSGeom res;
+    GEOSGeom res = NULL;
 //Rprintf("rgeos_Polygons_i_2Polygon: n: %d\n", n);
     if (n == 1) {
 //Rprintf("in n==1 branch\n");
@@ -398,8 +398,8 @@ GEOSGeom rgeos_Polygons_i_2Polygon(SEXP env, SEXP pls, SEXP vec) {
         }
     }
     
-/*    if (res == NULL)
-        error("rgeos_Polygons_i_2Polygon: Polygon not created");*/
+    if (res == NULL)
+        error("rgeos_Polygons_i_2Polygon: Polygon not created");
     
     return(res);
 }

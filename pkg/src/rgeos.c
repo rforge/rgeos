@@ -61,7 +61,7 @@ int is_errbuf_set(void) {
 
 static void __errorHandler(const char *fmt, ...) {
 
-    char buf[BUFSIZ], *p;
+    char *p;
     va_list ap;
     // from line 56, postgis/liblwgeom/lwgeom_geos.c
 /*    do {
