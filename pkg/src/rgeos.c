@@ -3,11 +3,17 @@
 //static void rgeos_finish_handle(SEXP ptr);
 //static GEOSContextHandle_t sr;
 
-SEXP rgeos_GEOSversion(void) {
+SEXP rgeos_GEOSversion(SEXP runtime) {
+
+    int rt = LOGICAL_POINTER(runtime)[0];
 
     SEXP ans;
     PROTECT(ans = NEW_CHARACTER(1));
-    SET_STRING_ELT(ans, 0, COPY_TO_USER_STRING(GEOSversion()));
+    if (rt) {
+        SET_STRING_ELT(ans, 0, COPY_TO_USER_STRING(GEOSversion()));
+    } else {
+        SET_STRING_ELT(ans, 0, COPY_TO_USER_STRING(GEOS_CAPI_VERSION));
+    }
     UNPROTECT(1);
     return(ans);
 }

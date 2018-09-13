@@ -38,7 +38,7 @@
 #define R_OFFSET 1
 
 // Utility functions
-SEXP rgeos_GEOSversion(void);
+SEXP rgeos_GEOSversion(SEXP runtime);
 SEXP rgeos_sp_linkingTo_version(void);
 SEXP rgeos_Init(void);
 SEXP rgeos_finish(SEXP env);
