@@ -1,7 +1,7 @@
 Package: rgeos
 Title: Interface to Geometry Engine - Open Source ('GEOS')
 Version: 0.4-1
-Date: 2018-08-29
+Date: 2018-10-18
 Depends: R (>= 3.3.0)
 Imports: methods, sp (>= 1.1-0), utils, stats, graphics
 LinkingTo: sp
