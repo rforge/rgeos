@@ -1,3 +1,12 @@
+2018-12-13 11:17  rsbivand
+
+	* DESCRIPTION, configure, configure.ac: ubuntu mess - changes in
+	  ./configure
+
+2018-11-07 13:31  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2018-10-22 07:10  rsbivand
 
 	* DESCRIPTION, configure, configure.ac: Debian stretch GEOS version
