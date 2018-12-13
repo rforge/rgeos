@@ -113,7 +113,8 @@ fi
 
 
 AC_SUBST([PKG_CPPFLAGS],["${PKG_CPPFLAGS} ${GEOS_CPPFLAGS}"])
-AC_SUBST([PKG_LIBS],["${PKG_LIBS} ${GEOS_LIBS} ${GEOS_CLIBS}"])
+#AC_SUBST([PKG_LIBS],["${PKG_LIBS} ${GEOS_LIBS} ${GEOS_CLIBS}"])
+AC_SUBST([PKG_LIBS],["${PKG_LIBS} ${GEOS_CLIBS}"])
 
 # honor PKG_xx overrides
 # for CPPFLAGS we will superfluously double R's flags
