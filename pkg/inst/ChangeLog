@@ -1,3 +1,19 @@
+2018-12-15 12:36  rsbivand
+
+	* configure: tidy
+
+2018-12-15 00:30  edzer
+
+	* configure, configure.ac: configure stuff for OSX
+
+2018-12-15 00:04  edzer
+
+	* configure, configure.ac: try with static libs
+
+2018-12-13 11:18  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2018-12-13 11:17  rsbivand
 
 	* DESCRIPTION, configure, configure.ac: ubuntu mess - changes in
