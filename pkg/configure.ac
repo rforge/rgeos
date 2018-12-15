@@ -184,7 +184,7 @@ fi
 
 if test "${geosok}" = no; then
   AC_MSG_CHECKING(geos: linking with ${GEOS_DEP_CLIBS})
-  ${CXX} ${CPPFLAGS} -o geos_test geos_test.cpp ${GEOS_DEP_CLIBS} 2> errors.txt
+  ${CXX} ${CPPFLAGS} -o geos_test geos_test.cc ${GEOS_DEP_CLIBS} 2> errors.txt
   if test `echo $?` -ne 0 ; then
     geosok=no
     AC_MSG_RESULT(no)
@@ -192,6 +192,7 @@ if test "${geosok}" = no; then
     AC_MSG_NOTICE([Install failure: compilation and/or linkage problems.])
     AC_MSG_ERROR([initGEOS_r not found in libgeos_c.])
   else
+    geosok=yes
     AC_SUBST([PKG_LIBS], ["${PKG_LIBS} ${GEOS_DEP_CLIBS}"])
     AC_MSG_RESULT(yes)
   fi
