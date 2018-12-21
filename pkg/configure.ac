@@ -102,6 +102,14 @@ if test ${GEOS_VER_DOT} -lt 320 ; then
 else
         AC_MSG_RESULT(yes)
 fi
+AC_MSG_CHECKING([geos version not more than 3.8.0])
+if test ${GEOS_VER_DOT} -gt 380 ; then
+        AC_MSG_RESULT(no)
+        AC_MSG_ERROR([GEOS version number too high])
+else
+        AC_MSG_RESULT(yes)
+fi
+
 
 AC_MSG_CHECKING(geos-config clibs)
 if test ${GEOS_VER_DOT} -lt 332 ; then
