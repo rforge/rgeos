@@ -26,7 +26,7 @@ An object of \code{\link[sp]{SpatialPolygons}} class.
 
 \examples{
 
-
+library(sp)
 if (require(rgdal)) {
 cities <- readOGR(dsn=system.file("vectors", package = "rgdal")[1], layer="cities")
 n<-75
