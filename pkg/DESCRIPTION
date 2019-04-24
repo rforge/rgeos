@@ -2,8 +2,8 @@ Package: rgeos
 Title: Interface to Geometry Engine - Open Source ('GEOS')
 Version: 0.4-3
 Date: 2019-04-23
-Depends: R (>= 3.3.0)
-Imports: methods, sp (>= 1.1-0), utils, stats, graphics
+Depends: R (>= 3.3.0), methods, sp (>= 1.1-0)
+Imports: utils, stats, graphics
 LinkingTo: sp
 Suggests: maptools (>= 0.8-5), testthat, XML, maps, rgdal
 NeedsCompilation: yes
