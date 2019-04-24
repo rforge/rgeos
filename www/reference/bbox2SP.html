@@ -105,7 +105,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'><a href='bbox2SP.rd.html'>bbox2SP</a></span>(<span class='no'>n</span>,<span class='no'>s</span>,<span class='no'>w</span>,<span class='no'>e</span>,<span class='kw'>bbox</span><span class='kw'>=</span><span class='fl'>NA</span>,<span class='kw'>proj4string</span><span class='kw'>=</span><span class='fu'>CRS</span>(<span class='st'>"+init=epsg:4326"</span>))</pre>
+    <pre class="usage"><span class='fu'>bbox2SP</span>(<span class='no'>n</span>,<span class='no'>s</span>,<span class='no'>w</span>,<span class='no'>e</span>,<span class='kw'>bbox</span><span class='kw'>=</span><span class='fl'>NA</span>,<span class='kw'>proj4string</span><span class='kw'>=</span><span class='fu'>CRS</span>(<span class='st'>"+init=epsg:4326"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -150,14 +150,20 @@
     <pre class="examples"><div class='input'>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>sp</span>)
 <span class='no'>run</span> <span class='kw'>&lt;-</span> <span class='fl'>FALSE</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='no'>rgdal</span>, <span class='kw'>quietly</span><span class='kw'>=</span><span class='fl'>TRUE</span>)) <span class='no'>run</span> <span class='kw'>&lt;-</span> <span class='fl'>TRUE</span>
-<span class='kw'>if</span> (<span class='no'>run</span>) {
+<span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='no'>rgdal</span>, <span class='kw'>quietly</span><span class='kw'>=</span><span class='fl'>TRUE</span>)) <span class='no'>run</span> <span class='kw'>&lt;-</span> <span class='fl'>TRUE</span></div><div class='output co'>#&gt; <span class='message'>rgdal: version: 1.4-3, (SVN revision 828)</span>
+#&gt; <span class='message'> Geospatial Data Abstraction Library extensions to R successfully loaded</span>
+#&gt; <span class='message'> Loaded GDAL runtime: GDAL 2.4.1, released 2019/03/15</span>
+#&gt; <span class='message'> Path to GDAL shared files: /usr/local/share/gdal</span>
+#&gt; <span class='message'> GDAL binary built with GEOS: TRUE </span>
+#&gt; <span class='message'> Loaded PROJ.4 runtime: Rel. 6.0.0, March 1st, 2019, [PJ_VERSION: 600]</span>
+#&gt; <span class='message'> Path to PROJ.4 shared files: (autodetected)</span>
+#&gt; <span class='message'> Linking to sp version: 1.3-1 </span></div><div class='input'><span class='kw'>if</span> (<span class='no'>run</span>) {
 <span class='no'>cities</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/rgdal/topics/readOGR'>readOGR</a></span>(<span class='kw'>dsn</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"vectors"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"rgdal"</span>)[<span class='fl'>1</span>], <span class='kw'>layer</span><span class='kw'>=</span><span class='st'>"cities"</span>)
 <span class='no'>n</span><span class='kw'>&lt;-</span><span class='fl'>75</span>
 <span class='no'>s</span><span class='kw'>&lt;-</span><span class='fl'>30</span>
 <span class='no'>w</span><span class='kw'>&lt;-</span>-<span class='fl'>40</span>
 <span class='no'>e</span><span class='kw'>&lt;-</span><span class='fl'>32</span>
-<span class='no'>myPoly</span><span class='kw'>&lt;-</span><span class='fu'><a href='bbox2SP.rd.html'>bbox2SP</a></span>(<span class='no'>n</span>,<span class='no'>s</span>,<span class='no'>e</span>,<span class='no'>w</span>)
+<span class='no'>myPoly</span><span class='kw'>&lt;-</span><span class='fu'>bbox2SP</span>(<span class='no'>n</span>,<span class='no'>s</span>,<span class='no'>e</span>,<span class='no'>w</span>)
 }</div><div class='output co'>#&gt; OGR data source with driver: ESRI Shapefile 
 #&gt; Source: "/home/rsb/lib/r_libs/rgdal/vectors", layer: "cities"
 #&gt; with 606 features
@@ -167,7 +173,7 @@
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>myPoly</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>"red"</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
 }</div><div class='output co'>#&gt; <span class='error'>Error in as.double(y): cannot coerce type 'S4' to vector of type 'double'</span></div><div class='input'><span class='kw'>if</span> (<span class='no'>run</span>) {
 <span class='no'>bb</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/bbox'>bbox</a></span>(<span class='no'>cities</span>)
-<span class='no'>myPoly</span><span class='kw'>&lt;-</span><span class='fu'><a href='bbox2SP.rd.html'>bbox2SP</a></span>(<span class='kw'>bbox</span><span class='kw'>=</span><span class='no'>bb</span>,<span class='kw'>proj4string</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></span>(<span class='no'>cities</span>)))
+<span class='no'>myPoly</span><span class='kw'>&lt;-</span><span class='fu'>bbox2SP</span>(<span class='kw'>bbox</span><span class='kw'>=</span><span class='no'>bb</span>,<span class='kw'>proj4string</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></span>(<span class='no'>cities</span>)))
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>myPoly</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>"blue"</span>)
 }</div><div class='output co'>#&gt; <span class='error'>Error in as.double(y): cannot coerce type 'S4' to vector of type 'double'</span></div></pre>
   </div>
