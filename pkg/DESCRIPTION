@@ -1,7 +1,7 @@
 Package: rgeos
 Title: Interface to Geometry Engine - Open Source ('GEOS')
-Version: 0.4-3
-Date: 2019-04-23
+Version: 0.4-4
+Date: 2019-07-31
 Depends: R (>= 3.3.0), methods, sp (>= 1.1-0)
 Imports: utils, stats, graphics
 LinkingTo: sp
@@ -19,6 +19,6 @@ Authors@R: c(
         person("Martin", "Davis", role = c("cph", "ctb")),
         person("Sandro", "Santilli", role = c("cph", "ctb")))
 License: GPL (>= 2)
-URL: https://r-forge.r-project.org/projects/rgeos/ http://trac.osgeo.org/geos/ 
+URL: https://r-forge.r-project.org/projects/rgeos/ http://trac.osgeo.org/geos/ http://rgeos.r-forge.r-project.org/index.html
 SystemRequirements: GEOS (>= 3.2.0); for building from source: GEOS from http://trac.osgeo.org/geos/; GEOS OSX frameworks built by William Kyngesburye at http://www.kyngchaos.com/ may be used for source installs on OSX.
 RoxygenNote: 6.1.1
