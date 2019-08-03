@@ -80,10 +80,12 @@ gDifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALS
         if (checkValidity == 2L) {
             if (!val1) {
                 spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
+                message("Attempting to make ", deparse(substitute(spgeom1)), " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom1, byid=TRUE)))) stop("Zero width buffer repair of spgeom1 failed")
             }
             if (!val2) {
                 spgeom2 <- gBuffer(spgeom2, byid=TRUE, width=0.0)
+                message("Attempting to make ", deparse(substitute(spgeom2)), " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom2, byid=TRUE)))) stop("Zero width buffer repair of spgeom2 failed")
             }
         }
@@ -104,10 +106,12 @@ gSymdifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=F
         if (checkValidity == 2L) {
             if (!val1) {
                 spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
+                message("Attempting to make ", deparse(substitute(spgeom1)), " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom1, byid=TRUE)))) stop("Zero width buffer repair of spgeom1 failed")
             }
             if (!val2) {
                 spgeom2 <- gBuffer(spgeom2, byid=TRUE, width=0.0)
+                message("Attempting to make ", deparse(substitute(spgeom2)), " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom2, byid=TRUE)))) stop("Zero width buffer repair of spgeom2 failed")
             }
         }
@@ -132,10 +136,12 @@ gIntersection = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, d
         if (checkValidity == 2L) {
             if (!val1) {
                 spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
+                message("Attempting to make ", deparse(substitute(spgeom1)), " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom1, byid=TRUE)))) stop("Zero width buffer repair of spgeom1 failed")
             }
             if (!val2) {
                 spgeom2 <- gBuffer(spgeom2, byid=TRUE, width=0.0)
+                message("Attempting to make ", deparse(substitute(spgeom2)), " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom2, byid=TRUE)))) stop("Zero width buffer repair of spgeom2 failed")
             }
         }
@@ -156,10 +162,12 @@ gUnion = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, un
         if (checkValidity == 2L) {
             if (!val1) {
                 spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
+                message("Attempting to make ", deparse(substitute(spgeom1)), " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom1, byid=TRUE)))) stop("Zero width buffer repair of spgeom1 failed")
             }
             if (!val2) {
                 spgeom2 <- gBuffer(spgeom2, byid=TRUE, width=0.0)
+                message("Attempting to make ", deparse(substitute(spgeom2)), " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom2, byid=TRUE)))) stop("Zero width buffer repair of spgeom2 failed")
             }
         }
