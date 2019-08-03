@@ -69,53 +69,100 @@ RGEOSBinTopoFunc = function(spgeom1, spgeom2, byid, ids=NULL, drop_lower_td=FALS
     return(x)
 }
 
-gDifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE) {
-    if(checkValidity) {
-        val1 <- gIsValid(spgeom1)
-        val2 <- gIsValid(spgeom2)
+gDifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=NULL) {
+    if (is.null(checkValidity)) checkValidity <- get_RGEOS_CheckValidity()
+    if(checkValidity > 0L) {
+        val1 <- isTRUE(all(gIsValid(spgeom1, byid=TRUE)))
+        val2 <- isTRUE(all(gIsValid(spgeom2, byid=TRUE)))
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
         if (!val2) message(deparse(substitute(spgeom2))," is invalid")
-        if (!all(c(val1, val2))) stop("Invalid objects found")
+        if (checkValidity == 1L && !all(c(val1, val2))) stop("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
+        if (checkValidity == 2L) {
+            if (!val1) {
+                spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
+                if (!isTRUE(all(gIsValid(spgeom1, byid=TRUE)))) stop("Zero width buffer repair of spgeom1 failed")
+            }
+            if (!val2) {
+                spgeom2 <- gBuffer(spgeom2, byid=TRUE, width=0.0)
+                if (!isTRUE(all(gIsValid(spgeom2, byid=TRUE)))) stop("Zero width buffer repair of spgeom2 failed")
+            }
+        }
     }
     
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
         unaryUnion_if_byid_false, "rgeos_difference") )
 }
-gSymdifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE) {
-    if(checkValidity) {
-        val1 <- gIsValid(spgeom1)
-        val2 <- gIsValid(spgeom2)
+
+gSymdifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=NULL) {
+    if (is.null(checkValidity)) checkValidity <- get_RGEOS_CheckValidity()
+    if(checkValidity > 0L) {
+        val1 <- isTRUE(all(gIsValid(spgeom1, byid=TRUE)))
+        val2 <- isTRUE(all(gIsValid(spgeom2, byid=TRUE)))
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
         if (!val2) message(deparse(substitute(spgeom2))," is invalid")
-        if (!all(c(val1, val2))) stop("Invalid objects found")
+        if (checkValidity == 1L && !all(c(val1, val2))) stop("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
+        if (checkValidity == 2L) {
+            if (!val1) {
+                spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
+                if (!isTRUE(all(gIsValid(spgeom1, byid=TRUE)))) stop("Zero width buffer repair of spgeom1 failed")
+            }
+            if (!val2) {
+                spgeom2 <- gBuffer(spgeom2, byid=TRUE, width=0.0)
+                if (!isTRUE(all(gIsValid(spgeom2, byid=TRUE)))) stop("Zero width buffer repair of spgeom2 failed")
+            }
+        }
     }
     
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
         unaryUnion_if_byid_false, "rgeos_symdifference") )
 }
-gIntersection = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE) {
+
+gIntersection = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=NULL) {
     if (!missing(drop_not_poly)) {
         warning("drop_not_poly argument name deprecated, use drop_lower_td")
         drop_lower_td <- drop_not_poly
     }
-    if(checkValidity) {
-        val1 <- gIsValid(spgeom1)
-        val2 <- gIsValid(spgeom2)
+    if (is.null(checkValidity)) checkValidity <- get_RGEOS_CheckValidity()
+    if(checkValidity > 0L) {
+        val1 <- isTRUE(all(gIsValid(spgeom1, byid=TRUE)))
+        val2 <- isTRUE(all(gIsValid(spgeom2, byid=TRUE)))
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
         if (!val2) message(deparse(substitute(spgeom2))," is invalid")
-        if (!all(c(val1, val2))) stop("Invalid objects found")
+        if (checkValidity == 1L && !all(c(val1, val2))) stop("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
+        if (checkValidity == 2L) {
+            if (!val1) {
+                spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
+                if (!isTRUE(all(gIsValid(spgeom1, byid=TRUE)))) stop("Zero width buffer repair of spgeom1 failed")
+            }
+            if (!val2) {
+                spgeom2 <- gBuffer(spgeom2, byid=TRUE, width=0.0)
+                if (!isTRUE(all(gIsValid(spgeom2, byid=TRUE)))) stop("Zero width buffer repair of spgeom2 failed")
+            }
+        }
     }
     
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
         unaryUnion_if_byid_false, "rgeos_intersection") )
 }
-gUnion = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=FALSE) {
-    if(checkValidity) {
-        val1 <- gIsValid(spgeom1)
-        val2 <- gIsValid(spgeom2)
+
+gUnion = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, unaryUnion_if_byid_false=TRUE, checkValidity=NULL) {
+    if (is.null(checkValidity)) checkValidity <- get_RGEOS_CheckValidity()
+    if(checkValidity > 0L) {
+        val1 <- isTRUE(all(gIsValid(spgeom1, byid=TRUE)))
+        val2 <- isTRUE(all(gIsValid(spgeom2, byid=TRUE)))
         if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
         if (!val2) message(deparse(substitute(spgeom2))," is invalid")
-        if (!all(c(val1, val2))) stop("Invalid objects found")
+        if (checkValidity == 1L && !all(c(val1, val2))) stop("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
+        if (checkValidity == 2L) {
+            if (!val1) {
+                spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
+                if (!isTRUE(all(gIsValid(spgeom1, byid=TRUE)))) stop("Zero width buffer repair of spgeom1 failed")
+            }
+            if (!val2) {
+                spgeom2 <- gBuffer(spgeom2, byid=TRUE, width=0.0)
+                if (!isTRUE(all(gIsValid(spgeom2, byid=TRUE)))) stop("Zero width buffer repair of spgeom2 failed")
+            }
+        }
     }
     
     return( RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td,
