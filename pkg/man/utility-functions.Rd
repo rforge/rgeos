@@ -11,6 +11,8 @@
 \alias{get_RGEOS_warnSlivers}
 \alias{set_RGEOS_dropSlivers}
 \alias{get_RGEOS_dropSlivers}
+\alias{set_RGEOS_CheckValidity}
+\alias{get_RGEOS_CheckValidity}
 \alias{rgeos_extSoftVersion}
 
 \title{RGEOS Utility Functions}
@@ -29,6 +31,8 @@
         get_RGEOS_warnSlivers()
         set_RGEOS_dropSlivers(value)
         get_RGEOS_dropSlivers()
+        get_RGEOS_CheckValidity()
+        set_RGEOS_CheckValidity(value)
 }
 
 \arguments{
@@ -48,6 +52,7 @@ translate is a testing function which translates the sp object into a GEOS C obj
 checkP4S is a validation function for proj4strings and is used in testing.
 
 version_GEOS returns the full runtime version string, and version_GEOS0 only the GEOS version number.
+set_RGEOS_CheckValidity takes an integer 0:2, 0L is no operation, 1L is check validity, and 2L is check and if invalid try to repair with a zero width buffer.
 }
 
 \author{Roger Bivand & Colin Rundel}
