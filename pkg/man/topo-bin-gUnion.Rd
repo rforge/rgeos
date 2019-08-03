@@ -12,7 +12,7 @@
 gUnion(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE,
  unaryUnion_if_byid_false=TRUE, checkValidity=NULL)
 gUnionCascaded(spgeom, id = NULL)
-gUnaryUnion(spgeom, id = NULL)
+gUnaryUnion(spgeom, id = NULL, checkValidity=NULL)
 gLineMerge(spgeom, byid=FALSE, id = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
