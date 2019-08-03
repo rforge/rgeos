@@ -74,18 +74,20 @@ gDifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALS
     if(checkValidity > 0L) {
         val1 <- isTRUE(all(gIsValid(spgeom1, byid=TRUE)))
         val2 <- isTRUE(all(gIsValid(spgeom2, byid=TRUE)))
-        if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
+        nm_1 <- deparse(substitute(spgeom1))
+        nm_2 <- deparse(substitute(spgeom2))
+        if (!val1) message(nm_1, " is invalid")
+        if (!val2) message(nm_2," is invalid")
         if (checkValidity == 1L && !all(c(val1, val2))) stop("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
         if (checkValidity == 2L) {
             if (!val1) {
                 spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
-                message("Attempting to make ", deparse(substitute(spgeom1)), " valid by zero-width buffering")
+                message("Attempting to make ", nm_1, " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom1, byid=TRUE)))) stop("Zero width buffer repair of spgeom1 failed")
             }
             if (!val2) {
                 spgeom2 <- gBuffer(spgeom2, byid=TRUE, width=0.0)
-                message("Attempting to make ", deparse(substitute(spgeom2)), " valid by zero-width buffering")
+                message("Attempting to make ", nm_2, " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom2, byid=TRUE)))) stop("Zero width buffer repair of spgeom2 failed")
             }
         }
@@ -100,18 +102,20 @@ gSymdifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=F
     if(checkValidity > 0L) {
         val1 <- isTRUE(all(gIsValid(spgeom1, byid=TRUE)))
         val2 <- isTRUE(all(gIsValid(spgeom2, byid=TRUE)))
-        if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
+        nm_1 <- deparse(substitute(spgeom1))
+        nm_2 <- deparse(substitute(spgeom2))
+        if (!val1) message(nm_1, " is invalid")
+        if (!val2) message(nm_2," is invalid")
         if (checkValidity == 1L && !all(c(val1, val2))) stop("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
         if (checkValidity == 2L) {
             if (!val1) {
                 spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
-                message("Attempting to make ", deparse(substitute(spgeom1)), " valid by zero-width buffering")
+                message("Attempting to make ", nm_1, " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom1, byid=TRUE)))) stop("Zero width buffer repair of spgeom1 failed")
             }
             if (!val2) {
                 spgeom2 <- gBuffer(spgeom2, byid=TRUE, width=0.0)
-                message("Attempting to make ", deparse(substitute(spgeom2)), " valid by zero-width buffering")
+                message("Attempting to make ", nm_2, " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom2, byid=TRUE)))) stop("Zero width buffer repair of spgeom2 failed")
             }
         }
@@ -130,18 +134,20 @@ gIntersection = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, d
     if(checkValidity > 0L) {
         val1 <- isTRUE(all(gIsValid(spgeom1, byid=TRUE)))
         val2 <- isTRUE(all(gIsValid(spgeom2, byid=TRUE)))
-        if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
+        nm_1 <- deparse(substitute(spgeom1))
+        nm_2 <- deparse(substitute(spgeom2))
+        if (!val1) message(nm_1, " is invalid")
+        if (!val2) message(nm_2," is invalid")
         if (checkValidity == 1L && !all(c(val1, val2))) stop("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
         if (checkValidity == 2L) {
             if (!val1) {
                 spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
-                message("Attempting to make ", deparse(substitute(spgeom1)), " valid by zero-width buffering")
+                message("Attempting to make ", nm_1, " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom1, byid=TRUE)))) stop("Zero width buffer repair of spgeom1 failed")
             }
             if (!val2) {
                 spgeom2 <- gBuffer(spgeom2, byid=TRUE, width=0.0)
-                message("Attempting to make ", deparse(substitute(spgeom2)), " valid by zero-width buffering")
+                message("Attempting to make ", nm_2, " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom2, byid=TRUE)))) stop("Zero width buffer repair of spgeom2 failed")
             }
         }
@@ -156,18 +162,20 @@ gUnion = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, un
     if(checkValidity > 0L) {
         val1 <- isTRUE(all(gIsValid(spgeom1, byid=TRUE)))
         val2 <- isTRUE(all(gIsValid(spgeom2, byid=TRUE)))
-        if (!val1) message(deparse(substitute(spgeom1)), " is invalid")
-        if (!val2) message(deparse(substitute(spgeom2))," is invalid")
+        nm_1 <- deparse(substitute(spgeom1))
+        nm_2 <- deparse(substitute(spgeom2))
+        if (!val1) message(nm_1, " is invalid")
+        if (!val2) message(nm_2," is invalid")
         if (checkValidity == 1L && !all(c(val1, val2))) stop("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
         if (checkValidity == 2L) {
             if (!val1) {
                 spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
-                message("Attempting to make ", deparse(substitute(spgeom1)), " valid by zero-width buffering")
+                message("Attempting to make ", nm_1, " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom1, byid=TRUE)))) stop("Zero width buffer repair of spgeom1 failed")
             }
             if (!val2) {
                 spgeom2 <- gBuffer(spgeom2, byid=TRUE, width=0.0)
-                message("Attempting to make ", deparse(substitute(spgeom2)), " valid by zero-width buffering")
+                message("Attempting to make ", nm_2, " valid by zero-width buffering")
                 if (!isTRUE(all(gIsValid(spgeom2, byid=TRUE)))) stop("Zero width buffer repair of spgeom2 failed")
             }
         }
