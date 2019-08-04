@@ -165,7 +165,7 @@ gUnaryUnion = function(spgeom, id = NULL, checkValidity=NULL) {
         val1 <- isTRUE(all(gIsValid(spgeom, byid=TRUE)))
         nm_1 <- deparse(substitute(spgeom))
         if (!val1) message(nm_1, " is invalid")
-        if (checkValidity == 1L && !all(val1)) stop("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
+        if (checkValidity == 1L && !all(val1)) warning("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
         if (checkValidity == 2L) {
             if (!val1) {
                 spgeom <- gBuffer(spgeom, byid=TRUE, width=0.0)

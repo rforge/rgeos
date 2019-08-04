@@ -78,7 +78,7 @@ gDifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALS
         nm_2 <- deparse(substitute(spgeom2))
         if (!val1) message(nm_1, " is invalid")
         if (!val2) message(nm_2," is invalid")
-        if (checkValidity == 1L && !all(c(val1, val2))) stop("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
+        if (checkValidity == 1L && !all(c(val1, val2))) warning("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
         if (checkValidity == 2L) {
             if (!val1) {
                 spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
@@ -106,7 +106,7 @@ gSymdifference = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=F
         nm_2 <- deparse(substitute(spgeom2))
         if (!val1) message(nm_1, " is invalid")
         if (!val2) message(nm_2," is invalid")
-        if (checkValidity == 1L && !all(c(val1, val2))) stop("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
+        if (checkValidity == 1L && !all(c(val1, val2))) warning("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
         if (checkValidity == 2L) {
             if (!val1) {
                 spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
@@ -138,7 +138,7 @@ gIntersection = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_not_poly, d
         nm_2 <- deparse(substitute(spgeom2))
         if (!val1) message(nm_1, " is invalid")
         if (!val2) message(nm_2," is invalid")
-        if (checkValidity == 1L && !all(c(val1, val2))) stop("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
+        if (checkValidity == 1L && !all(c(val1, val2))) warning("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
         if (checkValidity == 2L) {
             if (!val1) {
                 spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
@@ -166,7 +166,7 @@ gUnion = function(spgeom1, spgeom2, byid=FALSE, id=NULL, drop_lower_td=FALSE, un
         nm_2 <- deparse(substitute(spgeom2))
         if (!val1) message(nm_1, " is invalid")
         if (!val2) message(nm_2," is invalid")
-        if (checkValidity == 1L && !all(c(val1, val2))) stop("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
+        if (checkValidity == 1L && !all(c(val1, val2))) warning("Invalid objects found; consider using set_RGEOS_CheckValidity(2L)")
         if (checkValidity == 2L) {
             if (!val1) {
                 spgeom1 <- gBuffer(spgeom1, byid=TRUE, width=0.0)
