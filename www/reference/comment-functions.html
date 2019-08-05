@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -188,8 +188,7 @@
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/comment'>comment</a></span>(<span class='no'>pls</span>) <span class='kw'>=</span> <span class='fu'>createPolygonsComment</span>(<span class='no'>pls</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/comment'>comment</a></span>(<span class='no'>pls</span>)</div><div class='output co'>#&gt; [1] "0 1 11 0 6 0 8 0 1 13 0 1 0"</div><div class='input'>
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>SpatialPolygons</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>pls</span>)), <span class='kw'>col</span><span class='kw'>=</span><span class='st'>"magenta"</span>, <span class='kw'>pbg</span><span class='kw'>=</span><span class='st'>"cyan"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in as.double(y): cannot coerce type 'S4' to vector of type 'double'</span></div><div class='input'> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/title'>title</a></span>(<span class='kw'>xlab</span><span class='kw'>=</span><span class='st'>"Hole slot values before checking"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in title(xlab = "Hole slot values before checking"): plot.new has not been called yet</span></div><span class='co'># NOT RUN {</span>
-<span class='co'># running this illustration may be time-consuming</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>SpatialPolygons</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>pls</span>)), <span class='kw'>col</span><span class='kw'>=</span><span class='st'>"magenta"</span>, <span class='kw'>pbg</span><span class='kw'>=</span><span class='st'>"cyan"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in as.double(y): cannot coerce type 'S4' to vector of type 'double'</span></div><div class='input'> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/title'>title</a></span>(<span class='kw'>xlab</span><span class='kw'>=</span><span class='st'>"Hole slot values before checking"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in title(xlab = "Hole slot values before checking"): plot.new has not been called yet</span></div><div class='input'><span class='co'># running this illustration may be time-consuming</span>
 <span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='no'>maptools</span>)) {
 <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>wrld_simpl</span>)
 <span class='no'>usa</span> <span class='kw'>&lt;-</span> <span class='no'>wrld_simpl</span>[<span class='no'>wrld_simpl</span>$<span class='no'>ISO3</span><span class='kw'>==</span><span class='st'>"USA"</span>,]
@@ -216,8 +215,7 @@
 <span class='fu'>slot</span>(<span class='no'>usa1</span>, <span class='st'>"polygons"</span>) <span class='kw'>&lt;-</span> <span class='no'>Pls1</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>lapply</a></span>(<span class='fu'>slot</span>(<span class='no'>usa1</span>, <span class='st'>"polygons"</span>), <span class='no'>comment</span>)
 <span class='fu'><a href='pred-unary-gIsValid.html'>gIsValid</a></span>(<span class='no'>usa1</span>, <span class='kw'>reason</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-}
-<span class='co'># }</span></pre>
+}</div><div class='output co'>#&gt; <span class='message'>Loading required package: maptools</span></div><div class='output co'>#&gt; <span class='message'>Checking rgeos availability: TRUE</span></div><div class='output co'>#&gt; [1] "Valid Geometry"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

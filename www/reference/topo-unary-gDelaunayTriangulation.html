@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -158,15 +158,13 @@ head(out5)
 </div><div class='output co'>#&gt; <span class='error'>Error: &lt;text&gt;:19:0: unexpected end of input</span>
 #&gt; <span class='error'>17: head(out5)</span>
 #&gt; <span class='error'>18: </span>
-#&gt; <span class='error'>   ^</span></div><span class='co'># NOT RUN {</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='no'>spdep</span>)) {
+#&gt; <span class='error'>   ^</span></div><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='no'>spdep</span>)) {
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/class'>class</a></span>(<span class='no'>out5</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"spatial.neighbour"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/class'>class</a></span>(<span class='no'>out5</span>))
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>out5</span>, <span class='st'>"n"</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>meuse</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>out5</span>, <span class='st'>"region.id"</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/character'>as.character</a></span>(<span class='fl'>1</span>:<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>meuse</span>))
 <span class='no'>nb1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/spdep/topics/listw2sn'>sn2listw</a></span>(<span class='no'>out5</span>)$<span class='no'>neighbours</span>
 <span class='no'>nb2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/spdep/topics/testnb'>make.sym.nb</a></span>(<span class='no'>nb1</span>)
-}
-<span class='co'># }</span><div class='input'>}
+}</div><div class='output co'>#&gt; <span class='message'>Loading required package: spdep</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: spData</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: sf</span></div><div class='output co'>#&gt; <span class='message'>Linking to GEOS 3.7.2, GDAL 3.0.1, PROJ 6.1.1</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'out5' not found</span></div><div class='input'>}
 </div><div class='output co'>#&gt; <span class='error'>Error: &lt;text&gt;:1:1: unexpected '}'</span>
 #&gt; <span class='error'>1: }</span>
 #&gt; <span class='error'>    ^</span></div></pre>
