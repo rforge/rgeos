@@ -1,3 +1,12 @@
+2019-08-05 06:55  rsbivand
+
+	* man/topo-bin-gUnion.Rd: tidy
+
+2019-08-04 15:37  rsbivand
+
+	* ChangeLog, inst/ChangeLog: changing checkValidity for GEOS >
+	  3.7.1
+
 2019-08-04 15:35  rsbivand
 
 	* tests/leak_by_exception.Rout.save: changing checkValidity for
