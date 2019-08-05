@@ -80,5 +80,5 @@ plot(spol1, add=TRUE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{spatial,union}
+\keyword{spatial}
 
