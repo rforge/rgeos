@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.3</span>
       </span>
     </div>
 
@@ -152,7 +152,10 @@
     <p>In order for rgeos to function properly it is necessary that all holes within a given POLYGON or MULTIPOLYGON geometry must belong to a specific polygon. The <code>SpatialPolygons</code> class implementation does not currently include this information. To work around this limitation rgeos uses an additional comment attribute on the <code>Polygons</code> class that indicates which hole belongs to which polygon.</p>
 <p>Under the current implementation this comment is a text string of numbers separated by spaces where the order of the numbers corresponds to the order of the <code>Polygon</code> objects in the <code>Polygons</code> slot of the <code>Polygons</code> object. A <code>0</code> implies the <code>Polygon</code> object is a polygon, a non-zero number implies that the <code>Polygon</code> object is a hole with the value indicating the index of the <code>Polygon</code> that &#8220;owns&#8221; the hole.</p>
 <p><code>createPolygonsComment</code> attempts to create a valid comment for a <code>Polygons</code> object by assessing which polygons contain a given hole (using <code><a href='pred-binary-gContains.html'>gContains</a></code>). Ownership is assigned to the smallest polygon (by area) that contains the given hole. This is not guaranteed to generate valid polygons, always check the resulting objects for validity.</p>
-<p><code>createSPComment</code> attempts to create valid comments for all or a subset of polygons within a <code>SpatialPolygons</code> object.</p>
+<p><code>createSPComment</code> attempts to create valid comments for all or a subset of polygons within a <code>SpatialPolygons</code> object. Refer to Bivand et al. (2013), pages 47-48 and 132-133 for a further discussion and <code><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></code></p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Roger Bivand, Edzer Pebesma and Virgilio Gomez-Rubio, 2013. Applied spatial data analysis with R, Second edition. Springer, NY. <a href='https://asdar-book.org/'>https://asdar-book.org/</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -227,6 +230,7 @@
       <li><a href="#warning-check-polygons">Warning: check polygons</a></li>
       <li><a href="#warning-planar-geometries">Warning: planar geometries</a></li>
       <li><a href="#details">Details</a></li>
+      <li><a href="#references">References</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
