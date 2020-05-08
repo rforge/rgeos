@@ -22,17 +22,37 @@ gMakeValid(spgeom, byid=FALSE, id = NULL)
 
 \examples{
 # Based on test geometries from sf
+run <- FALSE
+if (version_GEOS0() >= "3.8.0") run <- TRUE
+if (run) {
 X <- readWKT("POLYGON ((0 0, 0.5 0, 0.5 0.5, 0.5 0, 1 0, 1 1, 0 1, 0 0))")
 gIsValid(X)
+}
+if (run) {
 class(X)
+}
+if (run) {
 row.names(X)
+}
+if (run) {
 Y <- gMakeValid(X)
+}
+if (run) {
 gIsValid(Y)
+}
+if (run) {
 class(Y)
+}
+if (run) {
 plot(slot(Y, "polyobj"))
 plot(slot(Y, "lineobj"), add=TRUE, col="red")
+}
+if (run) {
 row.names(slot(Y, "polyobj"))
+}
+if (run) {
 row.names(slot(Y, "lineobj"))
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
