@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -38,7 +42,6 @@
 <meta property="og:title" content="Compute optimal label positions for polygons — polygonsLabel" />
 <meta property="og:description" content="Compute optimal positions for placing labels inside polygons, and optionally plot the labels.
 Various algorithms for finding the ‘optimal’ label positions are supported." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -56,7 +59,7 @@ Various algorithms for finding the ‘optimal’ label positions are supported."
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -70,7 +73,7 @@ Various algorithms for finding the ‘optimal’ label positions are supported."
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
       </span>
     </div>
 
@@ -253,7 +256,7 @@ by Hoseok Kang and Shoreh Elhami, available at
 <span class='no'>xy</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='no'>x</span>,<span class='no'>y</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>sp</span>)
 <span class='no'>xy.sp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span>(<span class='no'>xy</span>)), <span class='kw'>ID</span> <span class='kw'>=</span> <span class='st'>"test"</span>)))
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>xy.sp</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"khaki"</span>)</div><div class='input'><span class='fu'>polygonsLabel</span>(<span class='no'>xy.sp</span>, <span class='st'>"Hi!"</span>)</div><div class='img'><img src='labelpt-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;          [,1]     [,2]
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>xy.sp</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"khaki"</span>)</div><div class='input'><span class='fu'>polygonsLabel</span>(<span class='no'>xy.sp</span>, <span class='st'>"Hi!"</span>)</div><div class='img'><img src='labelpt-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;          [,1]     [,2]
 #&gt; [1,] 2.001006 1.962585</div><div class='input'>
 
 <span class='co'># Example with multiple polygons, text labels and colours</span>
@@ -268,7 +271,7 @@ by Hoseok Kang and Shoreh Elhami, available at
   <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='no'>x3</span>,<span class='no'>y3</span>))), <span class='kw'>ID</span> <span class='kw'>=</span> <span class='st'>"test3"</span>), <span class='co'># wide</span>
   <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='no'>x2</span>,<span class='no'>y2</span>))), <span class='kw'>ID</span> <span class='kw'>=</span> <span class='st'>"test2"</span>)  <span class='co'># high</span>
 ))
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>xy.sp</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>terrain.colors</a></span>(<span class='fl'>3</span>))</div><div class='input'><span class='no'>labels</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Hi!"</span>, <span class='st'>"A very long text string"</span>, <span class='st'>"N\na\nr\nr\no\nw"</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>xy.sp</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>terrain.colors</a></span>(<span class='fl'>3</span>))</div><div class='input'><span class='no'>labels</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Hi!"</span>, <span class='st'>"A very long text string"</span>, <span class='st'>"N\na\nr\nr\no\nw"</span>)
 
 <span class='co'># Note that the label for the tall and narrow box is</span>
 <span class='co'># not necessarily centred vertically in the box.</span>
@@ -285,7 +288,7 @@ by Hoseok Kang and Shoreh Elhami, available at
 #&gt; [2,] 9.218740  2.000838
 #&gt; [3,] 2.000552 -7.478637</div><div class='input'>
 
-<span class='co'># \dontrun{</span>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'>## Example showing how bad the centroid </span>
 <span class='co'>## position can be on real maps.</span>
 
@@ -301,31 +304,18 @@ by Hoseok Kang and Shoreh Elhami, available at
 
 <span class='co'># Plot map, centroid positions (red dots) and optimal</span>
 <span class='co'># label positions using the ‘buffer’ method.</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>nmap.pol</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"khaki"</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>nmap.pol</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"khaki"</span>)
 <span class='no'>nmap.centroids</span> <span class='kw'>=</span> <span class='fu'>polygonsLabel</span>(<span class='no'>nmap.pol</span>, <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>nmap.pol</span>),
                                <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"centroid"</span>, <span class='kw'>doPlot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span>(<span class='no'>nmap.centroids</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>19</span>)
 <span class='fu'>polygonsLabel</span>(<span class='no'>nmap.pol</span>, <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>nmap.pol</span>), <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"buffer"</span>, <span class='kw'>cex</span><span class='kw'>=</span><span class='fl'>.8</span>)
-}</div><div class='output co'>#&gt; <span class='message'>Loading required package: maps</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum European_Terrestrial_Reference_System_1989 in CRS definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum Unknown_based_on_GRS80_ellipsoid in CRS definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum Unknown_based_on_GRS80_ellipsoid in CRS definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum Unknown_based_on_GRS80_ellipsoid in CRS definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum Unknown_based_on_GRS80_ellipsoid in CRS definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum Unknown_based_on_GRS80_ellipsoid in CRS definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum Unknown_based_on_GRS80_ellipsoid in CRS definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum Unknown_based_on_GRS80_ellipsoid in CRS definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum Unknown_based_on_GRS80_ellipsoid in CRS definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum Unknown_based_on_GRS80_ellipsoid in CRS definition</span></div><div class='img'><img src='labelpt-3.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;         [,1]    [,2]
-#&gt; [1,] 5140012 4480300
-#&gt; [2,] 4299762 4221980
-#&gt; [3,] 4689392 4672205</div><div class='input'># }
-</div></pre>
+}
+}</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#note">Note</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#references">References</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
-    <h2>Author</h2>
-    <p>Karl Ove Hufthammer, <a href='mailto:karl@huftis.org'>karl@huftis.org</a>.</p>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -336,7 +326,7 @@ by Hoseok Kang and Shoreh Elhami, available at
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
