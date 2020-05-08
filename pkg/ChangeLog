@@ -1,3 +1,11 @@
+2020-05-08 13:17  rsbivand
+
+	* DESCRIPTION: tidy
+
+2020-05-08 13:04  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2020-05-08 13:03  rsbivand
 
 	* src/Makevars.win, tools/winlibs.R: shift Windows binary to GEOS
