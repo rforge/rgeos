@@ -1,3 +1,16 @@
+2020-05-08 13:03  rsbivand
+
+	* src/Makevars.win, tools/winlibs.R: shift Windows binary to GEOS
+	  3.8
+
+2020-05-08 12:44  rsbivand
+
+	* inst/ChangeLog: tidy
+
+2020-05-08 12:44  rsbivand
+
+	* ChangeLog: tidy
+
 2020-05-08 12:43  rsbivand
 
 	* man/topo-unary-gMakeValid.Rd: add gMakeValid for GEOS >= 3.8.0
