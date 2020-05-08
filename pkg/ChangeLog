@@ -1,3 +1,11 @@
+2020-05-08 12:43  rsbivand
+
+	* man/topo-unary-gMakeValid.Rd: add gMakeValid for GEOS >= 3.8.0
+
+2020-05-08 12:17  rsbivand
+
+	* ChangeLog, inst/ChangeLog, man/topo-unary-gMakeValid.Rd: tidy
+
 2020-05-08 12:13  rsbivand
 
 	* DESCRIPTION, NAMESPACE, R/rgeos_linearref.R, R/rgeos_topology.R,
