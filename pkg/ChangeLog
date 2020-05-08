@@ -1,3 +1,15 @@
+2020-05-08 12:13  rsbivand
+
+	* DESCRIPTION, NAMESPACE, R/rgeos_linearref.R, R/rgeos_topology.R,
+	  configure, man/linref-gInterpolate.Rd, man/linref-gProject.Rd,
+	  src/init.c, src/rgeos.h, src/rgeos_topology.c,
+	  tests/leak_by_exception.Rout.save: add gMakeValid for GEOS >=
+	  3.8.0
+
+2020-03-28 10:46  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2019-11-13 08:04  rsbivand
 
 	* DESCRIPTION, man/comment-functions.Rd: add page number to comment
