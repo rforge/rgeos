@@ -1,3 +1,11 @@
+2020-09-02 08:50  rsbivand
+
+	* man/topo-unary-gCoverageUnion.Rd: tidy
+
+2020-09-01 12:39  rsbivand
+
+	* ChangeLog, inst/ChangeLog: tidy
+
 2020-09-01 12:38  rsbivand
 
 	* man/labelpt.Rd, man/misc-gDistance.Rd,
