@@ -66,6 +66,8 @@ get_RGEOS_STR <- function() {
     get("STRsubset", envir=.RGEOS_HANDLE)
 }
 
+
+
 init_RGEOS <- function() {
     .Call('rgeos_Init', PACKAGE="rgeos")
 }
@@ -128,6 +130,7 @@ version_sp_linkingTo <- function() {
     ", (SVN revision ", svn_version, ")\n", sep="")
   Smess <- paste(Smess, "GEOS runtime version:",
     version_GEOS(), "\n")
+  if (gIsOverlayNG()) Smess <- paste(Smess, "GEOS using OverlayNG\n")
   splVersion <- version_sp_linkingTo()
   Smess <- paste(Smess, "Linking to sp version:", splVersion, "\n")
   spVcheck <- NULL
@@ -144,6 +147,6 @@ version_sp_linkingTo <- function() {
 }
 
 rgeos_extSoftVersion <- function() {
-  res <- c("GEOS"=strsplit(version_GEOS(), "-")[[1]][1], "sp"=version_sp_linkingTo())
+  res <- c("GEOS"=strsplit(version_GEOS(), "-")[[1]][1], "OverlayNG"=gIsOverlayNG(), "sp"=version_sp_linkingTo())
   res
 }

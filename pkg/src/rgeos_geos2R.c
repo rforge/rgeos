@@ -4,6 +4,12 @@ SEXP rgeos_convert_geos2R(SEXP env, GEOSGeom geom, SEXP p4s, SEXP id) {
     
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
+/*    int norm = GEOSNormalize_r(GEOShandle, geom);
+    if (norm == -1) {
+        GEOSGeom_destroy_r(GEOShandle, geom);
+        error("rgeos_convert_geos2R: normalization failed");
+    }*/
+
     int type = GEOSGeomTypeId_r(GEOShandle, geom);
     int ng = GEOSGetNumGeometries_r(GEOShandle, geom);
     if (ng == -1) error("rgeos_convert_geos2R: invalid number of subgeometries"); 

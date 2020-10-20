@@ -224,3 +224,12 @@ groupID = function(spgeom, ids) {
     
     return(ans)
 }
+
+gIsOverlayNG <- function() {
+    a <- readRDS(system.file("test_cases/OverlayNG_test_a.rds", package="rgeos"))
+    bounds <- gUnaryUnion(a)
+    b0 <- sapply(slot(slot(bounds, "polygons")[[1]], "Polygons"), slot, "area")
+    b <- readRDS(system.file("test_cases/OverlayNG_test_b.rds", package="rgeos"))
+    isTRUE(all.equal(b0, b))
+}
+
