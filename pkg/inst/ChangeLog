@@ -1,3 +1,12 @@
+2020-12-10 10:17  rsbivand
+
+	* [r645] DESCRIPTION, R/rgeos_util.R,
+	  inst/test_cases/OverlayNG_test_c.rds: GEOS 3.9.0 beta2
+
+2020-10-20 10:56  rsbivand
+
+	* [r644] ChangeLog, inst/ChangeLog: tidy
+
 2020-10-20 09:54  rsbivand
 
 	* [r643] R/AAA.R, R/rgeos_util.R,
