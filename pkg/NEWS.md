@@ -1,4 +1,4 @@
-# Version 0.5-6 (development, rev. )
+# Version 0.5-6 (development, rev. 641-646)
 
 * adapt to OverlayNG in GEOS 3.9
 
