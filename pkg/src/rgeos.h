@@ -7,9 +7,6 @@
 #include <geos_c.h>
 
 // suggested BDR 111114
-#if GEOS_VERSION_MAJOR > 3
-#define  HAVE_UNARYUNION 1
-#endif
 #if GEOS_VERSION_MAJOR == 3
 #if GEOS_VERSION_MINOR >= 3
 #define  HAVE_UNARYUNION 1
@@ -17,11 +14,16 @@
 #endif
 
 #if GEOS_VERSION_MAJOR > 3
+#define  HAVE_UNARYUNION 1
 #define  HAVE_DELAUNAY 1
 #define HAVE_NODE 1
 #define HAVE_NEARESTPOINTS 1
 #define HAVE_MAKEVALID 1
+#define HAVE_COVERAGEUNION 1
+#define HAVE_MINIMUMROTATEDRECTANGLE 1
+#define HAVE_MAXIMUMINSSCRIBEDCIRCLE 1
 #endif
+
 #if GEOS_VERSION_MAJOR == 3
 #if GEOS_VERSION_MINOR >= 4
 #define  HAVE_DELAUNAY 1
@@ -29,6 +31,7 @@
 #define HAVE_NEARESTPOINTS 1
 #endif
 #endif
+
 #if GEOS_VERSION_MAJOR == 3
 #if GEOS_VERSION_MINOR >= 8
 #define HAVE_MAKEVALID 1
@@ -36,6 +39,12 @@
 #endif
 #endif
 
+#if GEOS_VERSION_MAJOR == 3
+#if GEOS_VERSION_MINOR >= 9
+#define HAVE_MINIMUMROTATEDRECTANGLE 1
+#define HAVE_MAXIMUMINSSCRIBEDCIRCLE 1
+#endif
+#endif
 
 
 /* use same define in package's local_stubs.c file */
@@ -134,6 +143,12 @@ SEXP rgeos_delaunaytriangulation(SEXP env, SEXP obj, SEXP tol,
 #endif
 #ifdef HAVE_COVERAGEUNION
 SEXP rgeos_coverageunion(SEXP env, SEXP obj, SEXP id, SEXP byid );
+#endif
+#ifdef HAVE_MINIMUMROTATEDRECTANGLE
+SEXP rgeos_minimumrotatedrectangle(SEXP env, SEXP obj, SEXP id, SEXP byid);
+#endif
+#ifdef HAVE_MAXIMUMINSSCRIBEDCIRCLE
+SEXP rgeos_maximuminscribedcircle(SEXP env, SEXP obj, SEXP id, SEXP byid, SEXP tol);
 #endif
 
 typedef GEOSGeometry* (*p_topofunc)(GEOSContextHandle_t, const GEOSGeometry*);

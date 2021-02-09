@@ -35,6 +35,55 @@ SEXP rgeos_unaryunion(SEXP env, SEXP obj, SEXP id, SEXP byid ) {
 }
 #endif
 
+#ifdef HAVE_MINIMUMROTATEDRECTANGLE
+SEXP rgeos_minimumrotatedrectangle(SEXP env, SEXP obj, SEXP id, SEXP byid) {
+    return( rgeos_topologyfunc(env, obj, id, byid, &GEOSMinimumRotatedRectangle_r) );
+}
+#endif
+
+#ifdef HAVE_MAXIMUMINSSCRIBEDCIRCLE
+SEXP rgeos_maximuminscribedcircle(SEXP env, SEXP obj, SEXP id, SEXP byid, SEXP tol) {
+    
+    GEOSContextHandle_t GEOShandle = getContextHandle(env);
+
+    SEXP p4s = GET_SLOT(obj, install("proj4string"));
+    GEOSGeom geom = rgeos_convert_R2geos(env, obj);
+    int type = GEOSGeomTypeId_r(GEOShandle, geom);
+    
+    int n = 1;
+    if (LOGICAL_POINTER(byid)[0] && type == GEOS_GEOMETRYCOLLECTION)
+        n = GEOSGetNumGeometries_r(GEOShandle, geom);
+    
+    if (n < 1) error("rgeos_maximuminscribedcircle: invalid number of geometries");
+    
+    GEOSGeom *resgeoms = (GEOSGeom *) R_alloc((size_t) n, sizeof(GEOSGeom));
+    
+    for(int i=0; i<n; i++) {
+        const GEOSGeometry *curgeom = (n > 1) ? (GEOSGeom) GEOSGetGeometryN_r(GEOShandle, geom, i)
+                                       : geom;
+        
+        if (curgeom == NULL) 
+            error("rgeos_maximuminscribedcircle: unable to get subgeometries");
+        
+        resgeoms[i] = GEOSMaximumInscribedCircle_r(GEOShandle, curgeom,
+            NUMERIC_POINTER(tol)[0]);
+        if (resgeoms[i] == NULL) {
+            GEOSGeom_destroy_r(GEOShandle, geom);
+            char* errbuf = get_errbuf();
+            error(errbuf);
+        }
+    }
+    
+    GEOSGeom_destroy_r(GEOShandle, geom);
+    
+    GEOSGeom res = (n == 1) ? resgeoms[0]
+                    : GEOSGeom_createCollection_r(GEOShandle, GEOS_GEOMETRYCOLLECTION, resgeoms, (unsigned int) n);
+    
+    return( rgeos_convert_geos2R(env, res, p4s, id) ); // releases res
+}
+#endif
+
+
 #ifdef HAVE_DELAUNAY
 SEXP rgeos_delaunaytriangulation(SEXP env, SEXP obj, SEXP tol,
   SEXP onlyEdges) {

@@ -46,6 +46,12 @@ static R_CallMethodDef CallEntries[] = {
 #ifdef HAVE_COVERAGEUNION
     {"rgeos_coverageunion", (DL_FUNC) &rgeos_coverageunion, 4},
 #endif
+#ifdef HAVE_MINIMUMROTATEDRECTANGLE
+    {"rgeos_minimumrotatedrectangle", (DL_FUNC) &rgeos_minimumrotatedrectangle, 4},
+#endif
+#ifdef HAVE_MAXIMUMINSSCRIBEDCIRCLE
+    {"rgeos_maximuminscribedcircle", (DL_FUNC) &rgeos_maximuminscribedcircle, 5},
+#endif
 
     {"rgeos_simplify", (DL_FUNC) &rgeos_simplify, 6},
     {"rgeos_polygonize", (DL_FUNC) &rgeos_polygonize, 5},
