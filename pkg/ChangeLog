@@ -1,3 +1,21 @@
+2021-02-09 09:03  rsbivand
+
+	* [r648] NAMESPACE, NEWS.md, R/rgeos_topology.R, src/init.c,
+	  src/rgeos.h, src/rgeos_R2geos.c, src/rgeos_R2geosMP.c,
+	  src/rgeos_buffer.c, src/rgeos_coord.c, src/rgeos_geos2R.c,
+	  src/rgeos_linearref.c, src/rgeos_poly2nb.c, src/rgeos_topology.c,
+	  src/rgeos_topology_binary.c, src/rgeos_wkt.c: adapt for GEOS
+	  3.9.0
+
+2021-01-30 13:22  rsbivand
+
+	* [r647] NEWS.md: tidy
+
+2021-01-30 13:21  rsbivand
+
+	* [r646] ChangeLog, DESCRIPTION, NEWS.md, inst/ChangeLog,
+	  src/Makevars.win: update Windows static GEOS to 3.9.0
+
 2020-12-10 10:17  rsbivand
 
 	* [r645] DESCRIPTION, R/rgeos_util.R,
