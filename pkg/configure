@@ -1826,9 +1826,13 @@ if test `${GEOS_CONFIG} --version`;
 then
 
         GEOS_VER=`${GEOS_CONFIG} --version`
-        GEOS_VER_DOT=`echo $GEOS_VER | tr -d "." | cut -c1-3`
+        MAJ_VER=`echo $GEOS_VER | cut -d "." -f 1`
+        MIN_VER=`echo $GEOS_VER | cut -d "." -f 2`
+        PAT_VER=`echo $GEOS_VER | cut -d "." -f 3 | cut -c 1`
+#        GEOS_VER_DOT=`echo $GEOS_VER | tr -d "." | cut -c1-3`
 	GEOS_CPPFLAGS=`${GEOS_CONFIG} --cflags`
-        if test ${GEOS_VER_DOT} -lt 370 ; then
+        if test ${MAJ_VER} = 3 && test ${MIN_VER} -lt 7 ; then
+#        if test ${GEOS_VER_DOT} -lt 370 ; then
 	    GEOS_LIBS=`${GEOS_CONFIG} --libs`
         else
 	    GEOS_LIBS=`${GEOS_CONFIG} --clibs`
@@ -1848,7 +1852,8 @@ fi
 $as_echo "$as_me: GEOS version: ${GEOS_VER}" >&6;}
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking geos version at least 3.2.0" >&5
 $as_echo_n "checking geos version at least 3.2.0... " >&6; }
-if test ${GEOS_VER_DOT} -lt 320 ; then
+if test ${MAJ_VER} = 3 && test ${MIN_VER} -lt 2 ; then
+#if test ${GEOS_VER_DOT} -lt 320 ; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
         as_fn_error $? "Upgrade GEOS to at least 3.2.0" "$LINENO" 5
@@ -1864,17 +1869,28 @@ fi
 #        AC_MSG_RESULT(yes)
 #fi
 
+TEST_332="no"
+if test ${MAJ_VER} -gt 3 ; then
+TEST_332="yes"
+fi
+if test ${MAJ_VER} = 3 && test ${MIN_VER} -gt 3 ; then
+TEST_332="yes"
+fi
+if test ${MAJ_VER} = 3 && test ${MIN_VER} = 3 && test ${PAT_VER} -ge 2 ; then
+TEST_332="yes"
+fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking geos-config clibs" >&5
 $as_echo_n "checking geos-config clibs... " >&6; }
-if test ${GEOS_VER_DOT} -lt 332 ; then
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-        GEOS_CLIBS="-lgeos_c"
-else
+if test ${TEST_332} = "yes" ; then
+#if test ${GEOS_VER_DOT} -lt 332 ; then
         GEOS_CLIBS=`${GEOS_CONFIG} --clibs`
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
+else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+        GEOS_CLIBS="-lgeos_c"
 fi
 
 

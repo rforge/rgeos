@@ -87,7 +87,8 @@ version_GEOS <- function(runtime=TRUE) {
 }
 
 version_GEOS0 <- function() {
-    substring(version_GEOS(), 1, 5)
+#    substring(version_GEOS(), 1, 5)
+    package_version(gsub("[a-zA-Z]", "", strsplit(version_GEOS(), "-")[[1]][1]))
 }
 
 version_sp_linkingTo <- function() {
