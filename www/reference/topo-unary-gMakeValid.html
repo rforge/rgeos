@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Make invalid geometries valid — gMakeValid" />
-<meta property="og:description" content="Function returns a valid geometry, not available before GEOS 3.8.0" />
+<meta property="og:description" content="Function returns a valid geometry, not available before GEOS 3.8.0; from 3.10.0 two correction strategies" />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-7</span>
       </span>
     </div>
 
@@ -80,12 +80,15 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -109,10 +112,10 @@
     </div>
 
     <div class="ref-description">
-    <p>Function returns a valid geometry, not available before GEOS 3.8.0</p>
+    <p>Function returns a valid geometry, not available before GEOS 3.8.0; from 3.10.0 two correction strategies</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gMakeValid</span>(<span class='no'>spgeom</span>, <span class='kw'>byid</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>spgeom</span>, byid<span class='op'>=</span><span class='cn'>FALSE</span>, id <span class='op'>=</span> <span class='cn'>NULL</span>, original<span class='op'>=</span><span class='cn'>NULL</span>, keepCollapsed<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -129,45 +132,143 @@
       <th>id</th>
       <td><p>Character vector defining id labels for the resulting geometries, if unspecified returned geometries will be labeled based on their parent geometries' labels.</p></td>
     </tr>
+    <tr>
+      <th>original</th>
+      <td><p>default NULL; if GEOS &lt; 3.10.0, TRUE, if GEOS &gt;= 3.10.0, either set directly or taken from environment variable <code>GEOS_MAKE_VALID</code> with values <code>ORIGINAL</code> or <code>BUFFERED</code>. If <code>GEOS_MAKE_VALID</code> is <code>BUFFERED</code>, <code>original</code> is FALSE</p></td>
+    </tr>
+    <tr>
+      <th>keepCollapsed</th>
+      <td><p>default FALSE; If GEOS &gt;= 3.10.0 and <code>original</code> is FALSE, the argument is used to control whether objects with dimension reduction are discarded (keepCollapsed is FALSE) or retained</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Returns a valid geometry or collection of geometries of different types</p>
+    <p>Returns a valid geometry or collection of geometries of different types. For details on the buffered geometry fixer, see links from <a href='https://github.com/r-spatial/sf/issues/1655'>https://github.com/r-spatial/sf/issues/1655</a>.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Roger Bivand</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='class-SpatialCollections.html'>SpatialCollections-class</a></p></div>
+    <div class='dont-index'><p><a href='SpatialCollections-class.html'>SpatialCollections-class</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Based on test geometries from sf</span>
-<span class='no'>run</span> <span class='kw'>&lt;-</span> <span class='fl'>FALSE</span>
-<span class='kw'>if</span> (<span class='fu'><a href='utility-functions.html'>version_GEOS0</a></span>() <span class='kw'>&gt;=</span> <span class='st'>"3.8.0"</span>) <span class='no'>run</span> <span class='kw'>&lt;-</span> <span class='fl'>TRUE</span>
-<span class='kw'>if</span> (<span class='no'>run</span>) {
-<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON ((0 0, 0.5 0, 0.5 0.5, 0.5 0, 1 0, 1 1, 0 1, 0 0))"</span>)
-<span class='fu'><a href='pred-unary-gIsValid.html'>gIsValid</a></span>(<span class='no'>X</span>)
-}</div><div class='output co'>#&gt; <span class='warning'>Warning: Self-intersection at or near point 0.5 0</span></div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='kw'>if</span> (<span class='no'>run</span>) {
-<span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span>(<span class='no'>X</span>)
-}</div><div class='output co'>#&gt; [1] "SpatialPolygons"
+<span class='va'>run</span> <span class='op'>&lt;-</span> <span class='cn'>FALSE</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='RGEOS Utility Functions.html'>version_GEOS0</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>&gt;=</span> <span class='st'>"3.8.0"</span><span class='op'>)</span> <span class='va'>run</span> <span class='op'>&lt;-</span> <span class='cn'>TRUE</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON ((0 0, 0.5 0, 0.5 0.5, 0.5 0, 1 0, 1 1, 0 1, 0 0))"</span><span class='op'>)</span>
+<span class='fu'><a href='gIsValid.html'>gIsValid</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Self-intersection at or near point 0.5 0</span></div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='output co'>#&gt; [1] "SpatialPolygons"
 #&gt; attr(,"package")
-#&gt; [1] "sp"</div><div class='input'><span class='kw'>if</span> (<span class='no'>run</span>) {
-<span class='fu'><a href='https://rdrr.io/r/base/row.names.html'>row.names</a></span>(<span class='no'>X</span>)
-}</div><div class='output co'>#&gt; [1] "1"</div><div class='input'><span class='kw'>if</span> (<span class='no'>run</span>) {
-<span class='no'>Y</span> <span class='kw'>&lt;-</span> <span class='fu'>gMakeValid</span>(<span class='no'>X</span>)
-}
-<span class='kw'>if</span> (<span class='no'>run</span>) {
-<span class='fu'><a href='pred-unary-gIsValid.html'>gIsValid</a></span>(<span class='no'>Y</span>)
-}</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='kw'>if</span> (<span class='no'>run</span>) {
-<span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span>(<span class='no'>Y</span>)
-}</div><div class='output co'>#&gt; [1] "SpatialCollections"
+#&gt; [1] "sp"</div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/base/row.names.html'>row.names</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='output co'>#&gt; [1] "1"</div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>Y</span> <span class='op'>&lt;-</span> <span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>
+<span class='op'>}</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='gIsValid.html'>gIsValid</a></span><span class='op'>(</span><span class='va'>Y</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>Y</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='output co'>#&gt; [1] "SpatialCollections"
 #&gt; attr(,"package")
-#&gt; [1] "rgeos"</div><div class='input'><span class='kw'>if</span> (<span class='no'>run</span>) {
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'>slot</span>(<span class='no'>Y</span>, <span class='st'>"polyobj"</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'>slot</span>(<span class='no'>Y</span>, <span class='st'>"lineobj"</span>), <span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='st'>"red"</span>)
-}</div><div class='img'><img src='topo-unary-gMakeValid-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>if</span> (<span class='no'>run</span>) {
-<span class='fu'><a href='https://rdrr.io/r/base/row.names.html'>row.names</a></span>(<span class='fu'>slot</span>(<span class='no'>Y</span>, <span class='st'>"polyobj"</span>))
-}</div><div class='output co'>#&gt; [1] "1"</div><div class='input'><span class='kw'>if</span> (<span class='no'>run</span>) {
-<span class='fu'><a href='https://rdrr.io/r/base/row.names.html'>row.names</a></span>(<span class='fu'>slot</span>(<span class='no'>Y</span>, <span class='st'>"lineobj"</span>))
-}</div><div class='output co'>#&gt; [1] "1"</div></pre>
+#&gt; [1] "rgeos"</div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'>slot</span><span class='op'>(</span><span class='va'>Y</span>, <span class='st'>"polyobj"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'>slot</span><span class='op'>(</span><span class='va'>Y</span>, <span class='st'>"lineobj"</span><span class='op'>)</span>, add<span class='op'>=</span><span class='cn'>TRUE</span>, col<span class='op'>=</span><span class='st'>"red"</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='img'><img src='topo-unary-gMakeValid-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/base/row.names.html'>row.names</a></span><span class='op'>(</span><span class='fu'>slot</span><span class='op'>(</span><span class='va'>Y</span>, <span class='st'>"polyobj"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='output co'>#&gt; [1] "1"</div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/base/row.names.html'>row.names</a></span><span class='op'>(</span><span class='fu'>slot</span><span class='op'>(</span><span class='va'>Y</span>, <span class='st'>"lineobj"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='output co'>#&gt; [1] "1"</div><div class='input'><span class='va'>run</span> <span class='op'>&lt;-</span> <span class='cn'>FALSE</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='RGEOS Utility Functions.html'>version_GEOS0</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>&gt;=</span> <span class='st'>"3.10.0"</span><span class='op'>)</span> <span class='va'>run</span> <span class='op'>&lt;-</span> <span class='cn'>TRUE</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>JTSplot</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>fill</span><span class='op'>=</span><span class='st'>"grey90"</span>, <span class='va'>pts</span><span class='op'>=</span><span class='st'>"black"</span>, <span class='va'>main</span><span class='op'>=</span><span class='st'>""</span>, <span class='va'>xlim</span>, <span class='va'>ylim</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>inherits</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"SpatialCollections"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+    <span class='va'>xl</span> <span class='op'>&lt;-</span> <span class='va'>xp</span> <span class='op'>&lt;-</span> <span class='va'>xpl</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span>
+    <span class='kw'>if</span> <span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NULL.html'>is.null</a></span><span class='op'>(</span><span class='fu'>slot</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"lineobj"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='va'>xl</span> <span class='op'>&lt;-</span> <span class='fu'>slot</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"lineobj"</span><span class='op'>)</span>
+    <span class='kw'>if</span> <span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NULL.html'>is.null</a></span><span class='op'>(</span><span class='fu'>slot</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"pointobj"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='va'>xp</span> <span class='op'>&lt;-</span> <span class='fu'>slot</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"pointobj"</span><span class='op'>)</span>
+    <span class='kw'>if</span> <span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NULL.html'>is.null</a></span><span class='op'>(</span><span class='fu'>slot</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"polyobj"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='va'>xpl</span> <span class='op'>&lt;-</span> <span class='fu'>slot</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"polyobj"</span><span class='op'>)</span>
+    <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NULL.html'>is.null</a></span><span class='op'>(</span><span class='va'>xl</span><span class='op'>)</span><span class='op'>)</span> <span class='va'>xl</span> <span class='op'>&lt;-</span> <span class='fu'>as</span><span class='op'>(</span><span class='va'>xpl</span>, <span class='st'>"SpatialLines"</span><span class='op'>)</span>
+    <span class='kw'>else</span> <span class='va'>xl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>xl</span>, <span class='fu'>as</span><span class='op'>(</span><span class='va'>xpl</span>, <span class='st'>"SpatialLines"</span><span class='op'>)</span><span class='op'>)</span>
+    <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NULL.html'>is.null</a></span><span class='op'>(</span><span class='va'>xp</span><span class='op'>)</span><span class='op'>)</span> <span class='va'>xp</span> <span class='op'>&lt;-</span> <span class='fu'>as</span><span class='op'>(</span><span class='va'>xl</span>, <span class='st'>"SpatialPoints"</span><span class='op'>)</span>
+    <span class='kw'>else</span> <span class='va'>xp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>xp</span>, <span class='fu'>as</span><span class='op'>(</span><span class='va'>xl</span>, <span class='st'>"SpatialPoints"</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='op'>}</span> <span class='kw'>else</span> <span class='op'>{</span>
+    <span class='va'>xl</span> <span class='op'>&lt;-</span> <span class='fu'>as</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"SpatialLines"</span><span class='op'>)</span>
+    <span class='va'>xp</span> <span class='op'>&lt;-</span> <span class='fu'>as</span><span class='op'>(</span><span class='va'>xl</span>, <span class='st'>"SpatialPoints"</span><span class='op'>)</span>
+  <span class='op'>}</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/sp/man/coordinates.html'>coordinates</a></span><span class='op'>(</span><span class='va'>xp</span><span class='op'>)</span>, type<span class='op'>=</span><span class='st'>"n"</span>, main<span class='op'>=</span><span class='va'>main</span>, xlab<span class='op'>=</span><span class='st'>""</span>, ylab<span class='op'>=</span><span class='st'>""</span>, axes<span class='op'>=</span><span class='cn'>FALSE</span>, xlim<span class='op'>=</span><span class='va'>xlim</span>, ylim<span class='op'>=</span><span class='va'>ylim</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>, col<span class='op'>=</span><span class='va'>fill</span>, border<span class='op'>=</span><span class='st'>"transparent"</span>, add<span class='op'>=</span><span class='cn'>TRUE</span>, xlim<span class='op'>=</span><span class='va'>xlim</span>, ylim<span class='op'>=</span><span class='va'>ylim</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>xl</span>, col<span class='op'>=</span><span class='va'>pts</span>, add<span class='op'>=</span><span class='cn'>TRUE</span>, xlim<span class='op'>=</span><span class='va'>xlim</span>, ylim<span class='op'>=</span><span class='va'>ylim</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>xp</span>, col<span class='op'>=</span><span class='va'>pts</span>, add<span class='op'>=</span><span class='cn'>TRUE</span>, pch<span class='op'>=</span><span class='fl'>14</span>, xlim<span class='op'>=</span><span class='va'>xlim</span>, ylim<span class='op'>=</span><span class='va'>ylim</span><span class='op'>)</span>
+<span class='op'>}</span>
+<span class='op'>}</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"POLYGON ((10 70, 90 70, 90 50, 30 50, 30 30, "</span>,
+ <span class='st'>"50 30, 50 90, 70 90, 70 10, 10 10, 10 70))"</span>, sep<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>bb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/bbox.html'>bbox</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>
+<span class='va'>opar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='va'>X</span>, fill<span class='op'>=</span><span class='st'>"#dfdfff"</span>, pts<span class='op'>=</span><span class='st'>"#00007c"</span>, main<span class='op'>=</span><span class='st'>"input"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span>, original<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>, pts<span class='op'>=</span><span class='st'>"#78b400"</span>,
+ main<span class='op'>=</span><span class='st'>"original"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span>, original<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>, pts<span class='op'>=</span><span class='st'>"#78b400"</span>,
+ main<span class='op'>=</span><span class='st'>"buffered"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span>, original<span class='op'>=</span><span class='cn'>FALSE</span>, keepCollapsed<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>,
+ pts<span class='op'>=</span><span class='st'>"#78b400"</span>, main<span class='op'>=</span><span class='st'>"buffered + keep collapsed"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>opar</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='img'><img src='topo-unary-gMakeValid-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"POLYGON ((10 70, 90 70, 90 10, 10 10, 10 70), "</span>,
+ <span class='st'>"(60 80, 50 30, 0 20, 10 30, 60 80), (30 40, 60 30, 40 0, 30 40))"</span>, sep<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>bb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>90</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>80</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>opar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='va'>X</span>, fill<span class='op'>=</span><span class='st'>"#dfdfff"</span>, pts<span class='op'>=</span><span class='st'>"#00007c"</span>, main<span class='op'>=</span><span class='st'>"input"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span>, original<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>, pts<span class='op'>=</span><span class='st'>"#78b400"</span>,
+ main<span class='op'>=</span><span class='st'>"original"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span>, original<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>, pts<span class='op'>=</span><span class='st'>"#78b400"</span>,
+ main<span class='op'>=</span><span class='st'>"buffered"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span>, original<span class='op'>=</span><span class='cn'>FALSE</span>, keepCollapsed<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>,
+ pts<span class='op'>=</span><span class='st'>"#78b400"</span>, main<span class='op'>=</span><span class='st'>"buffered + keep collapsed"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>opar</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='img'><img src='topo-unary-gMakeValid-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"MULTIPOLYGON (((10 90, 60 90, 60 40, 10 40, 10 90)), "</span>,
+ <span class='st'>"((40 60, 70 60, 70 30, 40 30, 40 60)), ((20 50, 50 50, 50 20, 20 20, 20 50)))"</span>, sep<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>bb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/bbox.html'>bbox</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>
+<span class='va'>opar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='va'>X</span>, fill<span class='op'>=</span><span class='st'>"#dfdfff"</span>, pts<span class='op'>=</span><span class='st'>"#00007c"</span>, main<span class='op'>=</span><span class='st'>"input"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span>, original<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>, pts<span class='op'>=</span><span class='st'>"#78b400"</span>,
+ main<span class='op'>=</span><span class='st'>"original"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span>, original<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>, pts<span class='op'>=</span><span class='st'>"#78b400"</span>,
+ main<span class='op'>=</span><span class='st'>"buffered"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span>, original<span class='op'>=</span><span class='cn'>FALSE</span>, keepCollapsed<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>,
+ pts<span class='op'>=</span><span class='st'>"#78b400"</span>, main<span class='op'>=</span><span class='st'>"buffered + keep collapsed"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>opar</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='img'><img src='topo-unary-gMakeValid-4.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"MULTIPOLYGON (((10 40, 40 40, 40 10, 10 10, 10 40), "</span>, 
+<span class='st'>"(16 17, 31 32, 24 25, 16 17)), ((50 40, 50 40, 50 40, 50 40, 50 40)))"</span>, sep<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>bb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/bbox.html'>bbox</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>
+<span class='va'>opar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='va'>X</span>, fill<span class='op'>=</span><span class='st'>"#dfdfff"</span>, pts<span class='op'>=</span><span class='st'>"#00007c"</span>, main<span class='op'>=</span><span class='st'>"input"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span>, original<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>, pts<span class='op'>=</span><span class='st'>"#78b400"</span>,
+ main<span class='op'>=</span><span class='st'>"original"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span>, original<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>, pts<span class='op'>=</span><span class='st'>"#78b400"</span>,
+ main<span class='op'>=</span><span class='st'>"buffered"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span>, original<span class='op'>=</span><span class='cn'>FALSE</span>, keepCollapsed<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>,
+ pts<span class='op'>=</span><span class='st'>"#78b400"</span>, main<span class='op'>=</span><span class='st'>"buffered + keep collapsed"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>opar</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='img'><img src='topo-unary-gMakeValid-5.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -183,7 +284,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-7</span>
       </span>
     </div>
 
@@ -80,12 +80,15 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -112,13 +115,13 @@
     <p>Functions for testing whether one geometry contains or is contained within another geometry</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gContains</span>(<span class='no'>spgeom1</span>, <span class='kw'>spgeom2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>byid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>prepared</span><span class='kw'>=</span><span class='fl'>TRUE</span>,
- <span class='kw'>returnDense</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>STRsubset</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>checkValidity</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
-<span class='fu'>gContainsProperly</span>(<span class='no'>spgeom1</span>, <span class='kw'>spgeom2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>byid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>returnDense</span><span class='kw'>=</span><span class='fl'>TRUE</span>,
- <span class='kw'>checkValidity</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
-<span class='fu'>gCovers</span>(<span class='no'>spgeom1</span>, <span class='kw'>spgeom2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>byid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>returnDense</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>checkValidity</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
-<span class='fu'>gCoveredBy</span>(<span class='no'>spgeom1</span>, <span class='kw'>spgeom2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>byid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>returnDense</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>checkValidity</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
-<span class='fu'>gWithin</span>(<span class='no'>spgeom1</span>, <span class='kw'>spgeom2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>byid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>returnDense</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>checkValidity</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>gContains</span><span class='op'>(</span><span class='va'>spgeom1</span>, spgeom2 <span class='op'>=</span> <span class='cn'>NULL</span>, byid <span class='op'>=</span> <span class='cn'>FALSE</span>, prepared<span class='op'>=</span><span class='cn'>TRUE</span>,
+ returnDense<span class='op'>=</span><span class='cn'>TRUE</span>, STRsubset<span class='op'>=</span><span class='cn'>FALSE</span>, checkValidity<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>gContainsProperly</span><span class='op'>(</span><span class='va'>spgeom1</span>, spgeom2 <span class='op'>=</span> <span class='cn'>NULL</span>, byid <span class='op'>=</span> <span class='cn'>FALSE</span>, returnDense<span class='op'>=</span><span class='cn'>TRUE</span>,
+ checkValidity<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>gCovers</span><span class='op'>(</span><span class='va'>spgeom1</span>, spgeom2 <span class='op'>=</span> <span class='cn'>NULL</span>, byid <span class='op'>=</span> <span class='cn'>FALSE</span>, returnDense<span class='op'>=</span><span class='cn'>TRUE</span>, checkValidity<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>gCoveredBy</span><span class='op'>(</span><span class='va'>spgeom1</span>, spgeom2 <span class='op'>=</span> <span class='cn'>NULL</span>, byid <span class='op'>=</span> <span class='cn'>FALSE</span>, returnDense<span class='op'>=</span><span class='cn'>TRUE</span>, checkValidity<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>gWithin</span><span class='op'>(</span><span class='va'>spgeom1</span>, spgeom2 <span class='op'>=</span> <span class='cn'>NULL</span>, byid <span class='op'>=</span> <span class='cn'>FALSE</span>, returnDense<span class='op'>=</span><span class='cn'>TRUE</span>, checkValidity<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -153,7 +156,7 @@
 
     <p><code>gContains</code> returns TRUE if none of the point of <code>spgeom2</code> is outside of <code>spgeom1</code> and at least one point of <code>spgeom2</code> falls within <code>spgeom1</code>.</p>
 <p><code>gContainsProperly</code> returns TRUE under the same conditions as <code>gContains</code> with the additional requirement that <code>spgeom2</code> does not intersect with the boundary of <code>spgeom1</code>. As such any given geometry will Contain itself but will not ContainProperly itself.</p>
-<p><code>gCovers</code> returns TRUE if no point in <code>spgeom2</code> is outside of <code>spgeom1</code>. This is slightly different from <code>gContains</code> as it does not require a point within <code>spgeom1</code> which can be an issue as boundaries are not considered to be "within" a geometry, see <code><a href='topo-unary-gBoundary.html'>gBoundary</a></code> for specifics of geometry boundaries.</p>
+<p><code>gCovers</code> returns TRUE if no point in <code>spgeom2</code> is outside of <code>spgeom1</code>. This is slightly different from <code>gContains</code> as it does not require a point within <code>spgeom1</code> which can be an issue as boundaries are not considered to be "within" a geometry, see <code><a href='gBoundary.html'>gBoundary</a></code> for specifics of geometry boundaries.</p>
 
 <p><code>gCoveredBy</code> is the converse of <code>gCovers</code> and is equivalent to swapping <code>spgeom1</code> and <code>spgeom2</code>.</p>
 <p><code>gWithin</code> is the converse of <code>gContains</code> and is equivalent to swapping <code>spgeom1</code> and <code>spgeom2</code>.</p>
@@ -164,60 +167,65 @@
 
     <p>Helpful information on the subtle differences between these functions:
 <a href='http://lin-ear-th-inking.blogspot.com/2007/06/subtleties-of-ogc-covers-spatial.html'>http://lin-ear-th-inking.blogspot.com/2007/06/subtleties-of-ogc-covers-spatial.html</a></p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Roger Bivand &amp; Colin Rundel</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='pred-binary-gCrosses.html'>gCrosses</a></code>
-<code><a href='pred-binary-gIntersects.html'>gDisjoint</a></code>
-<code><a href='pred-binary-gEquals.html'>gEquals</a></code>
-<code><a href='pred-binary-gEquals.html'>gEqualsExact</a></code>
-<code><a href='pred-binary-gIntersects.html'>gIntersects</a></code>
-<code><a href='pred-binary-gCrosses.html'>gOverlaps</a></code>
-<code><a href='pred-binary-gRelate.html'>gRelate</a></code>
-<code><a href='pred-binary-gTouches.html'>gTouches</a></code></p></div>
+    <div class='dont-index'><p><code><a href='gCrosses.html'>gCrosses</a></code>
+<code><a href='gIntersects.html'>gDisjoint</a></code>
+<code><a href='gEquals.html'>gEquals</a></code>
+<code><a href='gEquals.html'>gEqualsExact</a></code>
+<code><a href='gIntersects.html'>gIntersects</a></code>
+<code><a href='gCrosses.html'>gOverlaps</a></code>
+<code><a href='gRelate.html'>gRelate</a></code>
+<code><a href='gTouches.html'>gTouches</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>        <span class='no'>l1</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING(0 3,1 1,2 2,3 0)"</span>)
-        <span class='no'>l2</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING(1 3.5,3 3,2 1)"</span>)
-        <span class='no'>l3</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING(1 3.5,3 3,4 1)"</span>)
+    <pre class="examples"><div class='input'>  <span class='va'>l1</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING(0 3,1 1,2 2,3 0)"</span><span class='op'>)</span>
+  <span class='va'>l2</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING(1 3.5,3 3,2 1)"</span><span class='op'>)</span>
+  <span class='va'>l3</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING(1 3.5,3 3,4 1)"</span><span class='op'>)</span>
+  
+  <span class='va'>pt1</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"MULTIPOINT(1 1,3 0)"</span><span class='op'>)</span>
+  <span class='va'>pt2</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"MULTIPOINT(0 3,3 0)"</span><span class='op'>)</span>
+  <span class='va'>pt3</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"MULTIPOINT(1 1,2 2,3 1)"</span><span class='op'>)</span>
+  
+  <span class='va'>p1</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON((0 0,0 2,1 3.5,3 3,4 1,3 0,0 0))"</span><span class='op'>)</span>
+  <span class='va'>p2</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON((1 1,1 2,2 2,2 1,1 1))"</span><span class='op'>)</span>
 
-        <span class='no'>pt1</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"MULTIPOINT(1 1,3 0)"</span>)
-        <span class='no'>pt2</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"MULTIPOINT(0 3,3 0)"</span>)
-        <span class='no'>pt3</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"MULTIPOINT(1 1,2 2,3 1)"</span>)
+  
+  <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>l1</span>,col<span class='op'>=</span><span class='st'>'blue'</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>pt1</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,pch<span class='op'>=</span><span class='fl'>16</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"Contains:"</span>,<span class='fu'>gContains</span><span class='op'>(</span><span class='va'>l1</span>,<span class='va'>pt1</span><span class='op'>)</span>,
+        <span class='st'>"\nContainsProperly:"</span>,<span class='fu'>gContainsProperly</span><span class='op'>(</span><span class='va'>l1</span>,<span class='va'>pt1</span><span class='op'>)</span>,
+        <span class='st'>"\nCovers:"</span>,<span class='fu'>gCovers</span><span class='op'>(</span><span class='va'>l1</span>,<span class='va'>pt1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+  
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>l1</span>,col<span class='op'>=</span><span class='st'>'blue'</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>pt2</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,pch<span class='op'>=</span><span class='fl'>16</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"Contains:"</span>,<span class='fu'>gContains</span><span class='op'>(</span><span class='va'>l1</span>,<span class='va'>pt2</span><span class='op'>)</span>,
+        <span class='st'>"\nContainsProperly:"</span>,<span class='fu'>gContainsProperly</span><span class='op'>(</span><span class='va'>l1</span>,<span class='va'>pt2</span><span class='op'>)</span>,
+        <span class='st'>"\nCovers:"</span>,<span class='fu'>gCovers</span><span class='op'>(</span><span class='va'>l1</span>,<span class='va'>pt2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+  
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>p1</span>,col<span class='op'>=</span><span class='st'>'blue'</span>,border<span class='op'>=</span><span class='st'>'blue'</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>pt3</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,pch<span class='op'>=</span><span class='fl'>16</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"Contains:"</span>,<span class='fu'>gContains</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>pt3</span><span class='op'>)</span>,
+        <span class='st'>"\nContainsProperly:"</span>,<span class='fu'>gContainsProperly</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>pt3</span><span class='op'>)</span>,
+        <span class='st'>"\nCovers:"</span>,<span class='fu'>gCovers</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>pt3</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+  
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>p1</span>,col<span class='op'>=</span><span class='st'>'blue'</span>,border<span class='op'>=</span><span class='st'>'blue'</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>l2</span>,lwd<span class='op'>=</span><span class='fl'>2</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,pch<span class='op'>=</span><span class='fl'>16</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"Contains:"</span>,<span class='fu'>gContains</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>l2</span><span class='op'>)</span>,
+        <span class='st'>"\nContainsProperly:"</span>,<span class='fu'>gContainsProperly</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>l2</span><span class='op'>)</span>,
+        <span class='st'>"\nCovers:"</span>,<span class='fu'>gCovers</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>l2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 
-        <span class='no'>p1</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON((0 0,0 2,1 3.5,3 3,4 1,3 0,0 0))"</span>)
-        <span class='no'>p2</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON((1 1,1 2,2 2,2 1,1 1))"</span>)
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>p1</span>,col<span class='op'>=</span><span class='st'>'blue'</span>,border<span class='op'>=</span><span class='st'>'blue'</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>l3</span>,lwd<span class='op'>=</span><span class='fl'>2</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,pch<span class='op'>=</span><span class='fl'>16</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"Contains:"</span>,<span class='fu'>gContains</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>l3</span><span class='op'>)</span>,
+        <span class='st'>"\nContainsProperly:"</span>,<span class='fu'>gContainsProperly</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>l3</span><span class='op'>)</span>,
+        <span class='st'>"\nCovers:"</span>,<span class='fu'>gCovers</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>l3</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 
-
-        <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>3</span>))
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>l1</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'blue'</span>);<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>pt1</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>16</span>)
-        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Contains:"</span>,<span class='fu'>gContains</span>(<span class='no'>l1</span>,<span class='no'>pt1</span>),
-                                <span class='st'>"\nContainsProperly:"</span>,<span class='fu'>gContainsProperly</span>(<span class='no'>l1</span>,<span class='no'>pt1</span>),
-                                <span class='st'>"\nCovers:"</span>,<span class='fu'>gCovers</span>(<span class='no'>l1</span>,<span class='no'>pt1</span>)))
-
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>l1</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'blue'</span>);<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>pt2</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>16</span>)
-        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Contains:"</span>,<span class='fu'>gContains</span>(<span class='no'>l1</span>,<span class='no'>pt2</span>),
-                                <span class='st'>"\nContainsProperly:"</span>,<span class='fu'>gContainsProperly</span>(<span class='no'>l1</span>,<span class='no'>pt2</span>),
-                                <span class='st'>"\nCovers:"</span>,<span class='fu'>gCovers</span>(<span class='no'>l1</span>,<span class='no'>pt2</span>)))
-
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>p1</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'blue'</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>'blue'</span>);<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>pt3</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>16</span>)
-        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Contains:"</span>,<span class='fu'>gContains</span>(<span class='no'>p1</span>,<span class='no'>pt3</span>),
-                                <span class='st'>"\nContainsProperly:"</span>,<span class='fu'>gContainsProperly</span>(<span class='no'>p1</span>,<span class='no'>pt3</span>),
-                                <span class='st'>"\nCovers:"</span>,<span class='fu'>gCovers</span>(<span class='no'>p1</span>,<span class='no'>pt3</span>)))
-
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>p1</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'blue'</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>'blue'</span>);<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>l2</span>,<span class='kw'>lwd</span><span class='kw'>=</span><span class='fl'>2</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>16</span>)
-        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Contains:"</span>,<span class='fu'>gContains</span>(<span class='no'>p1</span>,<span class='no'>l2</span>),
-                                <span class='st'>"\nContainsProperly:"</span>,<span class='fu'>gContainsProperly</span>(<span class='no'>p1</span>,<span class='no'>l2</span>),
-                                <span class='st'>"\nCovers:"</span>,<span class='fu'>gCovers</span>(<span class='no'>p1</span>,<span class='no'>l2</span>)))
-
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>p1</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'blue'</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>'blue'</span>);<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>l3</span>,<span class='kw'>lwd</span><span class='kw'>=</span><span class='fl'>2</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>16</span>)
-        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Contains:"</span>,<span class='fu'>gContains</span>(<span class='no'>p1</span>,<span class='no'>l3</span>),
-                                <span class='st'>"\nContainsProperly:"</span>,<span class='fu'>gContainsProperly</span>(<span class='no'>p1</span>,<span class='no'>l3</span>),
-                                <span class='st'>"\nCovers:"</span>,<span class='fu'>gCovers</span>(<span class='no'>p1</span>,<span class='no'>l3</span>)))
-
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>p1</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'blue'</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>'blue'</span>);<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>p2</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'black'</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>16</span>)</div><div class='input'>        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Contains:"</span>,<span class='fu'>gContains</span>(<span class='no'>p1</span>,<span class='no'>p2</span>),
-                                <span class='st'>"\nContainsProperly:"</span>,<span class='fu'>gContainsProperly</span>(<span class='no'>p1</span>,<span class='no'>p2</span>),
-                                <span class='st'>"\nCovers:"</span>,<span class='fu'>gCovers</span>(<span class='no'>p1</span>,<span class='no'>p2</span>)))</div><div class='img'><img src='pred-binary-gContains-1.png' alt='' width='700' height='433' /></div><div class='input'>	
-	
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>p1</span>,col<span class='op'>=</span><span class='st'>'blue'</span>,border<span class='op'>=</span><span class='st'>'blue'</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>p2</span>,col<span class='op'>=</span><span class='st'>'black'</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,pch<span class='op'>=</span><span class='fl'>16</span><span class='op'>)</span>
+</div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"Contains:"</span>,<span class='fu'>gContains</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>p2</span><span class='op'>)</span>,
+        <span class='st'>"\nContainsProperly:"</span>,<span class='fu'>gContainsProperly</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>p2</span><span class='op'>)</span>,
+        <span class='st'>"\nCovers:"</span>,<span class='fu'>gCovers</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>p2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='pred-binary-gContains-1.png' alt='' width='700' height='433' /></div><div class='input'>  
+  
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -234,7 +242,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

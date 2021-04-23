@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-7</span>
       </span>
     </div>
 
@@ -80,12 +80,15 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -112,8 +115,8 @@
     <p>Functions for reading and writing Well Known Text (WKT)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>readWKT</span>(<span class='no'>text</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>p4s</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
-        <span class='fu'>writeWKT</span>(<span class='no'>spgeom</span>, <span class='kw'>byid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>readWKT</span><span class='op'>(</span><span class='va'>text</span>, id <span class='op'>=</span> <span class='cn'>NULL</span>, p4s <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+  <span class='fu'>writeWKT</span><span class='op'>(</span><span class='va'>spgeom</span>, byid <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -147,22 +150,35 @@
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Additional information on WKT Simple Feature Specification can be found at the following locations:</p>
-<p><a href='http://www.opengeospatial.org/standards/sfs'>http://www.opengeospatial.org/standards/sfs</a></p>
-<p><a href='http://en.wikipedia.org/wiki/Well-known_text'>http://en.wikipedia.org/wiki/Well-known_text</a></p>
-<p><a href='http://en.wikipedia.org/wiki/Simple_Features'>http://en.wikipedia.org/wiki/Simple_Features</a></p>
+<p><a href='https://www.ogc.org/standards/sfs'>https://www.ogc.org/standards/sfs</a></p>
+<p><a href='https://en.wikipedia.org/wiki/Well-known_text'>https://en.wikipedia.org/wiki/Well-known_text</a></p>
+<p><a href='https://en.wikipedia.org/wiki/Simple_Features'>https://en.wikipedia.org/wiki/Simple_Features</a></p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Colin Rundel</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>g1</span><span class='kw'>=</span><span class='fu'>readWKT</span>(<span class='st'>"POINT(6 10)"</span>)
-<span class='no'>g2</span><span class='kw'>=</span><span class='fu'>readWKT</span>(<span class='st'>"LINESTRING(3 4,10 50,20 25)"</span>)
-<span class='no'>g3</span><span class='kw'>=</span><span class='fu'>readWKT</span>(<span class='st'>"POLYGON((1 1,5 1,5 5,1 5,1 1),(2 2,2 3,3 3,3 2,2 2))"</span>)
-<span class='no'>g4</span><span class='kw'>=</span><span class='fu'>readWKT</span>(<span class='st'>"MULTIPOINT((3.5 5.6),(4.8 10.5))"</span>)
-<span class='no'>g5</span><span class='kw'>=</span><span class='fu'>readWKT</span>(<span class='st'>"MULTILINESTRING((3 4,10 50,20 25),(-5 -8,-10 -8,-15 -4))"</span>)
-<span class='no'>g6</span><span class='kw'>=</span><span class='fu'>readWKT</span>(<span class='st'>"MULTIPOLYGON(((1 1,5 1,5 5,1 5,1 1),(2 2,2 3,3 3,3 2,2 2)),((6 3,9 2,9 4,6 3)))"</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>(<span class='fu'>readWKT</span>(<span class='st'>"POINT EMPTY"</span>))</div><div class='output co'>#&gt; Error : Unable to parse: POINT EMPTY
-#&gt; GEOS reported: "rgeos_geospoint2SpatialPoints: empty point found"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>(<span class='fu'>readWKT</span>(<span class='st'>"MULTIPOLYGON EMPTY"</span>))</div><div class='output co'>#&gt; Error : Unable to parse: MULTIPOLYGON EMPTY
-#&gt; GEOS reported: "rgeos_geospolygon2Polygons: empty Polygons object"</div><div class='input'><span class='no'>g9</span><span class='kw'>=</span><span class='fu'>readWKT</span>(<span class='st'>"GEOMETRYCOLLECTION(POINT(4 6),LINESTRING(4 6,7 10))"</span>)
+    <pre class="examples"><div class='input'><span class='va'>g1</span><span class='op'>=</span><span class='fu'>readWKT</span><span class='op'>(</span><span class='st'>"POINT(6 10)"</span><span class='op'>)</span>
+<span class='va'>g2</span><span class='op'>=</span><span class='fu'>readWKT</span><span class='op'>(</span><span class='st'>"LINESTRING(3 4,10 50,20 25)"</span><span class='op'>)</span>
+<span class='va'>g3</span><span class='op'>=</span><span class='fu'>readWKT</span><span class='op'>(</span><span class='st'>"POLYGON((1 1,5 1,5 5,1 5,1 1),(2 2,2 3,3 3,3 2,2 2))"</span><span class='op'>)</span>
+<span class='va'>g4</span><span class='op'>=</span><span class='fu'>readWKT</span><span class='op'>(</span><span class='st'>"MULTIPOINT((3.5 5.6),(4.8 10.5))"</span><span class='op'>)</span>
+<span class='va'>g5</span><span class='op'>=</span><span class='fu'>readWKT</span><span class='op'>(</span><span class='st'>"MULTILINESTRING((3 4,10 50,20 25),(-5 -8,-10 -8,-15 -4))"</span><span class='op'>)</span>
+<span class='va'>g6</span><span class='op'>=</span><span class='fu'>readWKT</span><span class='op'>(</span><span class='st'>"MULTIPOLYGON(((1 1,5 1,5 5,1 5,1 1),(2 2,2 3,3 3,3 2,2 2)),((6 3,9 2,9 4,6 3)))"</span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/try.html'>try</a></span><span class='op'>(</span><span class='fu'>readWKT</span><span class='op'>(</span><span class='st'>"POINT EMPTY"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Error : Unable to parse: POINT EMPTY
+#&gt; GEOS reported: "rgeos_geospoint2SpatialPoints: empty point found"</div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/try.html'>try</a></span><span class='op'>(</span><span class='fu'>readWKT</span><span class='op'>(</span><span class='st'>"MULTIPOLYGON EMPTY"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Error : Unable to parse: MULTIPOLYGON EMPTY
+#&gt; GEOS reported: "rgeos_geospolygon2Polygons: empty Polygons object"</div><div class='input'><span class='va'>g9</span><span class='op'>=</span><span class='fu'>readWKT</span><span class='op'>(</span><span class='st'>"GEOMETRYCOLLECTION(POINT(4 6),LINESTRING(4 6,7 10))"</span><span class='op'>)</span>
 
-<span class='fu'>writeWKT</span>(<span class='no'>g1</span>)</div><div class='output co'>#&gt; [1] "POINT (6.0000000000000000 10.0000000000000000)"</div><div class='input'><span class='fu'>writeWKT</span>(<span class='no'>g2</span>)</div><div class='output co'>#&gt; [1] "LINESTRING (3.0000000000000000 4.0000000000000000, 10.0000000000000000 50.0000000000000000, 20.0000000000000000 25.0000000000000000)"</div><div class='input'><span class='fu'>writeWKT</span>(<span class='no'>g3</span>)</div><div class='output co'>#&gt; [1] "POLYGON ((1.0000000000000000 1.0000000000000000, 1.0000000000000000 5.0000000000000000, 5.0000000000000000 5.0000000000000000, 5.0000000000000000 1.0000000000000000, 1.0000000000000000 1.0000000000000000), (2.0000000000000000 2.0000000000000000, 3.0000000000000000 2.0000000000000000, 3.0000000000000000 3.0000000000000000, 2.0000000000000000 3.0000000000000000, 2.0000000000000000 2.0000000000000000))"</div><div class='input'><span class='fu'>writeWKT</span>(<span class='no'>g4</span>)</div><div class='output co'>#&gt; [1] "MULTIPOINT (3.5000000000000000 5.5999999999999996, 4.7999999999999998 10.5000000000000000)"</div><div class='input'><span class='fu'>writeWKT</span>(<span class='no'>g5</span>)</div><div class='output co'>#&gt; [1] "MULTILINESTRING ((3.0000000000000000 4.0000000000000000, 10.0000000000000000 50.0000000000000000, 20.0000000000000000 25.0000000000000000), (-5.0000000000000000 -8.0000000000000000, -10.0000000000000000 -8.0000000000000000, -15.0000000000000000 -4.0000000000000000))"</div><div class='input'><span class='fu'>writeWKT</span>(<span class='no'>g6</span>)</div><div class='output co'>#&gt; [1] "MULTIPOLYGON (((1.0000000000000000 1.0000000000000000, 1.0000000000000000 5.0000000000000000, 5.0000000000000000 5.0000000000000000, 5.0000000000000000 1.0000000000000000, 1.0000000000000000 1.0000000000000000), (2.0000000000000000 2.0000000000000000, 3.0000000000000000 2.0000000000000000, 3.0000000000000000 3.0000000000000000, 2.0000000000000000 3.0000000000000000, 2.0000000000000000 2.0000000000000000)), ((6.0000000000000000 3.0000000000000000, 9.0000000000000000 4.0000000000000000, 9.0000000000000000 2.0000000000000000, 6.0000000000000000 3.0000000000000000)))"</div><div class='input'><span class='fu'>writeWKT</span>(<span class='no'>g9</span>,<span class='kw'>byid</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; [1] "GEOMETRYCOLLECTION (POINT (4.0000000000000000 6.0000000000000000), LINESTRING (4.0000000000000000 6.0000000000000000, 7.0000000000000000 10.0000000000000000))"</div><div class='input'><span class='fu'>writeWKT</span>(<span class='no'>g9</span>,<span class='kw'>byid</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "POINT (4.0000000000000000 6.0000000000000000)"                                             
+<span class='fu'>writeWKT</span><span class='op'>(</span><span class='va'>g1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "POINT (6.0000000000000000 10.0000000000000000)"</div><div class='input'><span class='fu'>writeWKT</span><span class='op'>(</span><span class='va'>g2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "LINESTRING (3.0000000000000000 4.0000000000000000, 10.0000000000000000 50.0000000000000000, 20.0000000000000000 25.0000000000000000)"</div><div class='input'><span class='fu'>writeWKT</span><span class='op'>(</span><span class='va'>g3</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "POLYGON ((1.0000000000000000 1.0000000000000000, 1.0000000000000000 5.0000000000000000, 5.0000000000000000 5.0000000000000000, 5.0000000000000000 1.0000000000000000, 1.0000000000000000 1.0000000000000000), (2.0000000000000000 2.0000000000000000, 3.0000000000000000 2.0000000000000000, 3.0000000000000000 3.0000000000000000, 2.0000000000000000 3.0000000000000000, 2.0000000000000000 2.0000000000000000))"</div><div class='input'><span class='fu'>writeWKT</span><span class='op'>(</span><span class='va'>g4</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "MULTIPOINT (3.5000000000000000 5.5999999999999996, 4.7999999999999998 10.5000000000000000)"</div><div class='input'><span class='fu'>writeWKT</span><span class='op'>(</span><span class='va'>g5</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "MULTILINESTRING ((3.0000000000000000 4.0000000000000000, 10.0000000000000000 50.0000000000000000, 20.0000000000000000 25.0000000000000000), (-5.0000000000000000 -8.0000000000000000, -10.0000000000000000 -8.0000000000000000, -15.0000000000000000 -4.0000000000000000))"</div><div class='input'><span class='fu'>writeWKT</span><span class='op'>(</span><span class='va'>g6</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "MULTIPOLYGON (((1.0000000000000000 1.0000000000000000, 1.0000000000000000 5.0000000000000000, 5.0000000000000000 5.0000000000000000, 5.0000000000000000 1.0000000000000000, 1.0000000000000000 1.0000000000000000), (2.0000000000000000 2.0000000000000000, 3.0000000000000000 2.0000000000000000, 3.0000000000000000 3.0000000000000000, 2.0000000000000000 3.0000000000000000, 2.0000000000000000 2.0000000000000000)), ((6.0000000000000000 3.0000000000000000, 9.0000000000000000 4.0000000000000000, 9.0000000000000000 2.0000000000000000, 6.0000000000000000 3.0000000000000000)))"</div><div class='input'><span class='fu'>writeWKT</span><span class='op'>(</span><span class='va'>g9</span>,byid<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "GEOMETRYCOLLECTION (POINT (4.0000000000000000 6.0000000000000000), LINESTRING (4.0000000000000000 6.0000000000000000, 7.0000000000000000 10.0000000000000000))"</div><div class='input'><span class='fu'>writeWKT</span><span class='op'>(</span><span class='va'>g9</span>,byid<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "POINT (4.0000000000000000 6.0000000000000000)"                                             
 #&gt; [2] "LINESTRING (4.0000000000000000 6.0000000000000000, 7.0000000000000000 10.0000000000000000)"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -179,7 +195,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

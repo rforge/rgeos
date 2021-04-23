@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-7</span>
       </span>
     </div>
 
@@ -80,12 +80,15 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -112,8 +115,8 @@
     <p>Find spatial join or intersections</p>
     </div>
 
-    <pre class="usage"><span class='fu'>overGeomGeom</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>returnList</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>fn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>, <span class='kw'>minDimension</span> <span class='kw'>=</span> -<span class='fl'>1</span>)
-<span class='fu'>overGeomGeomDF</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>returnList</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>fn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>, <span class='kw'>minDimension</span> <span class='kw'>=</span> -<span class='fl'>1</span>)</pre>
+    <pre class="usage"><span class='fu'>overGeomGeom</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, returnList <span class='op'>=</span> <span class='cn'>FALSE</span>, fn <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span>, minDimension <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='fu'>overGeomGeomDF</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, returnList <span class='op'>=</span> <span class='cn'>FALSE</span>, fn <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span>, minDimension <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -140,9 +143,9 @@
     </tr>
     <tr>
       <th>minDimension</th>
-      <td><p>integer; if <code>-1</code>, <a href='pred-binary-gIntersects.html'>gIntersects</a> is used to find
-  geometry intersections; if <code>0</code>, <code>1</code> or <code>2</code>, <a href='pred-binary-gRelate.html'>gRelate</a> is used. if
-  <a href='pred-binary-gRelate.html'>gRelate</a> is used, intersecting geometries are ordered by the dimension of the
+      <td><p>integer; if <code>-1</code>, <a href='gIntersects.html'>gIntersects</a> is used to find
+  geometry intersections; if <code>0</code>, <code>1</code> or <code>2</code>, <a href='gRelate.html'>gRelate</a> is used. if
+  <a href='gRelate.html'>gRelate</a> is used, intersecting geometries are ordered by the dimension of the
   intersection (2: area overlap; 1: line in common; 0: point in common), and <code>minDimension</code>
   determines the mininum dimension of intersection required.</p></td>
     </tr>
@@ -153,14 +156,18 @@
     <p>see <a href='https://rdrr.io/pkg/sp/man/over.html'>over</a></p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p><a href='pred-binary-gRelate.html'>gRelate</a> (<code>minDimension</code> &gt; -1) is likely to be substantially slower than
-<a href='pred-binary-gIntersects.html'>gIntersects</a>.</p>
+    <p><a href='gRelate.html'>gRelate</a> (<code>minDimension</code> &gt; -1) is likely to be substantially slower than
+<a href='gIntersects.html'>gIntersects</a>.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Edzer Pebesma</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>p1</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON((0 1,0.95 0.31,0.59 -0.81,-0.59 -0.81,-0.95 0.31,0 1))"</span>)
-<span class='no'>p2</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON((2 2,-2 2,-2 -2,2 -2,2 2),(1 1,-1 1,-1 -1,1 -1,1 1))"</span>)
+    <pre class="examples"><div class='input'><span class='va'>p1</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON((0 1,0.95 0.31,0.59 -0.81,-0.59 -0.81,-0.95 0.31,0 1))"</span><span class='op'>)</span>
+<span class='va'>p2</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON((2 2,-2 2,-2 -2,2 -2,2 2),(1 1,-1 1,-1 -1,1 -1,1 1))"</span><span class='op'>)</span>
 
-<span class='fu'>overGeomGeom</span>(<span class='no'>p1</span>,<span class='no'>p2</span>)</div><div class='output co'>#&gt; 1 
+<span class='fu'>overGeomGeom</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>p2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 1 
 #&gt; 1 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -177,7 +184,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

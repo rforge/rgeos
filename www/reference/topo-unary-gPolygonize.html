@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-7</span>
       </span>
     </div>
 
@@ -80,12 +80,15 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -109,10 +112,10 @@
     </div>
 
     <div class="ref-description">
-    <p>Function attempts to polygonize the given list of linestrings. If the linestrings are not noded (coordinates inserted at intersection points), the function may fail. <code><a href='topo-unary-gNode.html'>gNode</a></code> may be tried to insert such missing points</p>
+    <p>Function attempts to polygonize the given list of linestrings. If the linestrings are not noded (coordinates inserted at intersection points), the function may fail. <code><a href='gNode.html'>gNode</a></code> may be tried to insert such missing points</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gPolygonize</span>( <span class='no'>splist</span>, <span class='kw'>getCutEdges</span><span class='kw'>=</span><span class='fl'>FALSE</span>);</pre>
+    <pre class="usage"><span class='fu'>gPolygonize</span><span class='op'>(</span> <span class='va'>splist</span>, getCutEdges<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>;</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -133,37 +136,45 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Polygonization is the process of forming polygons from linestrings which enclose an area. Linestrings are expected to be fully noded, as such they must not cross and must touch only at endpoints. <code>gPolygonize</code> takes a list of fully noded linestrings and forms all the polygons which are enclosed by the lines. Polygonization errors such as dangling lines or cut lines can be identified and reported.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Roger Bivand &amp; Colin Rundel</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='topo-unary-gNode.html'>gNode</a></code></p></div>
+    <div class='dont-index'><p><code><a href='gNode.html'>gNode</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>sp</span>)
-<span class='no'>linelist</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (0 0 , 10 10)"</span>),
-                                <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (185 221, 100 100)"</span>),
-                                <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (185 221, 88 275, 180 316)"</span>),
-                                <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (185 221, 292 281, 180 316)"</span>),
-                                <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (189 98, 83 187, 185 221)"</span>),
-                                <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (189 98, 325 168, 185 221)"</span>))
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/edzer/sp/'>sp</a></span><span class='op'>)</span>
+<span class='va'>linelist</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (0 0 , 10 10)"</span><span class='op'>)</span>,
+        <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (185 221, 100 100)"</span><span class='op'>)</span>,
+        <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (185 221, 88 275, 180 316)"</span><span class='op'>)</span>,
+        <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (185 221, 292 281, 180 316)"</span><span class='op'>)</span>, 
+        <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (189 98, 83 187, 185 221)"</span><span class='op'>)</span>, 
+        <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (189 98, 325 168, 185 221)"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>linelist</span><span class='kw'>[[</span><span class='fl'>1</span>]],<span class='kw'>xlim</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>350</span>),<span class='kw'>ylim</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>350</span>))
-<span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='st'>"Linestrings with nodes"</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'>as</span>(<span class='no'>linelist</span><span class='kw'>[[</span><span class='fl'>1</span>]],<span class='st'>"SpatialPoints"</span>),<span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>16</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>linelist</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>,xlim<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>350</span><span class='op'>)</span>,ylim<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>350</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='st'>"Linestrings with nodes"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'>as</span><span class='op'>(</span><span class='va'>linelist</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>,<span class='st'>"SpatialPoints"</span><span class='op'>)</span>,pch<span class='op'>=</span><span class='fl'>16</span>,add<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 
-<span class='kw'>for</span>(<span class='no'>i</span> <span class='kw'>in</span> <span class='fl'>2</span>:<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>linelist</span>)) {
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>linelist</span><span class='kw'>[[</span><span class='no'>i</span>]],<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'>as</span>(<span class='no'>linelist</span><span class='kw'>[[</span><span class='no'>i</span>]],<span class='st'>"SpatialPoints"</span>),<span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>16</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-}
+<span class='kw'>for</span><span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>2</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>linelist</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>linelist</span><span class='op'>[[</span><span class='va'>i</span><span class='op'>]</span><span class='op'>]</span>,add<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'>as</span><span class='op'>(</span><span class='va'>linelist</span><span class='op'>[[</span><span class='va'>i</span><span class='op'>]</span><span class='op'>]</span>,<span class='st'>"SpatialPoints"</span><span class='op'>)</span>,pch<span class='op'>=</span><span class='fl'>16</span>,add<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='op'>}</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'>gPolygonize</span>(<span class='no'>linelist</span>),<span class='kw'>xlim</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>350</span>),<span class='kw'>ylim</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>350</span>))</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='st'>"Polygonized Results"</span>)</div><div class='img'><img src='topo-unary-gPolygonize-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='fu'>gPolygonize</span>(<span class='no'>linelist</span>,<span class='kw'>getCutEdges</span><span class='kw'>=</span><span class='fl'>TRUE</span>) <span class='co'># no cut edges</span></div><div class='output co'>#&gt; NULL</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'>gPolygonize</span><span class='op'>(</span><span class='va'>linelist</span><span class='op'>)</span>,xlim<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>350</span><span class='op'>)</span>,ylim<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>350</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='st'>"Polygonized Results"</span><span class='op'>)</span>
+</div><div class='img'><img src='topo-unary-gPolygonize-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'>gPolygonize</span><span class='op'>(</span><span class='va'>linelist</span>,getCutEdges<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># no cut edges</span>
+</div><div class='output co'>#&gt; NULL</div><div class='input'>
 
 
-<span class='no'>linelist2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING(1 3, 3 3, 3 1, 1 1, 1 3)"</span>),
-                                 <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING(1 3, 3 3, 3 1, 1 1, 1 3)"</span>))
+<span class='va'>linelist2</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING(1 3, 3 3, 3 1, 1 1, 1 3)"</span><span class='op'>)</span>,
+         <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING(1 3, 3 3, 3 1, 1 1, 1 3)"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>gPolygonize</span>(<span class='no'>linelist2</span>,<span class='kw'>getCutEdges</span><span class='kw'>=</span><span class='fl'>FALSE</span>) <span class='co'># NULL</span></div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'>gPolygonize</span>(<span class='no'>linelist2</span>,<span class='kw'>getCutEdges</span><span class='kw'>=</span><span class='fl'>TRUE</span>) <span class='co'># Contains LineStrings</span></div><div class='output co'>#&gt; An object of class "SpatialLines"
+<span class='fu'>gPolygonize</span><span class='op'>(</span><span class='va'>linelist2</span>,getCutEdges<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='co'># NULL</span>
+</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'>gPolygonize</span><span class='op'>(</span><span class='va'>linelist2</span>,getCutEdges<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># Contains LineStrings</span>
+</div><div class='output co'>#&gt; An object of class "SpatialLines"
 #&gt; Slot "lines":
 #&gt; [[1]]
 #&gt; An object of class "Lines"
@@ -210,26 +221,27 @@
 #&gt; y   1   3
 #&gt; 
 #&gt; Slot "proj4string":
-#&gt; CRS arguments: NA 
-#&gt; </div><div class='input'><span class='co'># bug fix 130206</span>
-<span class='no'>LS</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (425963 576719, 425980 576703)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (425963 576719, 425882 577073)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (425980 576703, 426082 577072)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (425882 577073, 426082 577072)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (426138 577068, 426082 577072)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (426138 577068, 426420 577039)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (426420 577039, 426554 576990)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (426751 576924, 426776 576823)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (426751 576924, 426783 576919)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (426751 576924, 426714 576953)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (426776 576823, 426783 576919)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (426658 576966, 426554 576990)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (426658 576966, 426667 577031)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (426658 576966, 426714 576953)"</span>),
-<span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"LINESTRING (426667 577031, 426714 576953)"</span>)
-)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'>gPolygonize</span>(<span class='no'>LS</span>))</div><div class='img'><img src='topo-unary-gPolygonize-2.png' alt='' width='700' height='433' /></div></pre>
+#&gt; Coordinate Reference System:
+#&gt; Deprecated Proj.4 representation: NA </div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has no comment</span></div><div class='output co'>#&gt; </div><div class='input'><span class='co'># bug fix 130206</span>
+<span class='va'>LS</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (425963 576719, 425980 576703)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (425963 576719, 425882 577073)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (425980 576703, 426082 577072)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (425882 577073, 426082 577072)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (426138 577068, 426082 577072)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (426138 577068, 426420 577039)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (426420 577039, 426554 576990)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (426751 576924, 426776 576823)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (426751 576924, 426783 576919)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (426751 576924, 426714 576953)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (426776 576823, 426783 576919)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (426658 576966, 426554 576990)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (426658 576966, 426667 577031)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (426658 576966, 426714 576953)"</span><span class='op'>)</span>,
+<span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"LINESTRING (426667 577031, 426714 576953)"</span><span class='op'>)</span>
+<span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'>gPolygonize</span><span class='op'>(</span><span class='va'>LS</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='topo-unary-gPolygonize-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -245,7 +257,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

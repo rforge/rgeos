@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-7</span>
       </span>
     </div>
 
@@ -80,12 +80,15 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -116,10 +119,10 @@
 
     <h2 class="hasAnchor" id="objects-from-the-class"><a class="anchor" href="#objects-from-the-class"></a>Objects from the Class</h2>
 
-    <p>Objects can be created by calls to the function <a href='constructor-SpatialRings.html'>Ring</a></p>
+    <p>Objects can be created by calls to the function <a href='SpatialRings.html'>Ring</a></p>
     <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
 
-    <p></p><dl'>
+    <p></p><dl>
     <dt><code>coords</code>:</dt><dd><p>Object of class <code>"matrix"</code>; coordinates of the ring;
 	first point should equal the last point</p></dd>
     <dt><code>ID</code>:</dt><dd><p>Object of class <code>"character"</code>; unique identifier string</p></dd>
@@ -128,7 +131,7 @@
 
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
-    <p>Methods defined with class "Ring" in the signature:</p><dl'>
+    <p>Methods defined with class "Ring" in the signature:</p><dl>
     <dt>bbox</dt><dd><p><code>signature(obj = "Ring")</code>: retrieves the bbox element</p></dd>
 	<dt>coordinates</dt><dd><p><code>signature(object = "Ring")</code>: retrieves the coords element from Ring objects in rings slot</p></dd>
 	<dt>coordnames</dt><dd><p><code>signature(object = "Ring")</code>: retrieves coordinate names</p></dd>
@@ -136,12 +139,15 @@
   
 </dl>
 
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Colin Rundel</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='constructor-SpatialRings.html'>Ring</a></p></div>
+    <div class='dont-index'><p><a href='SpatialRings.html'>Ring</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>	#NONE 
+    <pre class="examples"><div class='input'>  <span class='co'>#NONE </span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -158,7 +164,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

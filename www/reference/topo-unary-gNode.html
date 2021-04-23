@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-7</span>
       </span>
     </div>
 
@@ -80,12 +80,15 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -112,7 +115,7 @@
     <p>Function attempts to node a linestring object, inserting coordinates at intersection points; only available for GEOS &gt;= 3.4.0.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gNode</span>(<span class='no'>spgeom</span>);</pre>
+    <pre class="usage"><span class='fu'>gNode</span><span class='op'>(</span><span class='va'>spgeom</span><span class='op'>)</span>;</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -128,51 +131,60 @@
     <p>Returns a noded linestring object.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Because <code><a href='topo-unary-gPolygonize.html'>gPolygonize</a></code> expects linestrings to be fully noded, as such they must not cross and must touch only at endpoints. <code>gNodee</code> takes an object inheriting from <code>SpatialLines</code> and attempts to add omitted nodes. Issue reported by Nicola Farina 21 March 2014.</p>
+    <p>Because <code><a href='gPolygonize.html'>gPolygonize</a></code> expects linestrings to be fully noded, as such they must not cross and must touch only at endpoints. <code>gNodee</code> takes an object inheriting from <code>SpatialLines</code> and attempts to add omitted nodes. Issue reported by Nicola Farina 21 March 2014.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Roger Bivand</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='topo-unary-gPolygonize.html'>gPolygonize</a></code></p></div>
+    <div class='dont-index'><p><code><a href='gPolygonize.html'>gPolygonize</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>sp</span>)
-<span class='no'>pol1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"POLYGON((39.936 43.446, 39.94 43.446, 39.94 43.45,"</span>,
- <span class='st'>"39.936 43.45, 39.936 43.446))"</span>))
-<span class='no'>pol2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"POLYGON((39.9417 43.45, 39.9395 43.4505,"</span>,
- <span class='st'>"39.9385 43.4462, 39.9343 43.4452, 39.9331 43.4469, 39.9417 43.45))"</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>pol2</span>, <span class='kw'>axes</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>pol1</span>, <span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>border</span><span class='kw'>=</span><span class='st'>"blue"</span>)</div><div class='input'><span class='fu'><a href='pred-unary-gIsValid.html'>gIsValid</a></span>(<span class='no'>pol1</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='pred-unary-gIsValid.html'>gIsValid</a></span>(<span class='no'>pol2</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Self-intersection at or near point 39.939171782762692 43.449088665879579</span></div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>(<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='topo-bin-gUnion.html'>gUnion</a></span>(<span class='no'>pol1</span>, <span class='no'>pol2</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: Self-intersection at or near point 39.939171782762692 43.449088665879579</span></div><div class='output co'>#&gt; <span class='message'>pol2 is invalid</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Invalid objects found; consider using set_RGEOS_CheckValidity(2L)</span></div><div class='output co'>#&gt; Error in RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td, unaryUnion_if_byid_false,  : 
-#&gt;   TopologyException: Input geom 1 is invalid: Self-intersection at or near point 39.939171782762692 43.449088665879579 at 39.939171782762692 43.449088665879579</div><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='utility-functions.html'>version_GEOS0</a></span>() <span class='kw'>&gt;</span> <span class='st'>"3.4.0"</span>) {
-<span class='no'>pol2a</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='topo-unary-gPolygonize.html'>gPolygonize</a></span>(<span class='fu'>gNode</span>(<span class='fu'>as</span>(<span class='no'>pol2</span>, <span class='st'>"SpatialLines"</span>)))
-<span class='fu'><a href='https://rdrr.io/r/base/try.html'>try</a></span>(<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='topo-bin-gUnion.html'>gUnion</a></span>(<span class='no'>pol1</span>, <span class='no'>pol2a</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>res</span>, <span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>border</span><span class='kw'>=</span><span class='st'>"red"</span>, <span class='kw'>lty</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>lwd</span><span class='kw'>=</span><span class='fl'>2</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>1</span>)
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/edzer/sp/'>sp</a></span><span class='op'>)</span>
+<span class='va'>pol1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"POLYGON((39.936 43.446, 39.94 43.446, 39.94 43.45,"</span>,
+ <span class='st'>"39.936 43.45, 39.936 43.446))"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>pol2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"POLYGON((39.9417 43.45, 39.9395 43.4505,"</span>,
+ <span class='st'>"39.9385 43.4462, 39.9343 43.4452, 39.9331 43.4469, 39.9417 43.45))"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>pol2</span>, axes<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>pol1</span>, add<span class='op'>=</span><span class='cn'>TRUE</span>, border<span class='op'>=</span><span class='st'>"blue"</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='gIsValid.html'>gIsValid</a></span><span class='op'>(</span><span class='va'>pol1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='gIsValid.html'>gIsValid</a></span><span class='op'>(</span><span class='va'>pol2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Self-intersection at or near point 39.939171782762692 43.449088665879579</span></div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/try.html'>try</a></span><span class='op'>(</span><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gUnion.html'>gUnion</a></span><span class='op'>(</span><span class='va'>pol1</span>, <span class='va'>pol2</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Self-intersection at or near point 39.939171782762692 43.449088665879579</span></div><div class='output co'>#&gt; <span class='message'>pol2 is invalid</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Invalid objects found; consider using set_RGEOS_CheckValidity(2L)</span></div><div class='output co'>#&gt; Error in RGEOSBinTopoFunc(spgeom1, spgeom2, byid, id, drop_lower_td, unaryUnion_if_byid_false,  : 
+#&gt;   TopologyException: Input geom 1 is invalid: Self-intersection at 39.939171782762692 43.449088665879579</div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='RGEOS Utility Functions.html'>version_GEOS0</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='st'>"3.4.0"</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>pol2a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gPolygonize.html'>gPolygonize</a></span><span class='op'>(</span><span class='fu'>gNode</span><span class='op'>(</span><span class='fu'>as</span><span class='op'>(</span><span class='va'>pol2</span>, <span class='st'>"SpatialLines"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/try.html'>try</a></span><span class='op'>(</span><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gUnion.html'>gUnion</a></span><span class='op'>(</span><span class='va'>pol1</span>, <span class='va'>pol2a</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>res</span>, add<span class='op'>=</span><span class='cn'>TRUE</span>, border<span class='op'>=</span><span class='st'>"red"</span>, lty<span class='op'>=</span><span class='fl'>2</span>, lwd<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
 <span class='co'># rw from Jim Holtman's R-help posting 2010-12-2</span>
-<span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>1000</span>
-<span class='no'>rw</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fl'>0</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='no'>n</span>)
-<span class='no'>indx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='no'>n</span>), <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='no'>n</span>, <span class='fl'>TRUE</span>))
-<span class='no'>rw</span>[<span class='no'>indx</span>] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>1</span>, <span class='fl'>1</span>), <span class='no'>n</span>, <span class='fl'>TRUE</span>)
-<span class='no'>rw</span>[,<span class='fl'>1</span>] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cumsum.html'>cumsum</a></span>(<span class='no'>rw</span>[, <span class='fl'>1</span>])
-<span class='no'>rw</span>[, <span class='fl'>2</span>] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cumsum.html'>cumsum</a></span>(<span class='no'>rw</span>[, <span class='fl'>2</span>])
-<span class='no'>slrw</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>SpatialLines</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/sp/man/Line.html'>Lines</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/sp/man/Line.html'>Line</a></span>(<span class='no'>rw</span>)), <span class='st'>"1"</span>)))
-<span class='no'>res0</span> <span class='kw'>&lt;-</span> <span class='fu'>gNode</span>(<span class='no'>slrw</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>slrw</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>res0</span>))
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='topo-unary-gPolygonize.html'>gPolygonize</a></span>(<span class='no'>res0</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>res</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>res</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>res0</span>, <span class='kw'>axes</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>res</span>, <span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>res</span>))))
+<span class='va'>n</span> <span class='op'>&lt;-</span> <span class='fl'>1000</span>
+<span class='va'>rw</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fl'>0</span>, ncol <span class='op'>=</span> <span class='fl'>2</span>, nrow <span class='op'>=</span> <span class='va'>n</span><span class='op'>)</span>
+<span class='va'>indx</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span>, <span class='va'>n</span>, <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>rw</span><span class='op'>[</span><span class='va'>indx</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, <span class='va'>n</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>rw</span><span class='op'>[</span>,<span class='fl'>1</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cumsum.html'>cumsum</a></span><span class='op'>(</span><span class='va'>rw</span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>
+<span class='va'>rw</span><span class='op'>[</span>, <span class='fl'>2</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cumsum.html'>cumsum</a></span><span class='op'>(</span><span class='va'>rw</span><span class='op'>[</span>, <span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span>
+<span class='va'>slrw</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialLines.html'>SpatialLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/sp/man/Line.html'>Lines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/sp/man/Line.html'>Line</a></span><span class='op'>(</span><span class='va'>rw</span><span class='op'>)</span><span class='op'>)</span>, <span class='st'>"1"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>res0</span> <span class='op'>&lt;-</span> <span class='fu'>gNode</span><span class='op'>(</span><span class='va'>slrw</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>slrw</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>res0</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gPolygonize.html'>gPolygonize</a></span><span class='op'>(</span><span class='va'>res0</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>res0</span>, axes<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>res</span>, add<span class='op'>=</span><span class='cn'>TRUE</span>, col<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='co'># library(spatstat)</span>
 <span class='co'># set.seed(0)</span>
 <span class='co'># X &lt;- psp(runif(100), runif(100), runif(100), runif(100), window=owin())</span>
 <span class='co'># library(maptools)</span>
 <span class='co'># sppsp &lt;- as(X, "SpatialLines")</span>
 <span class='co'># writeLines(writeWKT(sppsp, byid=FALSE), con="sppsp.wkt")</span>
-<span class='no'>sppsp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"wkts/sppsp.wkt"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"rgeos"</span>)))
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>sppsp</span>, <span class='kw'>axes</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-<span class='no'>res0</span> <span class='kw'>&lt;-</span> <span class='fu'>gNode</span>(<span class='no'>sppsp</span>)
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='topo-unary-gPolygonize.html'>gPolygonize</a></span>(<span class='no'>res0</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>res</span>, <span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>res</span>))))
-}</div><div class='img'><img src='topo-unary-gNode-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; [1] 1
+<span class='va'>sppsp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/readLines.html'>readLines</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"wkts/sppsp.wkt"</span>, package<span class='op'>=</span><span class='st'>"rgeos"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>sppsp</span>, axes<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>res0</span> <span class='op'>&lt;-</span> <span class='fu'>gNode</span><span class='op'>(</span><span class='va'>sppsp</span><span class='op'>)</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'><a href='gPolygonize.html'>gPolygonize</a></span><span class='op'>(</span><span class='va'>res0</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>res</span>, add<span class='op'>=</span><span class='cn'>TRUE</span>, col<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>rainbow</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='img'><img src='topo-unary-gNode-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; [1] 1
 #&gt; [1] 1
 #&gt; Object of class SpatialPolygons
 #&gt; Coordinates:
@@ -197,7 +209,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

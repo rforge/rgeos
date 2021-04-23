@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-7</span>
       </span>
     </div>
 
@@ -81,12 +81,15 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -122,7 +125,7 @@
     ...)</code> or by reading in from a file using <code>read.polyfile</code>.</p>
     <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
 
-    <p></p><dl'>
+    <p></p><dl>
     <dt>pts</dt><dd><p>Object of class &#8220;list&#8221;.  Actually,
       <code>pts</code> is a list of lists with length equal to the number of
       contours in the <code>"gpc.poly"</code> object.  Each element of
@@ -135,7 +138,7 @@
 
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
-    <p></p><dl'>
+    <p></p><dl>
     <dt>[</dt><dd><p><code>signature(x = "gpc.poly")</code>: ...</p></dd>
     <dt>append.poly</dt><dd><p><code>signature(x = "gpc.poly", y = "gpc.poly")</code>: ...</p></dd>
     <dt>area.poly</dt><dd><p><code>signature(object = "gpc.poly")</code>: ...</p></dd>
@@ -167,6 +170,9 @@
   
 </dl>
 
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Roger D. Peng</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>The class <code>"gpc.poly.nohole"</code> is identical to
@@ -175,55 +181,64 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Make some random polygons</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>100</span>)
-<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>), <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>))
-<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='no'>a</span>[<span class='fu'><a href='https://rdrr.io/r/grDevices/chull.html'>chull</a></span>(<span class='no'>a</span>), ]
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>
+<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='va'>a</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/grDevices/chull.html'>chull</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>)</span>, <span class='op'>]</span>
 
 <span class='co'>## Convert `a' from matrix to "gpc.poly"</span>
-<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'>as</span>(<span class='no'>a</span>, <span class='st'>"gpc.poly"</span>)
+<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'>as</span><span class='op'>(</span><span class='va'>a</span>, <span class='st'>"gpc.poly"</span><span class='op'>)</span>
 
-<span class='no'>b</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>), <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>))
-<span class='no'>b</span> <span class='kw'>&lt;-</span> <span class='fu'>as</span>(<span class='no'>b</span>[<span class='fu'><a href='https://rdrr.io/r/grDevices/chull.html'>chull</a></span>(<span class='no'>b</span>), ], <span class='st'>"gpc.poly"</span>)
+<span class='va'>b</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>b</span> <span class='op'>&lt;-</span> <span class='fu'>as</span><span class='op'>(</span><span class='va'>b</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/grDevices/chull.html'>chull</a></span><span class='op'>(</span><span class='va'>b</span><span class='op'>)</span>, <span class='op'>]</span>, <span class='st'>"gpc.poly"</span><span class='op'>)</span>
 
 <span class='co'>## More complex polygons with an intersection</span>
-<span class='no'>p1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gpc-polyfile.html'>read.polyfile</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"poly-ex-gpc/ex-poly1.txt"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"rgeos"</span>))
-<span class='no'>p2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gpc-polyfile.html'>read.polyfile</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"poly-ex-gpc/ex-poly2.txt"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"rgeos"</span>))
+<span class='va'>p1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='polyfile.html'>read.polyfile</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"poly-ex-gpc/ex-poly1.txt"</span>, package <span class='op'>=</span> <span class='st'>"rgeos"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>p2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='polyfile.html'>read.polyfile</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"poly-ex-gpc/ex-poly2.txt"</span>, package <span class='op'>=</span> <span class='st'>"rgeos"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## Plot both polygons and highlight their intersection in red</span>
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='gpc-new-generics.html'>append.poly</a></span>(<span class='no'>p1</span>, <span class='no'>p2</span>))</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/sets.html'>intersect</a></span>(<span class='no'>p1</span>, <span class='no'>p2</span>), <span class='kw'>poly.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>col</span> <span class='kw'>=</span> <span class='fl'>2</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='new-generics.html'>append.poly</a></span><span class='op'>(</span><span class='va'>p1</span>, <span class='va'>p2</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sets.html'>intersect</a></span><span class='op'>(</span><span class='va'>p1</span>, <span class='va'>p2</span><span class='op'>)</span>, poly.args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>col <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='input'>
 <span class='co'>## Highlight the difference p1 \ p2 in green</span>
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span>(<span class='no'>p1</span>, <span class='no'>p2</span>), <span class='kw'>poly.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>col</span> <span class='kw'>=</span> <span class='fl'>3</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span><span class='op'>(</span><span class='va'>p1</span>, <span class='va'>p2</span><span class='op'>)</span>, poly.args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>col <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='input'>
 <span class='co'>## Highlight the difference p2 \ p1 in blue</span>
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span>(<span class='no'>p2</span>, <span class='no'>p1</span>), <span class='kw'>poly.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>col</span> <span class='kw'>=</span> <span class='fl'>4</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='img'><img src='class-gpc.poly-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span><span class='op'>(</span><span class='va'>p2</span>, <span class='va'>p1</span><span class='op'>)</span>, poly.args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>col <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='img'><img src='class-gpc.poly-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## Plot the union of the two polygons</span>
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/sets.html'>union</a></span>(<span class='no'>p1</span>, <span class='no'>p2</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='img'><img src='class-gpc.poly-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sets.html'>union</a></span><span class='op'>(</span><span class='va'>p1</span>, <span class='va'>p2</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='img'><img src='class-gpc.poly-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## Take the non-intersect portions and create a new polygon</span>
 <span class='co'>## combining the two contours</span>
-<span class='no'>p.comb</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='gpc-new-generics.html'>append.poly</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span>(<span class='no'>p1</span>, <span class='no'>p2</span>), <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span>(<span class='no'>p2</span>, <span class='no'>p1</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>p.comb</span>, <span class='kw'>poly.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>col</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='fl'>0</span>))</div><div class='img'><img src='class-gpc.poly-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>p.comb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new-generics.html'>append.poly</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span><span class='op'>(</span><span class='va'>p1</span>, <span class='va'>p2</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span><span class='op'>(</span><span class='va'>p2</span>, <span class='va'>p1</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>p.comb</span>, poly.args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>col <span class='op'>=</span> <span class='fl'>2</span>, border <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='class-gpc.poly-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## Coerce from a matrix</span>
-<span class='no'>x</span> <span class='kw'>&lt;-</span>
-<span class='fu'><a href='https://rdrr.io/r/base/structure.html'>structure</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.0934073560027759</span>, <span class='fl'>0.192713393476752</span>, <span class='fl'>0.410062456627342</span>,
-<span class='fl'>0.470020818875781</span>, <span class='fl'>0.41380985426787</span>, <span class='fl'>0.271408743927828</span>, <span class='fl'>0.100902151283831</span>,
+<span class='va'>x</span> <span class='op'>&lt;-</span> 
+<span class='fu'><a href='https://rdrr.io/r/base/structure.html'>structure</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.0934073560027759</span>, <span class='fl'>0.192713393476752</span>, <span class='fl'>0.410062456627342</span>, 
+<span class='fl'>0.470020818875781</span>, <span class='fl'>0.41380985426787</span>, <span class='fl'>0.271408743927828</span>, <span class='fl'>0.100902151283831</span>, 
 <span class='fl'>0.0465648854961832</span>, <span class='fl'>0.63981588032221</span>, <span class='fl'>0.772382048331416</span>,
 <span class='fl'>0.753739930955121</span>, <span class='fl'>0.637744533947066</span>, <span class='fl'>0.455466052934407</span>,
-<span class='fl'>0.335327963176065</span>, <span class='fl'>0.399539700805524</span>,
-<span class='fl'>0.600460299194476</span>), <span class='kw'>.Dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>8</span>, <span class='fl'>2</span>))
-<span class='no'>y</span> <span class='kw'>&lt;-</span>
-<span class='fu'><a href='https://rdrr.io/r/base/structure.html'>structure</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.404441360166551</span>, <span class='fl'>0.338861901457321</span>, <span class='fl'>0.301387925052047</span>,
-<span class='fl'>0.404441360166551</span>, <span class='fl'>0.531852879944483</span>, <span class='fl'>0.60117973629424</span>, <span class='fl'>0.625537820957668</span>,
+<span class='fl'>0.335327963176065</span>, <span class='fl'>0.399539700805524</span>, 
+<span class='fl'>0.600460299194476</span><span class='op'>)</span>, .Dim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>8</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>y</span> <span class='op'>&lt;-</span> 
+<span class='fu'><a href='https://rdrr.io/r/base/structure.html'>structure</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.404441360166551</span>, <span class='fl'>0.338861901457321</span>, <span class='fl'>0.301387925052047</span>, 
+<span class='fl'>0.404441360166551</span>, <span class='fl'>0.531852879944483</span>, <span class='fl'>0.60117973629424</span>, <span class='fl'>0.625537820957668</span>, 
 <span class='fl'>0.179976985040276</span>, <span class='fl'>0.341542002301496</span>, <span class='fl'>0.445109321058688</span>,
 <span class='fl'>0.610817031070196</span>, <span class='fl'>0.596317606444189</span>, <span class='fl'>0.459608745684695</span>,
-<span class='fl'>0.215189873417722</span>), <span class='kw'>.Dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>7</span>, <span class='fl'>2</span>))
+<span class='fl'>0.215189873417722</span><span class='op'>)</span>, .Dim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>7</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='no'>x1</span> <span class='kw'>&lt;-</span> <span class='fu'>as</span>(<span class='no'>x</span>, <span class='st'>"gpc.poly"</span>)
-<span class='no'>y1</span> <span class='kw'>&lt;-</span> <span class='fu'>as</span>(<span class='no'>y</span>, <span class='st'>"gpc.poly"</span>)
+<span class='va'>x1</span> <span class='op'>&lt;-</span> <span class='fu'>as</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"gpc.poly"</span><span class='op'>)</span>
+<span class='va'>y1</span> <span class='op'>&lt;-</span> <span class='fu'>as</span><span class='op'>(</span><span class='va'>y</span>, <span class='st'>"gpc.poly"</span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='gpc-new-generics.html'>append.poly</a></span>(<span class='no'>x1</span>, <span class='no'>y1</span>))</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/sets.html'>intersect</a></span>(<span class='no'>x1</span>, <span class='no'>y1</span>), <span class='kw'>poly.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>col</span> <span class='kw'>=</span> <span class='fl'>2</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='img'><img src='class-gpc.poly-4.png' alt='' width='700' height='433' /></div><div class='input'>
-## Show the triangulation
-#plot(append.poly(x1, y1))
-#triangles &lt;- triangulate(append.poly(x1,y1))
-#for (i in 0:(nrow(triangles)/3 - 1)) 
-#    polygon(triangles[3*i + 1:3,], col="lightblue")
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='new-generics.html'>append.poly</a></span><span class='op'>(</span><span class='va'>x1</span>, <span class='va'>y1</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sets.html'>intersect</a></span><span class='op'>(</span><span class='va'>x1</span>, <span class='va'>y1</span><span class='op'>)</span>, poly.args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>col <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: implicit list embedding of S4 objects is deprecated</span></div><div class='img'><img src='class-gpc.poly-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'>## Show the triangulation</span>
+<span class='co'>#plot(append.poly(x1, y1))</span>
+<span class='co'>#triangles &lt;- triangulate(append.poly(x1,y1))</span>
+<span class='co'>#for (i in 0:(nrow(triangles)/3 - 1)) </span>
+<span class='co'>#    polygon(triangles[3*i + 1:3,], col="lightblue")</span>
 
 
 </div></pre>
@@ -242,7 +257,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-7</span>
       </span>
     </div>
 
@@ -80,12 +80,15 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -112,27 +115,27 @@
     <p>create object of class <code>SpatialCollections</code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>SpatialCollections</span>(<span class='kw'>points</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>lines</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>rings</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>polygons</span><span class='kw'>=</span><span class='kw'>NULL</span>,
- <span class='kw'>plotOrder</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>,<span class='fl'>3</span>,<span class='fl'>2</span>,<span class='fl'>1</span>), <span class='kw'>proj4string</span><span class='kw'>=</span><span class='fu'>CRS</span>(<span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span>(<span class='fl'>NA</span>)))</pre>
+    <pre class="usage"><span class='fu'>SpatialCollections</span><span class='op'>(</span>points<span class='op'>=</span><span class='cn'>NULL</span>, lines<span class='op'>=</span><span class='cn'>NULL</span>, rings<span class='op'>=</span><span class='cn'>NULL</span>, polygons<span class='op'>=</span><span class='cn'>NULL</span>,
+ plotOrder<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4</span>,<span class='fl'>3</span>,<span class='fl'>2</span>,<span class='fl'>1</span><span class='op'>)</span>, proj4string<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/pkg/sp/man/CRS-class.html'>CRS</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='cn'>NA</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>points</th>
-      <td><p>list with objects of class SpatialPoints-class</p></td>
+      <td><p>list with objects of class <a href='https://rdrr.io/pkg/sp/man/SpatialPoints-class.html'>SpatialPoints-class</a></p></td>
     </tr>
     <tr>
       <th>lines</th>
-      <td><p>list with objects of class SpatialLines-class</p></td>
+      <td><p>list with objects of class <a href='https://rdrr.io/pkg/sp/man/SpatialLines-class.html'>SpatialLines-class</a></p></td>
     </tr>
     <tr>
       <th>rings</th>
-      <td><p>list with objects of class <a href='class-SpatialRings.html'>SpatialRings-class</a></p></td>
+      <td><p>list with objects of class <a href='SpatialRings-class.html'>SpatialRings-class</a></p></td>
     </tr>
     <tr>
       <th>polygons</th>
-      <td><p>list with objects of class SpatialPolygons-class</p></td>
+      <td><p>list with objects of class <a href='https://rdrr.io/pkg/sp/man/SpatialPolygons-class.html'>SpatialPolygons-class</a></p></td>
     </tr>
     <tr>
       <th>plotOrder</th>
@@ -149,7 +152,7 @@
     <p><code>SpatialCollections</code> returns object of class <code>SpatialCollections</code></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='class-SpatialCollections.html'>SpatialCollections-class</a> SpatialPoints-class SpatialLines-class <a href='class-SpatialRings.html'>SpatialRings-class</a> SpatialPolygons-class</p></div>
+    <div class='dont-index'><p><a href='SpatialCollections-class.html'>SpatialCollections-class</a> <a href='https://rdrr.io/pkg/sp/man/SpatialPoints-class.html'>SpatialPoints-class</a> <a href='https://rdrr.io/pkg/sp/man/SpatialLines-class.html'>SpatialLines-class</a> <a href='SpatialRings-class.html'>SpatialRings-class</a> <a href='https://rdrr.io/pkg/sp/man/SpatialPolygons-class.html'>SpatialPolygons-class</a></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -166,7 +169,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -73,7 +73,7 @@ Various algorithms for finding the ‘optimal’ label positions are supported."
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-7</span>
       </span>
     </div>
 
@@ -81,12 +81,15 @@ Various algorithms for finding the ‘optimal’ label positions are supported."
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -114,10 +117,10 @@ Various algorithms for finding the ‘optimal’ label positions are supported."
 Various algorithms for finding the ‘optimal’ label positions are supported.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>polygonsLabel</span>(<span class='no'>pols</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"maxdist"</span>,
-              <span class='st'>"buffer"</span>, <span class='st'>"centroid"</span>, <span class='st'>"random"</span>, <span class='st'>"inpolygon"</span>)[<span class='fl'>1</span>],
-              <span class='kw'>gridpoints</span> <span class='kw'>=</span> <span class='fl'>60</span>, <span class='kw'>polypart</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"all"</span>, <span class='st'>"largest"</span>)[<span class='fl'>1</span>],
-              <span class='kw'>cex</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>doPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>polygonsLabel</span><span class='op'>(</span><span class='va'>pols</span>, labels <span class='op'>=</span> <span class='cn'>NULL</span>, method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"maxdist"</span>,
+              <span class='st'>"buffer"</span>, <span class='st'>"centroid"</span>, <span class='st'>"random"</span>, <span class='st'>"inpolygon"</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,
+              gridpoints <span class='op'>=</span> <span class='fl'>60</span>, polypart <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"all"</span>, <span class='st'>"largest"</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,
+              cex <span class='op'>=</span> <span class='fl'>1</span>, doPlot <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -235,43 +238,49 @@ for the corresponding polygon. If <code>doPlot</code> is <code>TRUE</code>
 (the default), the labels are also plotted on the current
 graphics device, with the given value of <code>cex</code>
 (font size scaling).</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Karl Ove Hufthammer, <a href='mailto:karl@huftis.org'>karl@huftis.org</a>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/maptools/man/pointLabelBase.html'>pointLabel</a></code></p></div>
+    <div class='dont-index'><p><code><a href='http://maptools.r-forge.r-project.org/reference/pointLabelBase.html'>pointLabel</a></code></p></div>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>The <code>buffer</code> method was inspired by
 (but is slightly different from) the algorithm described
 in the paper <cite>Using Shape Analyses for Placement of Polygon Labels</cite>
 by Hoseok Kang and Shoreh Elhami, available at
-<a href='http://training.esri.com/bibliography/index.cfm?event=general.recordDetail&amp;ID=13608'>http://training.esri.com/bibliography/index.cfm?event=general.recordDetail&amp;ID=13608</a>
+<a href='https://www.esri.com/training/'>https://www.esri.com/training/</a>
 .</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Simple example with a single polygon</span>
-<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1.8</span>, <span class='fl'>1.8</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2.2</span>, <span class='fl'>2.2</span>, <span class='fl'>4</span>,
-      <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>6</span>, <span class='fl'>14</span>, <span class='fl'>14</span>, <span class='fl'>6</span>, <span class='fl'>6</span>,  <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>0</span>)
-<span class='no'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0</span>, -<span class='fl'>2</span>, -<span class='fl'>2</span>, -<span class='fl'>10</span>, -<span class='fl'>10</span>, -<span class='fl'>2</span>, -<span class='fl'>2</span>, <span class='fl'>0</span>, <span class='fl'>0</span>,
-      <span class='fl'>1.8</span>, <span class='fl'>1.8</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2.2</span>, <span class='fl'>2.2</span>, <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>0</span>)
-<span class='no'>xy</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='no'>x</span>,<span class='no'>y</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>sp</span>)
-<span class='no'>xy.sp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span>(<span class='no'>xy</span>)), <span class='kw'>ID</span> <span class='kw'>=</span> <span class='st'>"test"</span>)))
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>xy.sp</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"khaki"</span>)</div><div class='input'><span class='fu'>polygonsLabel</span>(<span class='no'>xy.sp</span>, <span class='st'>"Hi!"</span>)</div><div class='img'><img src='labelpt-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;          [,1]     [,2]
+<span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1.8</span>, <span class='fl'>1.8</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2.2</span>, <span class='fl'>2.2</span>, <span class='fl'>4</span>,
+      <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>6</span>, <span class='fl'>14</span>, <span class='fl'>14</span>, <span class='fl'>6</span>, <span class='fl'>6</span>,  <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>
+<span class='va'>y</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span>, <span class='op'>-</span><span class='fl'>2</span>, <span class='op'>-</span><span class='fl'>2</span>, <span class='op'>-</span><span class='fl'>10</span>, <span class='op'>-</span><span class='fl'>10</span>, <span class='op'>-</span><span class='fl'>2</span>, <span class='op'>-</span><span class='fl'>2</span>, <span class='fl'>0</span>, <span class='fl'>0</span>,
+      <span class='fl'>1.8</span>, <span class='fl'>1.8</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2.2</span>, <span class='fl'>2.2</span>, <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>0</span><span class='op'>)</span>
+<span class='va'>xy</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>x</span>,<span class='va'>y</span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/edzer/sp/'>sp</a></span><span class='op'>)</span>
+<span class='va'>xy.sp</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span><span class='op'>(</span><span class='va'>xy</span><span class='op'>)</span><span class='op'>)</span>, ID <span class='op'>=</span> <span class='st'>"test"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>xy.sp</span>, col <span class='op'>=</span> <span class='st'>"khaki"</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'>polygonsLabel</span><span class='op'>(</span><span class='va'>xy.sp</span>, <span class='st'>"Hi!"</span><span class='op'>)</span>
+</div><div class='img'><img src='labelpt-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;          [,1]     [,2]
 #&gt; [1,] 2.001006 1.962585</div><div class='input'>
 
 <span class='co'># Example with multiple polygons, text labels and colours</span>
-<span class='no'>x1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>0</span>)
-<span class='no'>y1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>0</span>)
-<span class='no'>x2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>1</span>)
-<span class='no'>y2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>2</span>, -<span class='fl'>10</span>, -<span class='fl'>10</span>, -<span class='fl'>2</span>, -<span class='fl'>2</span>)
-<span class='no'>x3</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>6</span>, <span class='fl'>14</span>, <span class='fl'>14</span>, <span class='fl'>6</span>, <span class='fl'>6</span>)
-<span class='no'>y3</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>1</span>)
-<span class='no'>xy.sp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
-  <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='no'>x1</span>,<span class='no'>y1</span>))), <span class='kw'>ID</span> <span class='kw'>=</span> <span class='st'>"test1"</span>), <span class='co'># box</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='no'>x3</span>,<span class='no'>y3</span>))), <span class='kw'>ID</span> <span class='kw'>=</span> <span class='st'>"test3"</span>), <span class='co'># wide</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='no'>x2</span>,<span class='no'>y2</span>))), <span class='kw'>ID</span> <span class='kw'>=</span> <span class='st'>"test2"</span>)  <span class='co'># high</span>
-))
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>xy.sp</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>terrain.colors</a></span>(<span class='fl'>3</span>))</div><div class='input'><span class='no'>labels</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Hi!"</span>, <span class='st'>"A very long text string"</span>, <span class='st'>"N\na\nr\nr\no\nw"</span>)
+<span class='va'>x1</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>
+<span class='va'>y1</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>4</span>, <span class='fl'>4</span>, <span class='fl'>0</span><span class='op'>)</span>
+<span class='va'>x2</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>y2</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>2</span>, <span class='op'>-</span><span class='fl'>10</span>, <span class='op'>-</span><span class='fl'>10</span>, <span class='op'>-</span><span class='fl'>2</span>, <span class='op'>-</span><span class='fl'>2</span><span class='op'>)</span>
+<span class='va'>x3</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>6</span>, <span class='fl'>14</span>, <span class='fl'>14</span>, <span class='fl'>6</span>, <span class='fl'>6</span><span class='op'>)</span>
+<span class='va'>y3</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>xy.sp</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>x1</span>,<span class='va'>y1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, ID <span class='op'>=</span> <span class='st'>"test1"</span><span class='op'>)</span>, <span class='co'># box</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>x3</span>,<span class='va'>y3</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, ID <span class='op'>=</span> <span class='st'>"test3"</span><span class='op'>)</span>, <span class='co'># wide</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>x2</span>,<span class='va'>y2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, ID <span class='op'>=</span> <span class='st'>"test2"</span><span class='op'>)</span>  <span class='co'># high</span>
+<span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>xy.sp</span>, col<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/grDevices/palettes.html'>terrain.colors</a></span><span class='op'>(</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='input'><span class='va'>labels</span><span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Hi!"</span>, <span class='st'>"A very long text string"</span>, <span class='st'>"N\na\nr\nr\no\nw"</span><span class='op'>)</span>
 
 <span class='co'># Note that the label for the tall and narrow box is</span>
 <span class='co'># not necessarily centred vertically in the box.</span>
@@ -282,35 +291,37 @@ by Hoseok Kang and Shoreh Elhami, available at
 <span class='co'># to the polygon boundary is less than the horizontal</span>
 <span class='co'># distance. For regular polygons like this, the other</span>
 <span class='co'># label positions (e.g., method="buffer") work better.</span>
-<span class='fu'>polygonsLabel</span>(<span class='no'>xy.sp</span>, <span class='no'>labels</span>, <span class='kw'>cex</span><span class='kw'>=</span><span class='fl'>.8</span>,
-              <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'white'</span>, <span class='st'>'black'</span>, <span class='st'>'maroon'</span>))</div><div class='img'><img src='labelpt-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;          [,1]      [,2]
-#&gt; [1,] 1.999438  1.945393
+<span class='fu'>polygonsLabel</span><span class='op'>(</span><span class='va'>xy.sp</span>, <span class='va'>labels</span>, cex<span class='op'>=</span><span class='fl'>.8</span>,
+              col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'white'</span>, <span class='st'>'black'</span>, <span class='st'>'maroon'</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='labelpt-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt;          [,1]      [,2]
+#&gt; [1,] 2.000890  1.892383
 #&gt; [2,] 9.218740  2.000838
 #&gt; [3,] 2.000552 -7.478637</div><div class='input'>
 
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'>## Example showing how bad the centroid </span>
 <span class='co'>## position can be on real maps.</span>
 
 <span class='co'># Needed libraries</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>maps</span>) <span class='kw'>&amp;&amp;</span> <span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>maptools</span>) <span class='kw'>&amp;&amp;</span> <span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>rgdal</span>)) {
+<span class='kw'>if</span> <span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'>maps</span><span class='op'>)</span> <span class='op'>&amp;&amp;</span> <span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='http://maptools.r-forge.r-project.org/'>maptools</a></span><span class='op'>)</span> <span class='op'>&amp;&amp;</span> <span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='http://rgdal.r-forge.r-project.org'>rgdal</a></span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='co'># Load map data and convert to spatial object</span>
-<span class='no'>nmap</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/maps/man/map.html'>map</a></span>(<span class='st'>"world"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Norway"</span>, <span class='st'>"Sweden"</span>, <span class='st'>"Finland"</span>),
-           <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='no'>nmap.pol</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/maptools/man/map2SpatialPolygons.html'>map2SpatialPolygons</a></span>(<span class='no'>nmap</span>, <span class='kw'>IDs</span> <span class='kw'>=</span> <span class='no'>nmap</span>$<span class='no'>names</span>,
-                               <span class='kw'>proj4string</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/rgdal/man/CRS-class.html'>CRS</a></span>(<span class='st'>"+init=epsg:4326"</span>))
-<span class='no'>nmap.pol</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/rgdal/man/spTransform-methods.html'>spTransform</a></span>(<span class='no'>nmap.pol</span>, <span class='fu'><a href='https://rdrr.io/pkg/rgdal/man/CRS-class.html'>CRS</a></span>(<span class='st'>"+init=epsg:3035"</span>))
+<span class='va'>nmap</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/maps/man/map.html'>map</a></span><span class='op'>(</span><span class='st'>"world"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Norway"</span>, <span class='st'>"Sweden"</span>, <span class='st'>"Finland"</span><span class='op'>)</span>,
+           exact <span class='op'>=</span> <span class='cn'>TRUE</span>, fill <span class='op'>=</span> <span class='cn'>TRUE</span>, col <span class='op'>=</span> <span class='st'>"transparent"</span>, plot <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='va'>nmap.pol</span> <span class='op'>=</span> <span class='fu'><a href='http://maptools.r-forge.r-project.org/reference/map2SpatialPolygons.html'>map2SpatialPolygons</a></span><span class='op'>(</span><span class='va'>nmap</span>, IDs <span class='op'>=</span> <span class='va'>nmap</span><span class='op'>$</span><span class='va'>names</span>,
+                               proj4string <span class='op'>=</span> <span class='fu'><a href='http://rgdal.r-forge.r-project.org/reference/CRS-class.html'>CRS</a></span><span class='op'>(</span><span class='st'>"+init=epsg:4326"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>nmap.pol</span> <span class='op'>=</span> <span class='fu'><a href='http://rgdal.r-forge.r-project.org/reference/spTransform-methods.html'>spTransform</a></span><span class='op'>(</span><span class='va'>nmap.pol</span>, <span class='fu'><a href='http://rgdal.r-forge.r-project.org/reference/CRS-class.html'>CRS</a></span><span class='op'>(</span><span class='st'>"+init=epsg:3035"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Plot map, centroid positions (red dots) and optimal</span>
 <span class='co'># label positions using the ‘buffer’ method.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>nmap.pol</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"khaki"</span>)
-<span class='no'>nmap.centroids</span> <span class='kw'>=</span> <span class='fu'>polygonsLabel</span>(<span class='no'>nmap.pol</span>, <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>nmap.pol</span>),
-                               <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"centroid"</span>, <span class='kw'>doPlot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span>(<span class='no'>nmap.centroids</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>19</span>)
-<span class='fu'>polygonsLabel</span>(<span class='no'>nmap.pol</span>, <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>nmap.pol</span>), <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"buffer"</span>, <span class='kw'>cex</span><span class='kw'>=</span><span class='fl'>.8</span>)
-}
-}</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>nmap.pol</span>, col <span class='op'>=</span> <span class='st'>"khaki"</span><span class='op'>)</span>
+<span class='va'>nmap.centroids</span> <span class='op'>=</span> <span class='fu'>polygonsLabel</span><span class='op'>(</span><span class='va'>nmap.pol</span>, <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>nmap.pol</span><span class='op'>)</span>,
+                               method <span class='op'>=</span> <span class='st'>"centroid"</span>, doPlot <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>nmap.centroids</span>, col <span class='op'>=</span> <span class='st'>"red"</span>, pch<span class='op'>=</span><span class='fl'>19</span><span class='op'>)</span>
+<span class='fu'>polygonsLabel</span><span class='op'>(</span><span class='va'>nmap.pol</span>, <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>nmap.pol</span><span class='op'>)</span>, method <span class='op'>=</span> <span class='st'>"buffer"</span>, cex<span class='op'>=</span><span class='fl'>.8</span><span class='op'>)</span>
+<span class='op'>}</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -326,7 +337,7 @@ by Hoseok Kang and Shoreh Elhami, available at
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

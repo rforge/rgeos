@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-7</span>
       </span>
     </div>
 
@@ -80,12 +80,15 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -112,9 +115,9 @@
     <p>Calculates the distance between the given geometries</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gDistance</span>(<span class='no'>spgeom1</span>, <span class='kw'>spgeom2</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>byid</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>hausdorff</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>densifyFrac</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
-<span class='fu'>gWithinDistance</span>(<span class='no'>spgeom1</span>, <span class='kw'>spgeom2</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='no'>dist</span>, <span class='kw'>byid</span><span class='kw'>=</span><span class='fl'>FALSE</span>,
- <span class='kw'>hausdorff</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>densifyFrac</span><span class='kw'>=</span><span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>gDistance</span><span class='op'>(</span><span class='va'>spgeom1</span>, spgeom2<span class='op'>=</span><span class='cn'>NULL</span>, byid<span class='op'>=</span><span class='cn'>FALSE</span>, hausdorff<span class='op'>=</span><span class='cn'>FALSE</span>, densifyFrac <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+<span class='fu'>gWithinDistance</span><span class='op'>(</span><span class='va'>spgeom1</span>, spgeom2<span class='op'>=</span><span class='cn'>NULL</span>, <span class='va'>dist</span>, byid<span class='op'>=</span><span class='cn'>FALSE</span>,
+ hausdorff<span class='op'>=</span><span class='cn'>FALSE</span>, densifyFrac<span class='op'>=</span><span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,32 +152,44 @@
 
     <p>Discrete Hausdorff distance is essentially a measure of the similarity or dissimilarity of the two geometries, see references below for more detailed explanations / descriptions.</p>
 <p>If <code>hausdorff</code> is TRUE and <code>densifyFrac</code> is specified then the geometries' segments are densified by splitting each segment into equal length subsegments whose fraction of the total length is equal to <code>densifyFrac</code>.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Roger Bivand &amp; Colin Rundel</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code>gWithinDistance</code></p></div>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Hausdorff Differences:
-<a href='http://en.wikipedia.org/wiki/Hausdorff_distance'>http://en.wikipedia.org/wiki/Hausdorff_distance</a>
+<a href='https://en.wikipedia.org/wiki/Hausdorff_distance'>https://en.wikipedia.org/wiki/Hausdorff_distance</a>
 <a href='http://lin-ear-th-inking.blogspot.com/2009/01/computing-geometric-similarity.html'>http://lin-ear-th-inking.blogspot.com/2009/01/computing-geometric-similarity.html</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>pt1</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POINT(0.5 0.5)"</span>)
-<span class='no'>pt2</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POINT(2 2)"</span>)
+<span class='va'>pt1</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POINT(0.5 0.5)"</span><span class='op'>)</span>
+<span class='va'>pt2</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POINT(2 2)"</span><span class='op'>)</span>
 
-<span class='no'>p1</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON((0 0,1 0,1 1,0 1,0 0))"</span>)
-<span class='no'>p2</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON((2 0,3 1,4 0,2 0))"</span>)
+<span class='va'>p1</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON((0 0,1 0,1 1,0 1,0 0))"</span><span class='op'>)</span>
+<span class='va'>p2</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON((2 0,3 1,4 0,2 0))"</span><span class='op'>)</span>
 
-<span class='fu'>gDistance</span>(<span class='no'>pt1</span>,<span class='no'>pt2</span>)</div><div class='output co'>#&gt; [1] 2.12132</div><div class='input'><span class='fu'>gDistance</span>(<span class='no'>p1</span>,<span class='no'>pt1</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='fu'>gDistance</span>(<span class='no'>p1</span>,<span class='no'>pt2</span>)</div><div class='output co'>#&gt; [1] 1.414214</div><div class='input'><span class='fu'>gDistance</span>(<span class='no'>p1</span>,<span class='no'>p2</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'>
+<span class='fu'>gDistance</span><span class='op'>(</span><span class='va'>pt1</span>,<span class='va'>pt2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 2.12132</div><div class='input'><span class='fu'>gDistance</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>pt1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='fu'>gDistance</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>pt2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1.414214</div><div class='input'><span class='fu'>gDistance</span><span class='op'>(</span><span class='va'>p1</span>,<span class='va'>p2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1</div><div class='input'>
 
-<span class='no'>p3</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON((0 0,2 0,2 2,0 2,0 0))"</span>)
-<span class='no'>p4</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON((0 0,2 0,2 1.9,1.9 2,0 2,0 0))"</span>)
-<span class='no'>p5</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON((0 0,2 0,2 1.5,1.5 2,0 2,0 0))"</span>)
-<span class='no'>p6</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON((0 0,2 0,2 1,1 2,0 2,0 0))"</span>)
-<span class='no'>p7</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON((0 0,2 0,0 2,0 0))"</span>)
+<span class='va'>p3</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON((0 0,2 0,2 2,0 2,0 0))"</span><span class='op'>)</span>
+<span class='va'>p4</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON((0 0,2 0,2 1.9,1.9 2,0 2,0 0))"</span><span class='op'>)</span>
+<span class='va'>p5</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON((0 0,2 0,2 1.5,1.5 2,0 2,0 0))"</span><span class='op'>)</span>
+<span class='va'>p6</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON((0 0,2 0,2 1,1 2,0 2,0 0))"</span><span class='op'>)</span>
+<span class='va'>p7</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON((0 0,2 0,0 2,0 0))"</span><span class='op'>)</span>
 
-<span class='fu'>gDistance</span>(<span class='no'>p3</span>,<span class='kw'>hausdorff</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='fu'>gDistance</span>(<span class='no'>p3</span>,<span class='no'>p4</span>,<span class='kw'>hausdorff</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] 0.07071068</div><div class='input'><span class='fu'>gDistance</span>(<span class='no'>p3</span>,<span class='no'>p5</span>,<span class='kw'>hausdorff</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] 0.3535534</div><div class='input'><span class='fu'>gDistance</span>(<span class='no'>p3</span>,<span class='no'>p6</span>,<span class='kw'>hausdorff</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] 0.7071068</div><div class='input'><span class='fu'>gDistance</span>(<span class='no'>p3</span>,<span class='no'>p7</span>,<span class='kw'>hausdorff</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] 1.414214</div></pre>
+<span class='fu'>gDistance</span><span class='op'>(</span><span class='va'>p3</span>,hausdorff<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='fu'>gDistance</span><span class='op'>(</span><span class='va'>p3</span>,<span class='va'>p4</span>,hausdorff<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.07071068</div><div class='input'><span class='fu'>gDistance</span><span class='op'>(</span><span class='va'>p3</span>,<span class='va'>p5</span>,hausdorff<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.3535534</div><div class='input'><span class='fu'>gDistance</span><span class='op'>(</span><span class='va'>p3</span>,<span class='va'>p6</span>,hausdorff<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.7071068</div><div class='input'><span class='fu'>gDistance</span><span class='op'>(</span><span class='va'>p3</span>,<span class='va'>p7</span>,hausdorff<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1.414214</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -190,7 +205,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

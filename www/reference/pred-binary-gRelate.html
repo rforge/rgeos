@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgeos</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-7</span>
       </span>
     </div>
 
@@ -80,12 +80,15 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -112,8 +115,8 @@
     <p>Determines the relationships between two geometries by comparing the intersection of Interior, Boundary and Exterior  of both geometries to each other. The results are summarized by the Dimensionally Extended 9-Intersection Matrix or DE-9IM.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gRelate</span>(<span class='no'>spgeom1</span>, <span class='kw'>spgeom2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>byid</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
- <span class='kw'>checkValidity</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>gRelate</span><span class='op'>(</span><span class='va'>spgeom1</span>, spgeom2 <span class='op'>=</span> <span class='cn'>NULL</span>, pattern <span class='op'>=</span> <span class='cn'>NULL</span>, byid <span class='op'>=</span> <span class='cn'>FALSE</span>,
+ checkValidity<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -128,7 +131,7 @@
     </tr>
     <tr>
       <th>pattern</th>
-      <td><p>Character string containing intersection matrix pattern to match against DE-9IM for given geometries. Wild card <code>*</code> or <code>*</code> characters allowed.</p></td>
+      <td><p>Character string containing intersection matrix pattern to match against DE-9IM for given geometries. Wild card <code><a href='https://rdrr.io/r/base/Arithmetic.html'>*</a></code> or <code><a href='https://rdrr.io/r/base/Arithmetic.html'>*</a></code> characters allowed.</p></td>
     </tr>
     <tr>
       <th>checkValidity</th>
@@ -143,7 +146,7 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Each geometry is decomposed into an interior, a boundary, and an exterior region, all the resulting geometries are then tested by intersection against one another resulting in 9 total comparisons. These comparisons are summarized by the dimensions of the intersection region, as such intersection at point(s) is labeled <code>0</code>, at linestring(s) is labeled <code>1</code>, at polygons(s) is labeled <code>2</code>, and if they do not intersect labeled <code>F</code>.</p>
-<p>If a pattern is specified then limited matching with wildcards is possible, <code>*</code> matches any character whereas <code>T</code> matches any non-<code>F</code> character.</p>
+<p>If a pattern is specified then limited matching with wildcards is possible, <code><a href='https://rdrr.io/r/base/Arithmetic.html'>*</a></code> matches any character whereas <code>T</code> matches any non-<code>F</code> character.</p>
 <p>See references for additional details.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
@@ -152,81 +155,87 @@
 
     <p>Documentation of Intersection Matrix Patterns:
 <a href='http://docs.geotools.org/stable/userguide/library/jts/dim9.html'>http://docs.geotools.org/stable/userguide/library/jts/dim9.html</a></p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Roger Bivand &amp; Colin Rundel</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='pred-binary-gContains.html'>gContains</a></code>
-<code><a href='pred-binary-gContains.html'>gContainsProperly</a></code>
-<code><a href='pred-binary-gContains.html'>gCovers</a></code>
-<code><a href='pred-binary-gContains.html'>gCoveredBy</a></code>
-<code><a href='pred-binary-gCrosses.html'>gCrosses</a></code>
-<code><a href='pred-binary-gIntersects.html'>gDisjoint</a></code>
-<code><a href='pred-binary-gEquals.html'>gEquals</a></code>
-<code><a href='pred-binary-gEquals.html'>gEqualsExact</a></code>
-<code><a href='pred-binary-gIntersects.html'>gIntersects</a></code>
-<code><a href='pred-binary-gCrosses.html'>gOverlaps</a></code>
-<code><a href='pred-binary-gTouches.html'>gTouches</a></code>
-<code><a href='pred-binary-gContains.html'>gWithin</a></code></p></div>
+    <div class='dont-index'><p><code><a href='gContains.html'>gContains</a></code>
+<code><a href='gContains.html'>gContainsProperly</a></code>
+<code><a href='gContains.html'>gCovers</a></code>
+<code><a href='gContains.html'>gCoveredBy</a></code>
+<code><a href='gCrosses.html'>gCrosses</a></code>
+<code><a href='gIntersects.html'>gDisjoint</a></code>
+<code><a href='gEquals.html'>gEquals</a></code>
+<code><a href='gEquals.html'>gEqualsExact</a></code>
+<code><a href='gIntersects.html'>gIntersects</a></code>
+<code><a href='gCrosses.html'>gOverlaps</a></code>
+<code><a href='gTouches.html'>gTouches</a></code>
+<code><a href='gContains.html'>gWithin</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>        <span class='no'>x</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON((1 0,0 1,1 2,2 1,1 0))"</span>)
-        <span class='no'>x.inter</span> <span class='kw'>=</span> <span class='no'>x</span>
-        <span class='no'>x.bound</span> <span class='kw'>=</span> <span class='fu'><a href='topo-unary-gBoundary.html'>gBoundary</a></span>(<span class='no'>x</span>)
+    <pre class="examples"><div class='input'>  <span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON((1 0,0 1,1 2,2 1,1 0))"</span><span class='op'>)</span>
+  <span class='va'>x.inter</span> <span class='op'>=</span> <span class='va'>x</span>
+  <span class='va'>x.bound</span> <span class='op'>=</span> <span class='fu'><a href='gBoundary.html'>gBoundary</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
+  
+  <span class='va'>y</span> <span class='op'>=</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='st'>"POLYGON((2 0,1 1,2 2,3 1,2 0))"</span><span class='op'>)</span>
+  <span class='va'>y.inter</span> <span class='op'>=</span> <span class='va'>y</span>
+  <span class='va'>y.bound</span> <span class='op'>=</span> <span class='fu'><a href='gBoundary.html'>gBoundary</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span>
+  
+  
+  <span class='va'>xy.inter</span> <span class='op'>=</span> <span class='fu'><a href='gIntersection.html'>gIntersection</a></span><span class='op'>(</span><span class='va'>x</span>,<span class='va'>y</span><span class='op'>)</span>
+  <span class='va'>xy.inter.bound</span> <span class='op'>=</span> <span class='fu'><a href='gBoundary.html'>gBoundary</a></span><span class='op'>(</span><span class='va'>xy.inter</span><span class='op'>)</span>
+  
+  <span class='va'>xy.union</span> <span class='op'>=</span> <span class='fu'><a href='gUnion.html'>gUnion</a></span><span class='op'>(</span><span class='va'>x</span>,<span class='va'>y</span><span class='op'>)</span>
+  <span class='va'>bbox</span> <span class='op'>=</span> <span class='fu'><a href='gBuffer.html'>gBuffer</a></span><span class='op'>(</span><span class='fu'><a href='gEnvelope.html'>gEnvelope</a></span><span class='op'>(</span><span class='va'>xy.union</span><span class='op'>)</span>,width<span class='op'>=</span><span class='fl'>0.5</span>,joinStyle<span class='op'>=</span><span class='st'>'mitre'</span>,mitreLimit<span class='op'>=</span><span class='fl'>3</span><span class='op'>)</span>
 
-        <span class='no'>y</span> <span class='kw'>=</span> <span class='fu'><a href='wkt-functions.html'>readWKT</a></span>(<span class='st'>"POLYGON((2 0,1 1,2 2,3 1,2 0))"</span>)
-        <span class='no'>y.inter</span> <span class='kw'>=</span> <span class='no'>y</span>
-        <span class='no'>y.bound</span> <span class='kw'>=</span> <span class='fu'><a href='topo-unary-gBoundary.html'>gBoundary</a></span>(<span class='no'>y</span>)
+  <span class='va'>x.exter</span> <span class='op'>=</span> <span class='fu'><a href='gDifference.html'>gDifference</a></span><span class='op'>(</span><span class='va'>bbox</span>,<span class='va'>x</span><span class='op'>)</span>
+  <span class='va'>y.exter</span> <span class='op'>=</span> <span class='fu'><a href='gDifference.html'>gDifference</a></span><span class='op'>(</span><span class='va'>bbox</span>,<span class='va'>y</span><span class='op'>)</span>
 
-
-        <span class='no'>xy.inter</span> <span class='kw'>=</span> <span class='fu'><a href='topo-bin-gIntersection.html'>gIntersection</a></span>(<span class='no'>x</span>,<span class='no'>y</span>)
-        <span class='no'>xy.inter.bound</span> <span class='kw'>=</span> <span class='fu'><a href='topo-unary-gBoundary.html'>gBoundary</a></span>(<span class='no'>xy.inter</span>)
-
-        <span class='no'>xy.union</span> <span class='kw'>=</span> <span class='fu'><a href='topo-bin-gUnion.html'>gUnion</a></span>(<span class='no'>x</span>,<span class='no'>y</span>)
-        <span class='no'>bbox</span> <span class='kw'>=</span> <span class='fu'><a href='misc-gBuffer.html'>gBuffer</a></span>(<span class='fu'><a href='topo-unary-gEnvelope.html'>gEnvelope</a></span>(<span class='no'>xy.union</span>),<span class='kw'>width</span><span class='kw'>=</span><span class='fl'>0.5</span>,<span class='kw'>joinStyle</span><span class='kw'>=</span><span class='st'>'mitre'</span>,<span class='kw'>mitreLimit</span><span class='kw'>=</span><span class='fl'>3</span>)
-
-        <span class='no'>x.exter</span> <span class='kw'>=</span> <span class='fu'><a href='topo-bin-gDifference.html'>gDifference</a></span>(<span class='no'>bbox</span>,<span class='no'>x</span>)
-        <span class='no'>y.exter</span> <span class='kw'>=</span> <span class='fu'><a href='topo-bin-gDifference.html'>gDifference</a></span>(<span class='no'>bbox</span>,<span class='no'>y</span>)
-
-        <span class='co'># geometry decomposition</span>
-        <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>3</span>))
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>bbox</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>'grey'</span>);<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>x</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>"black"</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>);<span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='st'>"Interior"</span>,<span class='kw'>ylab</span> <span class='kw'>=</span> <span class='st'>"Polygon X"</span>)
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>bbox</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>'grey'</span>);<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>x.bound</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>"black"</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>);<span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='st'>"Boundary"</span>)
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>bbox</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>'grey'</span>);<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>x.exter</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>"black"</span>,<span class='kw'>pbg</span><span class='kw'>=</span><span class='st'>'white'</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>);<span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='st'>"Exterior"</span>)
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>bbox</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>'grey'</span>);<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>y</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>"black"</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>);<span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='kw'>ylab</span> <span class='kw'>=</span> <span class='st'>"Polygon Y"</span>)
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>bbox</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>'grey'</span>);<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>y.bound</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>"black"</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-        <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>bbox</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>'grey'</span>);<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>y.exter</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>"black"</span>,<span class='kw'>pbg</span><span class='kw'>=</span><span class='st'>'white'</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='pred-binary-gRelate-1.png' alt='' width='700' height='433' /></div><div class='input'>
-
-
-        <span class='no'>defaultplot</span> <span class='kw'>=</span> <span class='kw'>function</span>() {
-                <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>bbox</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>'grey'</span>)
-                <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>x</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'red1'</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>"red3"</span>)
-                <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>y</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'blue1'</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>"blue3"</span>)
-                <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>xy.inter</span>,<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'orange1'</span>,<span class='kw'>border</span><span class='kw'>=</span><span class='st'>"orange3"</span>)
-        }
-
-        <span class='co'># Dimensionally Extended 9-Intersection Matrix</span>
-        <span class='no'>pat</span> <span class='kw'>=</span> <span class='fu'>gRelate</span>(<span class='no'>x</span>,<span class='no'>y</span>)
-        <span class='no'>patchars</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/strsplit.html'>strsplit</a></span>(<span class='no'>pat</span>,<span class='st'>""</span>)<span class='kw'>[[</span><span class='fl'>1</span>]]
-
-        <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>,<span class='fl'>3</span>))
-        <span class='fu'>defaultplot</span>(); <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='topo-bin-gIntersection.html'>gIntersection</a></span>(<span class='no'>x.inter</span>,<span class='no'>y.inter</span>),<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'black'</span>)
-        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"dim:"</span>,<span class='no'>patchars</span>[<span class='fl'>1</span>]))
-        <span class='fu'>defaultplot</span>(); <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='topo-bin-gIntersection.html'>gIntersection</a></span>(<span class='no'>x.bound</span>,<span class='no'>y.inter</span>),<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'black'</span>,<span class='kw'>lwd</span><span class='kw'>=</span><span class='fl'>2</span>)
-        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"dim:"</span>,<span class='no'>patchars</span>[<span class='fl'>2</span>]))
-        <span class='fu'>defaultplot</span>(); <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='topo-bin-gIntersection.html'>gIntersection</a></span>(<span class='no'>x.exter</span>,<span class='no'>y.inter</span>),<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'black'</span>)
-        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"dim:"</span>,<span class='no'>patchars</span>[<span class='fl'>3</span>]))
-
-        <span class='fu'>defaultplot</span>(); <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='topo-bin-gIntersection.html'>gIntersection</a></span>(<span class='no'>x.inter</span>,<span class='no'>y.bound</span>),<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'black'</span>,<span class='kw'>lwd</span><span class='kw'>=</span><span class='fl'>2</span>)
-        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"dim:"</span>,<span class='no'>patchars</span>[<span class='fl'>4</span>]))
-        <span class='fu'>defaultplot</span>(); <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='topo-bin-gIntersection.html'>gIntersection</a></span>(<span class='no'>x.bound</span>,<span class='no'>y.bound</span>),<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'black'</span>,<span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>16</span>)
-        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"dim:"</span>,<span class='no'>patchars</span>[<span class='fl'>5</span>]))
-        <span class='fu'>defaultplot</span>(); <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='topo-bin-gIntersection.html'>gIntersection</a></span>(<span class='no'>x.exter</span>,<span class='no'>y.bound</span>),<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'black'</span>,<span class='kw'>lwd</span><span class='kw'>=</span><span class='fl'>2</span>)
-        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"dim:"</span>,<span class='no'>patchars</span>[<span class='fl'>6</span>]))
-
-        <span class='fu'>defaultplot</span>(); <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='topo-bin-gIntersection.html'>gIntersection</a></span>(<span class='no'>x.inter</span>,<span class='no'>y.exter</span>),<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'black'</span>)
-        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"dim:"</span>,<span class='no'>patchars</span>[<span class='fl'>7</span>]))
-        <span class='fu'>defaultplot</span>(); <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='topo-bin-gIntersection.html'>gIntersection</a></span>(<span class='no'>x.bound</span>,<span class='no'>y.exter</span>),<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'black'</span>,<span class='kw'>lwd</span><span class='kw'>=</span><span class='fl'>2</span>)
-        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"dim:"</span>,<span class='no'>patchars</span>[<span class='fl'>8</span>]))
-        <span class='fu'>defaultplot</span>(); <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='topo-bin-gIntersection.html'>gIntersection</a></span>(<span class='no'>x.exter</span>,<span class='no'>y.exter</span>),<span class='kw'>add</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>col</span><span class='kw'>=</span><span class='st'>'black'</span>)</div><div class='input'>        <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"dim:"</span>,<span class='no'>patchars</span>[<span class='fl'>9</span>]))</div><div class='img'><img src='pred-binary-gRelate-2.png' alt='' width='700' height='433' /></div><div class='input'>	
+  <span class='co'># geometry decomposition</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>bbox</span>,border<span class='op'>=</span><span class='st'>'grey'</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>,col<span class='op'>=</span><span class='st'>"black"</span>,add<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='st'>"Interior"</span>,ylab <span class='op'>=</span> <span class='st'>"Polygon X"</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>bbox</span>,border<span class='op'>=</span><span class='st'>'grey'</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x.bound</span>,col<span class='op'>=</span><span class='st'>"black"</span>,add<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='st'>"Boundary"</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>bbox</span>,border<span class='op'>=</span><span class='st'>'grey'</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x.exter</span>,col<span class='op'>=</span><span class='st'>"black"</span>,pbg<span class='op'>=</span><span class='st'>'white'</span>,add<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='st'>"Exterior"</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>bbox</span>,border<span class='op'>=</span><span class='st'>'grey'</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>y</span>,col<span class='op'>=</span><span class='st'>"black"</span>,add<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span>ylab <span class='op'>=</span> <span class='st'>"Polygon Y"</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>bbox</span>,border<span class='op'>=</span><span class='st'>'grey'</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>y.bound</span>,col<span class='op'>=</span><span class='st'>"black"</span>,add<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>bbox</span>,border<span class='op'>=</span><span class='st'>'grey'</span><span class='op'>)</span>;<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>y.exter</span>,col<span class='op'>=</span><span class='st'>"black"</span>,pbg<span class='op'>=</span><span class='st'>'white'</span>,add<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='pred-binary-gRelate-1.png' alt='' width='700' height='433' /></div><div class='input'>  
+  
+  
+  <span class='va'>defaultplot</span> <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>{</span>
+    <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>bbox</span>,border<span class='op'>=</span><span class='st'>'grey'</span><span class='op'>)</span>
+    <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,col<span class='op'>=</span><span class='st'>'red1'</span>,border<span class='op'>=</span><span class='st'>"red3"</span><span class='op'>)</span>
+    <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>y</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,col<span class='op'>=</span><span class='st'>'blue1'</span>,border<span class='op'>=</span><span class='st'>"blue3"</span><span class='op'>)</span>    
+    <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>xy.inter</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,col<span class='op'>=</span><span class='st'>'orange1'</span>,border<span class='op'>=</span><span class='st'>"orange3"</span><span class='op'>)</span>
+  <span class='op'>}</span>
+  
+  <span class='co'># Dimensionally Extended 9-Intersection Matrix</span>
+  <span class='va'>pat</span> <span class='op'>=</span> <span class='fu'>gRelate</span><span class='op'>(</span><span class='va'>x</span>,<span class='va'>y</span><span class='op'>)</span>
+  <span class='va'>patchars</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/strsplit.html'>strsplit</a></span><span class='op'>(</span><span class='va'>pat</span>,<span class='st'>""</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
+  
+  <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>,<span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'>defaultplot</span><span class='op'>(</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='gIntersection.html'>gIntersection</a></span><span class='op'>(</span><span class='va'>x.inter</span>,<span class='va'>y.inter</span><span class='op'>)</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,col<span class='op'>=</span><span class='st'>'black'</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"dim:"</span>,<span class='va'>patchars</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'>defaultplot</span><span class='op'>(</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='gIntersection.html'>gIntersection</a></span><span class='op'>(</span><span class='va'>x.bound</span>,<span class='va'>y.inter</span><span class='op'>)</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,col<span class='op'>=</span><span class='st'>'black'</span>,lwd<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"dim:"</span>,<span class='va'>patchars</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'>defaultplot</span><span class='op'>(</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='gIntersection.html'>gIntersection</a></span><span class='op'>(</span><span class='va'>x.exter</span>,<span class='va'>y.inter</span><span class='op'>)</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,col<span class='op'>=</span><span class='st'>'black'</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"dim:"</span>,<span class='va'>patchars</span><span class='op'>[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+  
+  <span class='fu'>defaultplot</span><span class='op'>(</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='gIntersection.html'>gIntersection</a></span><span class='op'>(</span><span class='va'>x.inter</span>,<span class='va'>y.bound</span><span class='op'>)</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,col<span class='op'>=</span><span class='st'>'black'</span>,lwd<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"dim:"</span>,<span class='va'>patchars</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'>defaultplot</span><span class='op'>(</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='gIntersection.html'>gIntersection</a></span><span class='op'>(</span><span class='va'>x.bound</span>,<span class='va'>y.bound</span><span class='op'>)</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,col<span class='op'>=</span><span class='st'>'black'</span>,pch<span class='op'>=</span><span class='fl'>16</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"dim:"</span>,<span class='va'>patchars</span><span class='op'>[</span><span class='fl'>5</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'>defaultplot</span><span class='op'>(</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='gIntersection.html'>gIntersection</a></span><span class='op'>(</span><span class='va'>x.exter</span>,<span class='va'>y.bound</span><span class='op'>)</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,col<span class='op'>=</span><span class='st'>'black'</span>,lwd<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"dim:"</span>,<span class='va'>patchars</span><span class='op'>[</span><span class='fl'>6</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+  
+  <span class='fu'>defaultplot</span><span class='op'>(</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='gIntersection.html'>gIntersection</a></span><span class='op'>(</span><span class='va'>x.inter</span>,<span class='va'>y.exter</span><span class='op'>)</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,col<span class='op'>=</span><span class='st'>'black'</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"dim:"</span>,<span class='va'>patchars</span><span class='op'>[</span><span class='fl'>7</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'>defaultplot</span><span class='op'>(</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='gIntersection.html'>gIntersection</a></span><span class='op'>(</span><span class='va'>x.bound</span>,<span class='va'>y.exter</span><span class='op'>)</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,col<span class='op'>=</span><span class='st'>'black'</span>,lwd<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"dim:"</span>,<span class='va'>patchars</span><span class='op'>[</span><span class='fl'>8</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'>defaultplot</span><span class='op'>(</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='gIntersection.html'>gIntersection</a></span><span class='op'>(</span><span class='va'>x.exter</span>,<span class='va'>y.exter</span><span class='op'>)</span>,add<span class='op'>=</span><span class='cn'>TRUE</span>,col<span class='op'>=</span><span class='st'>'black'</span><span class='op'>)</span>
+</div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/graphics/title.html'>title</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"dim:"</span>,<span class='va'>patchars</span><span class='op'>[</span><span class='fl'>9</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='pred-binary-gRelate-2.png' alt='' width='700' height='433' /></div><div class='input'>  
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -243,7 +252,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
