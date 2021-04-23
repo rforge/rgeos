@@ -160,7 +160,7 @@ gUnionCascaded = function(spgeom, id = NULL) {
     res
 }
 
-gMakeValid = function(spgeom, byid=FALSE, id = NULL, original=NULL, keepCollapsed=FALSE) {
+gMakeValid = function(spgeom, byid=FALSE, id = NULL, original=NULL, keepCollapsed=NULL) {
 
     if (version_GEOS0() < "3.8.0")
         stop("No UnaryUnion in this version of GEOS")
@@ -176,6 +176,19 @@ gMakeValid = function(spgeom, byid=FALSE, id = NULL, original=NULL, keepCollapse
                 original <- TRUE
             }
         }
+        if (original) {
+            keepCollapsed <- FALSE
+        } else {
+            if(is.null(keepCollapsed)) {
+                envvar <- Sys.getenv("GEOS_MAKE_VALID_KEEPCOLLAPSED")
+                if (nzchar(envvar)) {
+                    keepCollapsed <- FALSE
+                    if (envvar == "TRUE") keepCollapsed <- TRUE
+                } else {
+                    keepCollapsed <- FALSE
+                }
+            }
+        } 
         stopifnot(is.logical(original))
         stopifnot(is.logical(keepCollapsed))
         attr(byid, "original") <- original
