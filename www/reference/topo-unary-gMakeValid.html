@@ -115,7 +115,7 @@
     <p>Function returns a valid geometry, not available before GEOS 3.8.0; from 3.10.0 two correction strategies</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>spgeom</span>, byid<span class='op'>=</span><span class='cn'>FALSE</span>, id <span class='op'>=</span> <span class='cn'>NULL</span>, original<span class='op'>=</span><span class='cn'>NULL</span>, keepCollapsed<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>spgeom</span>, byid<span class='op'>=</span><span class='cn'>FALSE</span>, id <span class='op'>=</span> <span class='cn'>NULL</span>, original<span class='op'>=</span><span class='cn'>NULL</span>, keepCollapsed<span class='op'>=</span><span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -138,7 +138,7 @@
     </tr>
     <tr>
       <th>keepCollapsed</th>
-      <td><p>default FALSE; If GEOS &gt;= 3.10.0 and <code>original</code> is FALSE, the argument is used to control whether objects with dimension reduction are discarded (keepCollapsed is FALSE) or retained</p></td>
+      <td><p>default NULL; If GEOS &gt;= 3.10.0 and <code>original</code> is FALSE, the argument is used to control whether objects with dimension reduction are discarded (keepCollapsed is FALSE) or retained (TRUE). It may be set directly, or if NULL controlled by environment variable <code>GEOS_MAKE_VALID_KEEPCOLLAPSED</code> with values <code>FALSE</code> or <code>TRUE</code>. If <code>GEOS_MAKE_VALID_KEEPCOLLAPSED</code> is <code>TRUE</code>, <code>keepCollapsed</code> is TRUE</p></td>
     </tr>
     </table>
 
@@ -267,6 +267,27 @@
 <span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span>, original<span class='op'>=</span><span class='cn'>FALSE</span>, keepCollapsed<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>,
  pts<span class='op'>=</span><span class='st'>"#78b400"</span>, main<span class='op'>=</span><span class='st'>"buffered + keep collapsed"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>opar</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='va'>run</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'><a href='RGEOS WKT Functions.html'>readWKT</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"MULTIPOLYGON (((10 40, 40 40, 40 10, 10 10, 10 40), "</span>, 
+<span class='st'>"(16 17, 31 32, 24 25, 16 17)), ((50 40, 50 40, 50 40, 50 40, 50 40)))"</span>, sep<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>bb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/bbox.html'>bbox</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>
+<span class='va'>opar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='va'>X</span>, fill<span class='op'>=</span><span class='st'>"#dfdfff"</span>, pts<span class='op'>=</span><span class='st'>"#00007c"</span>, main<span class='op'>=</span><span class='st'>"input"</span>, xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Sys.setenv.html'>Sys.setenv</a></span><span class='op'>(</span><span class='st'>"GEOS_MAKE_VALID"</span><span class='op'>=</span><span class='st'>"ORIGINAL"</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>, pts<span class='op'>=</span><span class='st'>"#78b400"</span>, main<span class='op'>=</span><span class='st'>"original"</span>,
+ xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Sys.setenv.html'>Sys.setenv</a></span><span class='op'>(</span><span class='st'>"GEOS_MAKE_VALID"</span><span class='op'>=</span><span class='st'>"BUFFERED"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Sys.setenv.html'>Sys.setenv</a></span><span class='op'>(</span><span class='st'>"GEOS_MAKE_VALID_KEEPCOLLAPSED"</span><span class='op'>=</span><span class='st'>"FALSE"</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>, pts<span class='op'>=</span><span class='st'>"#78b400"</span>, main<span class='op'>=</span><span class='st'>"buffered"</span>,
+ xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Sys.setenv.html'>Sys.setenv</a></span><span class='op'>(</span><span class='st'>"GEOS_MAKE_VALID_KEEPCOLLAPSED"</span><span class='op'>=</span><span class='st'>"TRUE"</span><span class='op'>)</span>
+<span class='fu'>JTSplot</span><span class='op'>(</span><span class='fu'>gMakeValid</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>, fill<span class='op'>=</span><span class='st'>"#ffffa4"</span>, pts<span class='op'>=</span><span class='st'>"#78b400"</span>, main<span class='op'>=</span><span class='st'>"buffered + keep collapsed"</span>,
+ xlim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>, ylim<span class='op'>=</span><span class='va'>bb</span><span class='op'>[</span><span class='fl'>2</span>,<span class='op'>]</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>opar</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Sys.setenv.html'>Sys.unsetenv</a></span><span class='op'>(</span><span class='st'>"GEOS_MAKE_VALID"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Sys.setenv.html'>Sys.unsetenv</a></span><span class='op'>(</span><span class='st'>"GEOS_MAKE_VALID_KEEPCOLLAPSED"</span><span class='op'>)</span>
+
 <span class='op'>}</span>
 </div><div class='img'><img src='topo-unary-gMakeValid-5.png' alt='' width='700' height='433' /></div></pre>
   </div>
