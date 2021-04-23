@@ -56,7 +56,7 @@ gPolygonize = function( splist, getCutEdges=FALSE) {
 TopologyFunc = function(spgeom, id, byid, func) {
     
     stopifnot(is.logical(byid))
-    byid = as.logical(byid)
+#    byid = as.logical(byid)
     if (is.na(byid)) 
         stop("Invalid value for byid, must be logical")
     
@@ -88,6 +88,8 @@ TopologyFunc = function(spgeom, id, byid, func) {
         x <- .Call("rgeos_unioncascaded", .RGEOS_HANDLE, spgeom, id, byid, PACKAGE="rgeos")
     else if (func == "rgeos_makevalid")
         x <- .Call("rgeos_makevalid", .RGEOS_HANDLE, spgeom, id, byid, PACKAGE="rgeos")
+    else if (func == "rgeos_makevalidparams")
+        x <- .Call("rgeos_makevalidparams", .RGEOS_HANDLE, spgeom, id, byid, PACKAGE="rgeos")
     else if (func == "rgeos_coverageunion")
         x <- .Call("rgeos_coverageunion", .RGEOS_HANDLE, spgeom, id, byid, PACKAGE="rgeos")
     else if (func == "rgeos_minimumrotatedrectangle")
@@ -158,12 +160,28 @@ gUnionCascaded = function(spgeom, id = NULL) {
     res
 }
 
-gMakeValid = function(spgeom, byid=FALSE, id = NULL) {
+gMakeValid = function(spgeom, byid=FALSE, id = NULL, original=NULL, keepCollapsed=FALSE) {
 
     if (version_GEOS0() < "3.8.0")
         stop("No UnaryUnion in this version of GEOS")
-    return( TopologyFunc(spgeom, id, byid, "rgeos_makevalid") ) 
-
+    if (version_GEOS0() < "3.10.0") {
+        return( TopologyFunc(spgeom, id, byid, "rgeos_makevalid") ) 
+    } else {
+        if (is.null(original)) {
+            envvar <- Sys.getenv("GEOS_MAKE_VALID")
+            if (nzchar(envvar)) {
+                original <- TRUE
+                if (envvar == "BUFFERED") original <- FALSE
+            } else {
+                original <- TRUE
+            }
+        }
+        stopifnot(is.logical(original))
+        stopifnot(is.logical(keepCollapsed))
+        attr(byid, "original") <- original
+        attr(byid, "keepCollapsed") <- keepCollapsed
+        return( TopologyFunc(spgeom, id, byid, "rgeos_makevalidparams") ) 
+    }
 }
 
 gCoverageUnion = function(spgeom, byid=FALSE, id = NULL) {

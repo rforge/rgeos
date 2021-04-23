@@ -43,6 +43,9 @@ static R_CallMethodDef CallEntries[] = {
 #ifdef HAVE_MAKEVALID
     {"rgeos_makevalid", (DL_FUNC) &rgeos_makevalid, 4},
 #endif
+#ifdef HAVE_MAKEVALIDPARAMS
+    {"rgeos_makevalidparams", (DL_FUNC) &rgeos_makevalidparams, 4},
+#endif
 #ifdef HAVE_COVERAGEUNION
     {"rgeos_coverageunion", (DL_FUNC) &rgeos_coverageunion, 4},
 #endif

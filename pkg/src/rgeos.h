@@ -47,6 +47,13 @@
 #endif
 
 
+#if GEOS_VERSION_MAJOR == 3
+#if GEOS_VERSION_MINOR >= 10
+#define HAVE_MAKEVALIDPARAMS 1
+#endif
+#endif
+
+
 /* use same define in package's local_stubs.c file */
 #define SP_XPORT(x) RGEOS_ ## x
 #include "sp.h"
@@ -162,6 +169,10 @@ SEXP rgeos_node(SEXP env, SEXP obj);
 #ifdef HAVE_MAKEVALID
 SEXP rgeos_makevalid(SEXP env, SEXP obj, SEXP id, SEXP byid );
 #endif
+#ifdef HAVE_MAKEVALIDPARAMS
+SEXP rgeos_makevalidparams(SEXP env, SEXP obj, SEXP id, SEXP byid );
+#endif
+
 
 // Binary Topology Functions - rgeos_topology_binary.c
 SEXP rgeos_difference(SEXP env, SEXP geom1, SEXP geom2, SEXP byid, SEXP ids);
