@@ -171,7 +171,7 @@ gMakeValid = function(spgeom, byid=FALSE, id = NULL, original=NULL, keepCollapse
             envvar <- Sys.getenv("GEOS_MAKE_VALID")
             if (nzchar(envvar)) {
                 original <- TRUE
-                if (envvar == "BUFFERED") original <- FALSE
+                if (envvar == "STRUCTURE") original <- FALSE
             } else {
                 original <- TRUE
             }

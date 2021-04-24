@@ -54,14 +54,6 @@ SEXP rgeos_makevalidparams(SEXP env, SEXP obj, SEXP id, SEXP byid ) {
     original = getAttrib(byid, install("original"));
     keepCollapsed = getAttrib(byid, install("keepCollapsed"));
 
-/*    GEOSMakeValidBufferedOptions *options;
-    if (!LOGICAL_POINTER(original)[0]) {
-        int kC = LOGICAL_POINTER(keepCollapsed)[0];
-        options = (GEOSMakeValidBufferedOptions *) R_alloc((size_t) 1, 
-            sizeof(GEOSMakeValidBufferedOptions));
-        options->keepCollapsed = kC;
-    }*/
-
     GEOSContextHandle_t GEOShandle = getContextHandle(env);
 
     SEXP p4s = GET_SLOT(obj, install("proj4string"));
@@ -78,10 +70,10 @@ SEXP rgeos_makevalidparams(SEXP env, SEXP obj, SEXP id, SEXP byid ) {
 
     if (LOGICAL_POINTER(original)[0]) {
         GEOSMakeValidParams_setMethod_r(GEOShandle, p,
-            GEOS_MAKE_VALID_ORIGINAL);
+            GEOS_MAKE_VALID_LINEWORK);
     } else {
         GEOSMakeValidParams_setMethod_r(GEOShandle, p,
-            GEOS_MAKE_VALID_BUFFERED);
+            GEOS_MAKE_VALID_STRUCTURE);
     }
     GEOSMakeValidParams_setKeepCollapsed_r(GEOShandle, p,
         (int) LOGICAL_POINTER(keepCollapsed)[0]);
@@ -97,13 +89,6 @@ SEXP rgeos_makevalidparams(SEXP env, SEXP obj, SEXP id, SEXP byid ) {
 
         resgeoms[i] = GEOSMakeValidWithParams_r(GEOShandle, curgeom, p);
         
-/*        if (LOGICAL_POINTER(original)[0]) {
-            resgeoms[i] = GEOSMakeValidWithParams_r(GEOShandle, curgeom,
-                GEOS_MAKE_VALID_ORIGINAL, NULL);
-        } else {
-            resgeoms[i] = GEOSMakeValidWithParams_r(GEOShandle, curgeom,
-                GEOS_MAKE_VALID_BUFFERED, options);
-        } */
         if (resgeoms[i] == NULL) {
             GEOSGeom_destroy_r(GEOShandle, geom);
             GEOSMakeValidParams_destroy_r(GEOShandle, p);
