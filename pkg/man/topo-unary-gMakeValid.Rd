@@ -141,7 +141,7 @@ bb <- bbox(X)
 opar <- par(mfrow=c(2,2))
 JTSplot(X, fill="#dfdfff", pts="#00007c", main="input", xlim=bb[1,], ylim=bb[2,])
 Sys.setenv("GEOS_MAKE_VALID"="LINEWORK")
-JTSplot(gMakeValid(X), fill="#ffffa4", pts="#78b400", main="original (env-var)",
+JTSplot(gMakeValid(X), fill="#ffffa4", pts="#78b400", main="linework (env-var)",
  xlim=bb[1,], ylim=bb[2,])
 Sys.setenv("GEOS_MAKE_VALID"="STRUCTURE")
 Sys.setenv("GEOS_MAKE_VALID_KEEPCOLLAPSED"="FALSE")
