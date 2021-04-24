@@ -1,4 +1,4 @@
-# Version 0.5-7 (development, rev. 641-650)
+# Version 0.5-7 (development, rev. 641-660)
 
 * adapt to OverlayNG in GEOS 3.9
 
@@ -8,7 +8,7 @@
 
 * adapt configure.ac for GEOS 3.10
 
-* add support for buffered geometry fixer in gMakeValid() from 3.10
+* add support for structured geometry fixer in gMakeValid() from 3.10
 
 # Version 0.5-5 (2020-09-07, rev. 634-640)
 

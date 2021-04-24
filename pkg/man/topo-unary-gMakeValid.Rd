@@ -11,7 +11,7 @@ gMakeValid(spgeom, byid=FALSE, id = NULL, original=NULL, keepCollapsed=NULL)
   \item{spgeom}{sp object as defined in package sp}
   \item{byid}{Logical determining if the function should be applied across subgeometries (TRUE) or the entire object (FALSE)}
   \item{id}{Character vector defining id labels for the resulting geometries, if unspecified returned geometries will be labeled based on their parent geometries' labels.}
-  \item{original}{default NULL; if GEOS < 3.10.0, TRUE, if GEOS >= 3.10.0, either set directly or taken from environment variable \code{GEOS_MAKE_VALID} with values \code{LINEWORK} for the orininal algorithm or \code{STRUCTURE} fot the new algorithm. If \code{GEOS_MAKE_VALID} is \code{STRUCTURE}, \code{original} is FALSE}
+  \item{original}{default NULL; if GEOS < 3.10.0, TRUE, if GEOS >= 3.10.0, either set directly or taken from environment variable \code{GEOS_MAKE_VALID} with values \code{LINEWORK} for the original algorithm or \code{STRUCTURE} for the new algorithm. If \code{GEOS_MAKE_VALID} is \code{STRUCTURE}, \code{original} is FALSE}
   \item{keepCollapsed}{default NULL; If GEOS >= 3.10.0 and \code{original} is FALSE, the argument is used to control whether objects with dimension reduction are discarded (keepCollapsed is FALSE) or retained (TRUE). It may be set directly, or if NULL controlled by environment variable \code{GEOS_MAKE_VALID_KEEPCOLLAPSED} with values \code{FALSE} or \code{TRUE}. If \code{GEOS_MAKE_VALID_KEEPCOLLAPSED} is \code{TRUE}, \code{keepCollapsed} is TRUE}
 }
 
