@@ -1,4 +1,7 @@
-gSimplify = function(spgeom, tol, topologyPreserve=FALSE) {
+gSimplify = function(spgeom, tol, topologyPreserve=NULL) {
+
+        if (is.null(topologyPreserve))
+            topologyPreserve <- version_GEOS0() >= "3.10.0"
 
 	getCutEdges = as.logical(topologyPreserve)
 	if (is.na(topologyPreserve))
