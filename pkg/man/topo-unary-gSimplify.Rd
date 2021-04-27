@@ -4,13 +4,13 @@
 \title{Simplify Geometry}
 \description{Function simplifies the given geometry using the Douglas-Peuker algorithm}
 \usage{
-	gSimplify(spgeom, tol, topologyPreserve=NULL)
+	gSimplify(spgeom, tol, topologyPreserve=FALSE)
 }
 
 \arguments{
   \item{spgeom}{sp object as defined in package sp}
   \item{tol}{Numerical tolerance value to be used by the Douglas-Peuker algorithm}
-  \item{topologyPreserve}{Logical determining if the algorithm should attempt to preserve the topology of the original geometry; default changed from FALSE to TRUE for GEOS >= 3.10.0}
+  \item{topologyPreserve}{Logical determining if the algorithm should attempt to preserve the topology of the original geometry}
 }
 
 \value{Returns a simplified version of the given geometry when applied to [MULTI]LINEs or [MULTI]POLYGONs.}

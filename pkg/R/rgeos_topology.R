@@ -1,17 +1,13 @@
-gSimplify = function(spgeom, tol, topologyPreserve=NULL) {
+gSimplify = function(spgeom, tol, topologyPreserve=FALSE) {
 
-        if (is.null(topologyPreserve))
-            topologyPreserve <- version_GEOS0() >= "3.10.0"
-
-	getCutEdges = as.logical(topologyPreserve)
-	if (is.na(topologyPreserve))
-		stop("Invalid value for topologyPreserve, must be logical")
+    stopifnot(is.logical(topologyPreserve))
+    if (is.na(topologyPreserve))
+	stop("Invalid value for topologyPreserve, must be logical")
 	
     if (inherits(spgeom, "SpatialPolygons") && get_do_poly_check() && notAllComments(spgeom)) 
         spgeom <- createSPComment(spgeom)
     id = row.names(spgeom)
-    return( .Call("rgeos_simplify", .RGEOS_HANDLE, spgeom, tol, id, 
-									FALSE, topologyPreserve, PACKAGE="rgeos") )
+    return( .Call("rgeos_simplify", .RGEOS_HANDLE, spgeom, tol, id, FALSE, topologyPreserve, PACKAGE="rgeos") )
 }
 
 gPolygonize = function( splist, getCutEdges=FALSE) {
