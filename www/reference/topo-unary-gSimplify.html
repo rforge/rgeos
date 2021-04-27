@@ -115,7 +115,7 @@
     <p>Function simplifies the given geometry using the Douglas-Peuker algorithm</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gSimplify</span><span class='op'>(</span><span class='va'>spgeom</span>, <span class='va'>tol</span>, topologyPreserve<span class='op'>=</span><span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>gSimplify</span><span class='op'>(</span><span class='va'>spgeom</span>, <span class='va'>tol</span>, topologyPreserve<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -130,7 +130,7 @@
     </tr>
     <tr>
       <th>topologyPreserve</th>
-      <td><p>Logical determining if the algorithm should attempt to preserve the topology of the original geometry; default changed from FALSE to TRUE for GEOS &gt;= 3.10.0</p></td>
+      <td><p>Logical determining if the algorithm should attempt to preserve the topology of the original geometry</p></td>
     </tr>
     </table>
 
