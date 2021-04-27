@@ -226,10 +226,6 @@ groupID = function(spgeom, ids) {
 }
 
 gIsOverlayNG <- function() {
-    a <- readRDS(system.file("test_cases/OverlayNG_test_a.rds", package="rgeos"))
-    bounds <- gUnaryUnion(a)
-    b0 <- sapply(slot(slot(bounds, "polygons")[[1]], "Polygons"), slot, "area")
-    c <- readRDS(system.file("test_cases/OverlayNG_test_c.rds", package="rgeos"))
-    !isTRUE(all.equal(b0, c))
+    version_GEOS0() >= "3.9.0"
 }
 
